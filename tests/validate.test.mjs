@@ -74,7 +74,7 @@ function goodPool(n = 312) {
     source: SOURCES[i % 8],
     indicator: `ind-${Math.floor(i / 2)}`,
     tone: i % 2 ? 'silly' : 'serious',
-  })).map((e) => ({ ...e, value: Math.round(e.value * 10) / 10 }));
+  })).map((e) => { const value = Math.round(e.value * 10) / 10; return { ...e, value, evidence: `${value}%` }; });
 }
 
 test('a good pool passes in production mode', () => {

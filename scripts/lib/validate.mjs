@@ -5,6 +5,7 @@
 import { CATEGORY_IDS, RULES, STATUSES, TONES } from '../../src/config.js';
 import { isLegalPair } from '../../src/pairs.js';
 import { isAuthoritativeUrl } from './sources.mjs';
+import { valueMatchesEvidence } from '../verify-sources.mjs';
 
 // Aggregates that are not a single country and so are exempt from the country cap.
 export const NON_COUNTRY = new Set(['WORLD', 'EU', 'OECD']);
@@ -78,6 +79,9 @@ export function validateEntry(e, today) {
     if (!isValidDate(e.verifiedOn)) errs.push(`${where} verified entry needs a valid "verifiedOn"`);
     else if (e.verifiedOn > today) errs.push(`${where} verifiedOn is in the future`);
     if (e.reviewReason) errs.push(`${where} verified entry must not carry a reviewReason`);
+  }
+  if (e.evidence && typeof e.value === 'number' && !valueMatchesEvidence(e.value, e.evidence)) {
+    errs.push(`${where} value ${e.value} does not match any number in its evidence`);
   }
   if (e.status === 'unverified' && !e.reviewReason) errs.push(`${where} unverified entry needs "reviewReason"`);
   return errs;
