@@ -5,7 +5,8 @@ import { createPairGenerator, higherOf, mulberry32, hashString, pairKey, pickCar
 import {
   DAILY_GUESS_CARDS, dailyPairs, dailyGuessCards, romeDate, msUntilNextDaily, formatCountdown, currentStreak, longestStreak,
 } from './daily.js';
-import { createDial } from './dial.js';
+import { createDial, needlePosition, prefersReducedMotion } from './dial.js';
+import { createMatchGenerator, createOddGenerator } from './modes.js';
 import { icon } from './icons.js';
 import * as audio from './audio.js';
 import * as online from './online.js';
@@ -52,6 +53,8 @@ const formatReading = (reading, target) => formatPercent(Number.isInteger(target
 const pickFrom = (list, rng = Math.random) => list[Math.floor(rng() * list.length)];
 const colorOf = (e) => CATEGORIES[e.category].color;
 const catLabel = (c) => t(CATEGORIES[c].label);
+/** Marks text for translation where it is stored, to be passed through t() when shown. */
+const N = (text) => text;
 /** A translated sentence with elements inside: tx('Better than {pct} …', { pct: node }). */
 function tx(text, nodes, vars = {}) {
   const str = t(text, vars);
@@ -169,44 +172,81 @@ function guessCrowdLine(stats) {
   return h('p', { class: 'crowd' }, ...tx('Players guess {avg} on average, usually {miss} points off.', { avg: h('b', {}, formatPercent(Math.round(avg))), miss: h('b', {}, String(Math.round(miss))) }));
 }
 
+// ---------- the card ----------
+/**
+ * One statistic card, the same in every mode: category, text, detail, a pie
+ * and the value (hidden as "?" until revealed). Returns the parts the modes
+ * animate: { wrap, pick, value, source, fill(reading), show(value) }.
+ */
+function statCard(e, { side, ariaLabel, onPick, stamp = t('Higher') }) {
+  const value = h('span', { class: 'card-value' }, '?');
+  // The percentage as a slice of pie, swept round as the value counts up.
+  const pie = h('span', { class: 'pie', 'aria-hidden': 'true' });
+  const fill = (reading) => pie.style.setProperty('--v', reading.toFixed(2));
+  const pick = h('button', { class: 'card-pick', type: 'button', 'aria-label': ariaLabel, onclick: onPick },
+    h('span', { class: 'card-top' }, h('span', { class: 'card-cat' }, icon(e.category), catLabel(e.category)), h('span', { class: 'card-side', 'aria-hidden': 'true' }, side)),
+    h('span', { class: 'card-text' }, cardText(e)),
+    h('span', { class: 'card-detail' }, cardDetail(e)),
+    h('span', { class: 'card-foot' }, pie, value),
+    h('span', { class: 'stamp', 'aria-hidden': 'true' }, stamp));
+  const source = h('p', { class: 'card-source', hidden: true },
+    t('Source:'), ' ', h('a', { href: e.sourceUrl, target: '_blank', rel: 'noopener' }, e.source), ` · ${e.year}`);
+  const wrap = h('div', { class: 'card', style: `--c:${colorOf(e)}` }, pick, source);
+  const show = (v) => { value.textContent = formatValue(v); fill(v); source.hidden = false; };
+  return { wrap, pick, value, source, fill, show };
+}
+
+/** Counts every card up to its value together, with the Percentometer's swing. */
+function countUp(cards, values, duration = 1500) {
+  if (prefersReducedMotion()) { cards.forEach((c, i) => c.show(values[i])); return Promise.resolve(); }
+  return new Promise((resolve) => {
+    const start = performance.now();
+    const frame = (now) => {
+      const p = Math.min(1, (now - start) / duration);
+      cards.forEach((c, i) => {
+        const r = Math.max(0, Math.min(100, needlePosition(0, values[i], p)));
+        c.value.textContent = formatReading(r, values[i]);
+        c.fill(r);
+      });
+      if (p < 1) requestAnimationFrame(frame); else { cards.forEach((c, i) => c.show(values[i])); resolve(); }
+    };
+    requestAnimationFrame(frame);
+  });
+}
+
 // ---------- the round ----------
 /**
  * Renders one pair. Options: pair, headline, pill {value, label}, progress (node),
  * onAnswer(correct), onContinue(correct), continueLabel, timeLimit (ms, optional).
  * A right answer moves on by itself; a wrong one waits for the button so the
  * player can read the sources. Running out of time counts as wrong.
+ * Match the card reuses it: `target` ('a' | 'b') is the right card instead of
+ * the higher one, `title`/`instruction` change the question and `lead` shows
+ * the percentage to match above the cards.
  */
-function renderRound({ pair, headline, pill, progress, onAnswer, onContinue, continueLabel = t('Continue'), timeLimit = 0 }) {
+function renderRound({
+  pair, headline, pill, progress, onAnswer, onContinue, continueLabel = t('Continue'), timeLimit = 0,
+  target = null, title = TITLE, instruction = INSTRUCTION, lead = null,
+}) {
   const dial = createDial();
   const cards = { a: pair.a, b: pair.b };
+  const higherMode = !target;
   let phase = 'ask';
   let correct = false;
   const dom = {};
 
   const card = (id) => {
     const e = cards[id];
-    const value = h('span', { class: 'card-value' }, '?');
-    // The percentage as a slice of pie, swept round as the value counts up.
-    const pie = h('span', { class: 'pie', 'aria-hidden': 'true' });
-    const fill = (reading) => pie.style.setProperty('--v', reading.toFixed(2));
-    const pick = h('button', {
-      class: 'card-pick',
-      type: 'button',
-      'aria-label': t(id === 'a' ? 'Left card: {text}, {detail}. Pick as higher.' : 'Right card: {text}, {detail}. Pick as higher.', { text: cardText(e), detail: cardDetail(e) }),
-      onclick: () => choose(id),
-    },
-    h('span', { class: 'card-top' }, h('span', { class: 'card-cat' }, icon(e.category), catLabel(e.category)), h('span', { class: 'card-side', 'aria-hidden': 'true' }, id === 'a' ? 'L' : 'R')),
-    h('span', { class: 'card-text' }, cardText(e)),
-    h('span', { class: 'card-detail' }, cardDetail(e)),
-    h('span', { class: 'card-foot' }, pie, value),
-    h('span', { class: 'stamp', 'aria-hidden': 'true' }, t('Higher')));
-    const source = h('p', { class: 'card-source', hidden: true },
-      t('Source:'), ' ', h('a', { href: e.sourceUrl, target: '_blank', rel: 'noopener' }, e.source), ` · ${e.year}`);
-    const wrap = h('div', { class: `card card-${id}`, style: `--c:${colorOf(e)}` }, pick, source);
+    const vars = { text: cardText(e), detail: cardDetail(e) };
+    const ariaLabel = higherMode
+      ? t(id === 'a' ? 'Left card: {text}, {detail}. Pick as higher.' : 'Right card: {text}, {detail}. Pick as higher.', vars)
+      : t(id === 'a' ? 'Left card: {text}, {detail}. Pick if it matches.' : 'Right card: {text}, {detail}. Pick if it matches.', vars);
+    const c = statCard(e, { side: id === 'a' ? 'L' : 'R', ariaLabel, onPick: () => choose(id), stamp: higherMode ? t('Higher') : t('Match') });
+    c.wrap.classList.add(`card-${id}`);
     const answer = h('button', { class: 'answer', type: 'button', onclick: () => choose(id) },
       id === 'a' ? t('← Left') : t('Right →'), h('small', {}, id === 'a' ? t('key 1') : t('key 2')));
-    dom[id] = { wrap, pick, value, source, answer, fill };
-    return wrap;
+    dom[id] = { ...c, answer };
+    return c.wrap;
   };
 
   const feedback = h('p', { class: 'feedback', role: 'status', 'aria-live': 'polite' }, t('Pick a card. The Percentometer will reveal the truth.'));
@@ -220,9 +260,10 @@ function renderRound({ pair, headline, pill, progress, onAnswer, onContinue, con
 
   mount(
     h('header', { class: 'round-head' },
-      h('div', {}, h('p', { class: 'kicker' }, headline), h('h1', { class: 'screen-title' }, t(TITLE)), h('p', { class: 'sub' }, t(INSTRUCTION))),
+      h('div', {}, h('p', { class: 'kicker' }, headline), h('h1', { class: 'screen-title' }, t(title)), h('p', { class: 'sub' }, t(instruction))),
       pill ? h('div', { class: 'pill' }, icon('bolt', 'icon bolt'), h('span', {}, h('b', {}, String(pill.value)), h('small', {}, pill.label))) : null),
     clock,
+    lead,
     duel,
     h('div', { class: 'answers' }, dom.a.answer, dom.b.answer),
     h('div', { class: 'reveal' }, dial.el, h('div', { class: 'reveal-side' }, feedback, next)),
@@ -250,12 +291,13 @@ function renderRound({ pair, headline, pill, progress, onAnswer, onContinue, con
     phase = 'reveal';
     clearInterval(countdown);
     clock?.classList.add('stopped');
-    correct = id !== null && cards[id].value > cards[id === 'a' ? 'b' : 'a'].value;
+    correct = id !== null && (higherMode ? cards[id].value > cards[id === 'a' ? 'b' : 'a'].value : id === target);
     audio.sfx(id ? 'tap' : 'timeout');
     onAnswer?.(correct);
-    // Ask what everybody else answered while the Percentometer swings.
+    // Ask what everybody else answered while the Percentometer swings
+    // (shared counters exist for "higher or lower" pairs only).
     const key = pairKey(pair.a, pair.b);
-    const crowd = online.answerStats(key).catch(() => null);
+    const crowd = higherMode ? online.answerStats(key).catch(() => null) : Promise.resolve(null);
     for (const k of ['a', 'b']) { dom[k].pick.disabled = true; dom[k].answer.disabled = true; }
     if (id) dom[id].wrap.classList.add('chosen');
     feedback.textContent = id ? t('Measuring…') : t('⏱ Time is up! Measuring…');
@@ -271,7 +313,8 @@ function renderRound({ pair, headline, pill, progress, onAnswer, onContinue, con
       }));
     }
     await Promise.all(swings);
-    const high = higherOf(pair) === pair.a ? 'a' : 'b';
+    // The right card: the higher one, or the one the percentage belongs to.
+    const high = target || (higherOf(pair) === pair.a ? 'a' : 'b');
     for (const k of ['a', 'b']) {
       dom[k].value.textContent = formatValue(cards[k].value);
       dom[k].answer.textContent = formatValue(cards[k].value);
@@ -287,7 +330,7 @@ function renderRound({ pair, headline, pill, progress, onAnswer, onContinue, con
     within(crowd, 900).then((stats) => {
       const line = pairCrowdLine(stats);
       if (line && feedback.isConnected) feedback.after(line);
-      if (id) online.recordPair(key, correct).catch(() => {});
+      if (id && higherMode) online.recordPair(key, correct).catch(() => {});
     });
     feedback.textContent = id ? `${correct ? '✓' : '✗'} ${t(pickFrom(correct ? RIGHT_QUIPS : WRONG_QUIPS))}` : t('⏱ Time is up! 15 seconds per card.');
     phase = 'done';
@@ -328,32 +371,32 @@ function home() {
       h('p', { class: 'lede' }, t('Real statistics about things that have nothing in common. Pick the bigger percentage and keep your streak alive.')),
       h('div', { class: 'actions' },
         h('a', { class: 'btn btn-primary btn-big', href: '#/endless' }, t('Play mixed')),
-        h('a', { class: 'btn', href: '#/guess' }, t('Closest guess')),
         h('a', { class: 'btn', href: '#/online' }, icon('globe'), t('Play online')),
         h('a', { class: 'btn', href: '#/daily' }, t('Daily challenge'))),
       h('p', { class: 'hero-meta' },
         streak().current ? h('a', { class: 'streak-chip', href: '#/daily' }, `🔥 ${t('{n}-day streak', { n: streak().current })}`) : null,
         h('span', {}, t('Best streak {n}', { n: best })), h('span', {}, t('{n} statistics', { n: ENTRIES.length })), h('span', {}, t('{n} categories', { n: cats.length })))),
+    modesSection(),
     cats.length ? categorySection(cats) : null);
 }
 
-// Category tiles, for either game: "higher or lower" or "closest guess".
+// Category tiles, for any of the four games.
 function categorySection(cats) {
   const KEY = 'percento:homeMode';
   const grid = h('ul', { class: 'cat-grid' });
   const note = h('p', { class: 'muted' });
-  const buttons = [['endless', t('Higher or lower')], ['guess', t('Closest guess')]].map(([id, label]) =>
-    h('button', { class: 'seg', type: 'button', 'data-mode': id, onclick: () => show(id) }, label));
-  const show = (mode) => {
-    save(KEY, mode);
-    for (const b of buttons) b.setAttribute('aria-pressed', String(b.dataset.mode === mode));
-    note.textContent = mode === 'guess' ? t('Ten cards from one topic. Guess each percentage.') : t('Every pair from one topic. Harder than it looks.');
+  const buttons = GAME_MODES.map((m) => h('button', { class: 'seg', type: 'button', 'data-mode': m.route, onclick: () => show(m.route) }, t(m.name)));
+  const show = (route) => {
+    const mode = gameMode(route);
+    save(KEY, route);
+    for (const b of buttons) b.setAttribute('aria-pressed', String(b.dataset.mode === route));
+    note.textContent = t(mode.catNote);
     grid.replaceChildren(...cats.map((c) => h('li', {},
-      h('a', { class: 'cat-tile', href: `#/${mode}/${c}`, style: `--c:${CATEGORIES[c].color}` },
+      h('a', { class: 'cat-tile', href: `#/${route}/${c}`, style: `--c:${CATEGORIES[c].color}` },
         icon(c), h('strong', {}, catLabel(c)),
-        h('small', {}, t('{n} stats · best {best}', { n: categoryPool(c).length, best: load(mode === 'guess' ? guessBestKey(c) : catBestKey(c), 0) || 0 }))))));
+        h('small', {}, t('{n} stats · best {best}', { n: categoryPool(c).length, best: load(mode.best(c), 0) || 0 }))))));
   };
-  show(load(KEY, 'endless') === 'guess' ? 'guess' : 'endless');
+  show(gameMode(load(KEY, 'endless'))?.route ?? 'endless');
   return h('section', { class: 'cat-section' },
     h('div', { class: 'section-head' }, h('h2', {}, t('Play by category')), h('div', { class: 'segmented', role: 'group', 'aria-label': t('Game for the categories') }, buttons)),
     note, grid);
@@ -392,28 +435,196 @@ function startEndless(cat = null) {
   round();
 }
 
-function endlessOver({ cat, score, best, exhausted }) {
-  // The world board and the device top 10 rank mixed play only.
-  if (!cat) recordRun(score);
+function endlessOver({ mode = 'pairs', cat, score, best, exhausted }) {
+  // The world board and the device top 10 rank mixed "higher or lower" only.
+  const ranked = mode === 'pairs' && !cat;
+  if (ranked) recordRun(score);
   renderPanel();
   const runs = load(RUNS_KEY, []) || [];
-  const myIndex = cat ? -1 : runs.findIndex((r) => r.score === score);
-  const again = () => startEndless(cat);
+  const myIndex = ranked ? runs.findIndex((r) => r.score === score) : -1;
+  const again = () => (mode === 'pairs' ? startEndless(cat) : startStreak(mode, cat));
   setKeys((ev) => { if (ev.key === 'Enter') { ev.preventDefault(); again(); } });
   const newBest = score > 0 && score >= best;
+  const exhaustedLine = mode === 'pairs' ? N('Every pair has been played. The Percentometer needs a nap.') : N('Every question has been played. The Percentometer needs a nap.');
   audio.sfx(newBest ? 'win' : 'gameover');
   mount(
-    h('p', { class: 'kicker' }, cat ? t('{category} only', { category: catLabel(cat) }) : t('Mixed')),
+    h('p', { class: 'kicker' }, `${t(gameMode(mode).name)} · ${cat ? t('{category} only', { category: catLabel(cat) }) : t('Mixed')}`),
     h('h1', { class: 'screen-title' }, exhausted ? t('You ran out of statistics!') : t('Game over')),
     h('p', { class: 'big-score' }, h('span', {}, String(score)), h('small', {}, score === 1 ? t('correct answer') : t('correct answers'))),
-    h('p', { class: 'lede' }, exhausted ? t('Every pair has been played. The Percentometer needs a nap.') : t(pickByScore(GAME_OVER_LINES, score, Math.floor(Math.random() * 2)))),
+    h('p', { class: 'lede' }, t(exhausted ? exhaustedLine : pickByScore(GAME_OVER_LINES, score, Math.floor(Math.random() * 2)))),
     h('p', { class: 'muted' }, newBest ? t('New personal best: {n}!', { n: best }) : t('Personal best: {n}', { n: best })),
     storageAvailable() ? null : h('p', { class: 'note' }, t('Your browser blocks storage, so your scores last only until you close this tab.')),
     h('div', { class: 'actions' },
       h('button', { class: 'btn btn-primary', type: 'button', onclick: again }, t('Play again')),
-      h('a', { class: 'btn', href: '#/' }, cat ? t('Other categories') : t('Play by category')),
+      h('a', { class: 'btn', href: '#/' }, cat ? t('Other categories') : t('Other games')),
       h('a', { class: 'btn', href: '#/online' }, t('Play online'))),
-    cat ? null : h('section', { class: 'box' }, h('h2', {}, t('Your best runs')), leaderboardList(5, myIndex)));
+    ranked ? h('section', { class: 'box' }, h('h2', {}, t('Your best runs')), leaderboardList(5, myIndex)) : null);
+}
+
+// ---------- match the card ----------
+/** One question: a percentage and two statistics; it belongs to exactly one. */
+function renderMatch({ q, ...opts }) {
+  const value = q[q.target].value;
+  const pie = h('span', { class: 'pie', 'aria-hidden': 'true', style: `--v:${value}` });
+  renderRound({
+    ...opts,
+    pair: { a: q.a, b: q.b },
+    target: q.target,
+    title: N('Which statistic is it?'),
+    instruction: N('One of these two is exactly this percentage.'),
+    lead: h('div', { class: 'target' }, pie, h('b', {}, formatValue(value)), h('span', {}, t('Which card is this?'))),
+  });
+}
+
+// ---------- odd one out ----------
+const ODD_LABELS = ['A', 'B', 'C', 'D'];
+const ODD_NEXT_MS = 2800; // a right answer leaves time to read the explanation
+
+/** Four statistics: three close together, one away. Pick the outsider. */
+function renderOdd({ q, headline, pill, progress, onContinue }) {
+  let phase = 'ask';
+  let correct = false;
+  const values = q.cards.map((e) => e.value);
+  const cards = q.cards.map((e, i) => statCard(e, {
+    side: ODD_LABELS[i],
+    ariaLabel: t('Card {letter}: {text}, {detail}. Pick as the odd one out.', { letter: ODD_LABELS[i], text: cardText(e), detail: cardDetail(e) }),
+    onPick: () => choose(i),
+    stamp: t('Outsider'),
+  }));
+  const feedback = h('p', { class: 'feedback', role: 'status', 'aria-live': 'polite' }, t('Three of these are close together. Which one is not?'));
+  const explain = h('p', { class: 'odd-why', hidden: true });
+  const ruler = h('div', { class: 'guess-ruler odd-ruler', hidden: true, 'aria-hidden': 'true' });
+  const next = h('button', { class: 'btn btn-primary continue', type: 'button', hidden: true, onclick: () => advance() }, t('Continue'));
+
+  mount(
+    h('header', { class: 'round-head' },
+      h('div', {}, h('p', { class: 'kicker' }, headline), h('h1', { class: 'screen-title' }, t('Find the odd one out')),
+        h('p', { class: 'sub' }, t('Tap the statistic whose percentage is far from the other three.'))),
+      pill ? h('div', { class: 'pill' }, icon('bolt', 'icon bolt'), h('span', {}, h('b', {}, String(pill.value)), h('small', {}, pill.label))) : null),
+    h('div', { class: 'odd-grid' }, cards.map((c) => c.wrap)),
+    h('div', { class: 'odd-reveal' }, feedback, explain, ruler, next),
+    progress);
+
+  async function choose(i) {
+    if (phase !== 'ask') return;
+    phase = 'reveal';
+    correct = i === q.odd;
+    audio.sfx('tap');
+    for (const c of cards) c.pick.disabled = true;
+    cards[i].wrap.classList.add('chosen');
+    feedback.textContent = t('Measuring…');
+    await countUp(cards, values);
+    cards.forEach((c, k) => c.wrap.classList.add(k === q.odd ? 'higher' : 'lower'));
+    feedback.className = `feedback ${correct ? 'ok' : 'ko'}`;
+    feedback.textContent = `${correct ? '✓' : '✗'} ${t(pickFrom(correct ? RIGHT_QUIPS : WRONG_QUIPS))}`;
+    audio.sfx(correct ? 'right' : 'wrong');
+    // Why: the outsider's distance from the group, and all four on one ruler.
+    const away = Math.round(q.distance * 10) / 10;
+    explain.textContent = t('{letter} is {n} points away from the other three, which sit between {lo} and {hi}.', {
+      letter: ODD_LABELS[q.odd], n: away, lo: formatValue(q.group.lo), hi: formatValue(q.group.hi),
+    });
+    explain.hidden = false;
+    // Letters only (the values are on the cards); neighbours alternate above and below.
+    const rank = [...values.keys()].sort((x, y) => values[x] - values[y]);
+    ruler.replaceChildren(
+      h('span', { class: 'odd-band', style: `left:${q.group.lo}%;width:${Math.max(1, q.group.hi - q.group.lo)}%` }),
+      ...values.map((v, k) => h('span', { class: `pin${k === q.odd ? ' truth' : ''}${rank.indexOf(k) % 2 ? ' low' : ''}${edge(v)}`, style: `left:${v}%` },
+        h('b', {}, ODD_LABELS[k]))));
+    ruler.hidden = false;
+    explain.scrollIntoView({ block: 'nearest', behavior: prefersReducedMotion() ? 'auto' : 'smooth' });
+    phase = 'done';
+    if (correct) {
+      feedback.append(h('span', { class: 'auto-next', style: `--t:${ODD_NEXT_MS}ms`, 'aria-hidden': 'true' }));
+      const timer = setTimeout(advance, ODD_NEXT_MS);
+      cleanup.push(() => clearTimeout(timer));
+    } else {
+      next.hidden = false;
+      next.focus({ preventScroll: true });
+    }
+  }
+
+  function advance() {
+    if (phase !== 'done') return;
+    phase = 'gone';
+    onContinue(correct);
+  }
+
+  setKeys((ev) => {
+    const k = ['1', '2', '3', '4'].indexOf(ev.key);
+    if (k >= 0) { ev.preventDefault(); choose(k); } else if (ev.key === 'Enter' && phase === 'done') { ev.preventDefault(); advance(); }
+  });
+}
+
+// ---------- streak modes: match the card, odd one out ----------
+// Same scoring as Higher or lower: one point per right answer, a mistake ends the run.
+const streakBestKey = (mode, cat) => `percento:best:${mode}${cat ? `:${cat}` : ''}`;
+const STREAK_MODES = {
+  match: { make: (pool, cat) => createMatchGenerator(pool, Math.random, { sameCategory: Boolean(cat) }), render: renderMatch },
+  odd: { make: (pool, cat) => createOddGenerator(pool, Math.random, { sameCategory: Boolean(cat) }), render: renderOdd },
+};
+
+function startStreak(mode, cat = null) {
+  const pool = cat ? categoryPool(cat) : ENTRIES;
+  const sessionKey = `${mode}:${cat}`;
+  if (!sessionGens.has(sessionKey)) sessionGens.set(sessionKey, STREAK_MODES[mode].make(pool, cat));
+  const gen = sessionGens.get(sessionKey);
+  const key = streakBestKey(mode, cat);
+  const label = cat ? catLabel(cat) : t('Mixed');
+  let score = 0;
+  let best = load(key, 0) || 0;
+
+  const round = () => {
+    const q = gen.next();
+    if (!q) return score || best ? endlessOver({ mode, cat, score, best, exhausted: true }) : calibrating();
+    STREAK_MODES[mode].render({
+      q,
+      headline: `${t(gameMode(mode).name)} · ${label}`,
+      pill: { value: score, label: t('Streak · best {n}', { n: best }) },
+      progress: h('div', { class: 'progress' }, h('span', {}, `${label} · ${t('score {n}', { n: score })}`), h('span', {}, t('Personal best {n}', { n: best }))),
+      onContinue: (correct) => {
+        if (!correct) return endlessOver({ mode, cat, score, best, exhausted: false });
+        score++;
+        if (score > best) { best = score; save(key, best); }
+        round();
+      },
+    });
+  };
+  round();
+}
+
+// ---------- the four games ----------
+// One list drives the home "choose a game" tiles, the category switch and the routes.
+const GAME_MODES = [
+  { id: 'pairs', route: 'endless', name: N('Higher or lower'), desc: N('Two statistics. Tap the higher percentage.'),
+    catNote: N('Every pair from one topic. Harder than it looks.'), best: (cat) => (cat ? catBestKey(cat) : BEST_KEY) },
+  { id: 'guess', route: 'guess', name: N('Closest guess'), desc: N('One statistic. Slide to the percentage you think it is.'),
+    catNote: N('Ten cards from one topic. Guess each percentage.'), best: (cat) => guessBestKey(cat) },
+  { id: 'match', route: 'match', name: N('Match the card'), desc: N('One percentage, two statistics. Find the one it belongs to.'),
+    catNote: N('One percentage, two statistics from one topic.'), best: (cat) => streakBestKey('match', cat) },
+  { id: 'odd', route: 'odd', name: N('Odd one out'), desc: N('Four statistics, three close together. Spot the one that is not.'),
+    catNote: N('Four statistics from one topic. Spot the outsider.'), best: (cat) => streakBestKey('odd', cat) },
+];
+const gameMode = (id) => GAME_MODES.find((m) => m.id === id || m.route === id);
+
+/** A small picture of each game, drawn with the game's own pies. */
+function modeVisual(id) {
+  const pie = (v, c) => h('span', { class: 'pie', style: `--v:${v};--c:${c}` });
+  const C = CATEGORIES;
+  if (id === 'pairs') return h('span', { class: 'mode-visual' }, pie(35, C.space.color), h('i', {}, '?'), pie(70, C.food.color));
+  if (id === 'guess') return h('span', { class: 'mode-visual' }, pie(45, C.nature.color), h('span', { class: 'mini-slider' }, h('span', {})));
+  if (id === 'match') return h('span', { class: 'mode-visual' }, h('b', { class: 'mini-target' }, '12%'), h('span', { class: 'mini-card' }), h('span', { class: 'mini-card' }));
+  return h('span', { class: 'mode-visual' }, pie(62, C.sport.color), pie(66, C.tech.color), pie(20, C.health.color), pie(70, C.history.color));
+}
+
+function modesSection() {
+  return h('section', { class: 'modes-section' },
+    h('div', { class: 'section-head' }, h('h2', {}, t('Choose a game'))),
+    h('ul', { class: 'mode-grid' }, GAME_MODES.map((m) => h('li', {},
+      h('a', { class: `mode-tile mode-${m.id}`, href: `#/${m.route}` },
+        modeVisual(m.id),
+        h('strong', {}, t(m.name)),
+        h('span', {}, t(m.desc)),
+        h('small', {}, t('Best {n}', { n: load(m.best(null), 0) || 0 })))))));
 }
 
 // ---------- closest guess ----------
@@ -1492,7 +1703,8 @@ async function room(code) {
 
 // ---------- router ----------
 const ROUTES = {
-  '': ['play', home], '#/': ['play', home], '#/endless': ['play', () => startEndless()], '#/guess': ['play', () => startGuess()], '#/friends': ['online', () => { location.hash = '#/online'; }],
+  '': ['play', home], '#/': ['play', home], '#/endless': ['play', () => startEndless()], '#/guess': ['play', () => startGuess()],
+  '#/match': ['play', () => startStreak('match')], '#/odd': ['play', () => startStreak('odd')], '#/friends': ['online', () => { location.hash = '#/online'; }],
   '#/daily': ['daily', startDaily], '#/daily/guess': ['daily', startDailyGuess], '#/leaderboard': ['leaderboard', leaderboard],
   '#/sources': ['sources', () => sources()], '#/settings': ['account', settings], '#/review': ['sources', review],
   '#/account': ['account', () => account()], '#/account/new': ['account', () => account('signup')], '#/online': ['online', friends],
@@ -1508,6 +1720,8 @@ function route() {
   if (!entry && /^#\/room\/[A-Za-z0-9]{6}$/.test(hash)) entry = ['online', () => room(hash.slice(7).toUpperCase())];
   if (!entry && /^#\/endless\/[a-z]+$/.test(hash) && CATEGORIES[hash.slice(10)]) entry = ['play', () => startEndless(hash.slice(10))];
   if (!entry && /^#\/guess\/[a-z]+$/.test(hash) && CATEGORIES[hash.slice(8)]) entry = ['play', () => startGuess(hash.slice(8))];
+  const modeRoute = /^#\/(match|odd)\/([a-z]+)$/.exec(hash);
+  if (!entry && modeRoute && CATEGORIES[modeRoute[2]]) entry = ['play', () => startStreak(modeRoute[1], modeRoute[2])];
   entry ||= ROUTES[''];
   for (const a of document.querySelectorAll('.nav a')) {
     const active = a.dataset.route === entry[0];

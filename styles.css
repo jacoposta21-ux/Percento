@@ -485,3 +485,63 @@ select.input {
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { transition: none !important; animation: none !important; }
 }
+
+/* ---------- choose a game: four mode tiles ---------- */
+.modes-section { margin-top: 34px; }
+.mode-grid { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: 1fr; gap: 14px; }
+@media (min-width: 560px) { .mode-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.mode-tile {
+  display: grid; gap: 6px; align-content: start; height: 100%; padding: 14px 16px 16px;
+  background: var(--card); color: var(--ink); text-decoration: none; border-radius: 22px; border: 2.5px solid var(--ink);
+  box-shadow: var(--lift); transition: transform 0.1s ease, box-shadow 0.1s ease;
+}
+.mode-tile:hover { transform: translateY(-2px); box-shadow: 0 7px 0 var(--ink); }
+.mode-tile strong { font-family: var(--display); font-weight: 800; font-size: 1.08rem; letter-spacing: -0.02em; margin-top: 4px; }
+.mode-tile span:not(.pie):not(.mode-visual):not(.mini-slider):not(.mini-card) { color: var(--ink-soft); font-size: 0.92rem; line-height: 1.35; }
+.mode-tile small { color: var(--ink-soft); font-size: 0.82rem; font-weight: 700; margin-top: 2px; }
+/* Each game's picture: a strip of pies on the blue table. */
+.mode-visual {
+  display: flex; align-items: center; justify-content: center; gap: 8px; height: 72px; margin-bottom: 4px;
+  border-radius: 14px; background: var(--table);
+}
+.mode-visual .pie { width: 38px; }
+.mode-odd .mode-visual .pie { width: 30px; }
+.mode-odd .mode-visual .pie:nth-child(3) { width: 38px; transform: translateY(-6px); }
+.mode-visual i { font-style: normal; font-family: var(--display); font-weight: 800; color: var(--sun); }
+.mini-slider { width: 64px; height: 12px; border-radius: 999px; border: 2px solid var(--ink); background: var(--card); overflow: hidden; }
+.mini-slider span { display: block; width: 45%; height: 100%; background: var(--sun); }
+.mini-target { padding: 2px 10px; border-radius: 999px; border: 2px solid var(--ink); background: var(--sun); color: var(--ink); font-family: var(--display); font-size: 0.9rem; }
+.mini-card { width: 26px; height: 34px; border-radius: 6px; border: 2px solid var(--ink); background: var(--card); }
+
+/* ---------- match the card: the percentage to place ---------- */
+.target {
+  display: flex; align-items: center; gap: 14px; width: fit-content; max-width: 100%; margin: 18px 0 0; padding: 8px 20px 8px 10px;
+  background: var(--card); color: var(--ink); border: 2.5px solid var(--ink); border-radius: 999px; box-shadow: var(--lift);
+}
+.target .pie { width: 52px; }
+.target b { font-family: var(--display); font-weight: 800; font-size: clamp(1.8rem, 7vw, 2.6rem); letter-spacing: -0.04em; line-height: 1; }
+.target span:last-child { color: var(--ink-soft); font-weight: 700; font-size: 0.92rem; }
+
+/* ---------- odd one out: four cards ---------- */
+.odd-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 20px 0 10px; }
+.odd-grid .card-pick { min-height: 220px; }
+.odd-grid .card-value { font-size: clamp(1.3rem, 5.5vw, 2rem); }
+.odd-grid .card .pie { width: 36%; max-width: 70px; }
+.odd-grid .stamp { right: 8px; }
+.odd-reveal { display: grid; gap: 8px; margin-top: 8px; max-width: 760px; }
+.odd-reveal .feedback { margin: 0; }
+.odd-why { margin: 0; font-size: 1.02rem; }
+.odd-ruler { margin-top: 6px; }
+.odd-band { position: absolute; top: 40px; height: 16px; border-radius: 999px; background: color-mix(in srgb, var(--sun) 45%, transparent); }
+.odd-reveal .continue { justify-self: start; }
+@media (min-width: 900px) {
+  .odd-grid { gap: 22px; }
+  .odd-grid .card-pick { min-height: 250px; }
+}
+@media (max-width: 420px) {
+  .odd-grid { gap: 10px; }
+  .odd-grid .card-pick { min-height: 200px; }
+  .target { gap: 10px; padding: 6px 14px 6px 8px; }
+  .target .pie { width: 40px; }
+  .target span:last-child { font-size: 0.82rem; }
+}

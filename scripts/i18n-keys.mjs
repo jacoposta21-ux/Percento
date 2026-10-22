@@ -2,7 +2,7 @@
 // be checked for gaps:
 //   node scripts/i18n-keys.mjs            → list keys missing per language
 //   node scripts/i18n-keys.mjs --json     → all keys as JSON (for translators)
-// Sources: t()/tx()/toast() calls in src/*.js, data-i18n attributes in
+// Sources: t()/tx()/toast()/N() calls in src/*.js, data-i18n attributes in
 // index.html, category labels, and every line in src/copy.js.
 import { readFileSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
@@ -41,7 +41,7 @@ export function collectKeys() {
     // Comments may quote keys in shortened form; only code counts.
     const src = readFileSync(join(dir, file), 'utf8').replace(/\/\*[\s\S]*?\*\//g, '').replace(/^\s*\/\/.*$/gm, '');
     // A call, not a method (x.t(…)), but spread calls (...tx(…)) count.
-    for (const m of src.matchAll(/(?<![\w$])(?<![^.]\.)(t|tx|toast)\(/g)) {
+    for (const m of src.matchAll(/(?<![\w$])(?<![^.]\.)(t|tx|toast|N)\(/g)) {
       const arg = firstArgument(src, m.index + m[0].length - 1);
       for (const lit of arg.matchAll(LITERAL)) {
         const text = unescape(lit[1] ?? lit[2]);

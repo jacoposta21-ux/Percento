@@ -346,6 +346,73 @@ async function main() {
       await context.close();
     }
 
+    log('▶ match the card and odd one out');
+    for (const [w, hgt, name] of [[360, 760, 'mobile'], [1280, 800, 'desktop']]) {
+      const context = await newContext({ viewport: { width: w, height: hgt } });
+      const page = await context.newPage();
+      watch(page);
+      await page.goto(`${BASE}#/`);
+      await page.waitForSelector('.mode-tile');
+      check((await page.$$('.mode-tile')).length === 4, `${name}: four games on home`);
+      check((await page.$$('.cat-section .seg')).length === 4, `${name}: category switch offers all four games`);
+      await page.click('.cat-section .seg:has-text("Match the card")');
+      check((await page.getAttribute('.cat-tile >> nth=0', 'href')).startsWith('#/match/'), `${name}: category tiles switch to match the card`);
+      await page.click('.cat-section .seg:has-text("Odd one out")');
+      check((await page.getAttribute('.cat-tile >> nth=0', 'href')).startsWith('#/odd/'), `${name}: category tiles switch to odd one out`);
+
+      // Match the card: the shown percentage is exactly one card's value.
+      await page.click('.mode-tile:has-text("Match the card")');
+      await page.waitForSelector('.target');
+      await audit(page, `${name} match round`);
+      let streak = 0;
+      for (let round = 0; round < 40; round++) {
+        await page.waitForSelector('.card-pick:not([disabled])');
+        const target = parseFloat((await page.textContent('.target b')).replace('%', ''));
+        check((await page.$$eval('.card-value', (els) => els.every((e) => e.textContent.trim() === '?'))), `${name}: match values hidden before the pick`);
+        // Pick right a few times, then wrong on purpose.
+        const pickA = round % 2 === 0;
+        await page.click(pickA ? '.card-a .card-pick' : '.card-b .card-pick');
+        const ok = await waitReveal(page);
+        const [va, vb] = [await readValue(page, '.card-a'), await readValue(page, '.card-b')];
+        check((va === target) !== (vb === target), `${name}: exactly one card is ${target} (${va}, ${vb})`);
+        check(ok === ((pickA ? va : vb) === target), `${name}: match feedback agrees with the values`);
+        check(Boolean(await page.$(`${va === target ? '.card-a' : '.card-b'}.higher`)), `${name}: matching card highlighted`);
+        if (!ok) { await audit(page, `${name} match reveal`); await afterVerdict(page, name, false); break; }
+        streak++;
+        await afterVerdict(page, name, true);
+      }
+      await page.waitForSelector('.big-score', { timeout: 5000 });
+      check(Number(await page.textContent('.big-score span')) === streak, `${name}: match score is the streak (${streak})`);
+      check(Number(await page.evaluate(() => localStorage.getItem('percento:best:match')) || 0) >= streak, `${name}: match best saved`);
+      await audit(page, `${name} match over`);
+
+      // Odd one out: four cards, one clear outsider, explained after the pick.
+      for (const route of ['#/odd', '#/odd/economy']) {
+        await page.goto(`${BASE}${route}`);
+        await page.waitForSelector('.odd-grid .card-pick:not([disabled])');
+        check((await page.$$('.odd-grid .card')).length === 4, `${name}: odd one out shows four cards`);
+        if (route === '#/odd') await audit(page, `${name} odd round`);
+        const cats = await page.$$eval('.card-cat', (els) => els.map((e) => e.textContent.trim()));
+        if (route === '#/odd') check(new Set(cats).size === 4, `${name}: odd one out mixes categories (${cats})`);
+        else check(cats.every((c) => c === 'Economy'), `${name}: odd one out keeps to the category (${cats})`);
+        await page.keyboard.press('1');
+        const ok = await waitReveal(page);
+        const values = [];
+        for (let k = 1; k <= 4; k++) values.push(await readValue(page, `.odd-grid .card:nth-child(${k})`));
+        const odd = await page.$$eval('.odd-grid .card', (els) => els.findIndex((e) => e.classList.contains('higher')));
+        const rest = values.filter((_, k) => k !== odd);
+        check(odd >= 0 && Math.max(...rest) - Math.min(...rest) <= 14, `${name}: the other three sit close together (${values})`);
+        check(rest.every((v) => Math.abs(v - values[odd]) >= 12), `${name}: the outsider is clearly away (${values})`);
+        check(ok === (odd === 0), `${name}: odd feedback agrees with the highlight`);
+        check(await page.isVisible('.odd-why'), `${name}: odd one out explains the answer`);
+        check((await page.$$('.odd-ruler .pin')).length === 4, `${name}: all four values on the ruler`);
+        if (route === '#/odd') { await audit(page, `${name} odd reveal`); await page.screenshot({ path: join(SHOTS, `${name}-odd-reveal.png`), fullPage: true }); }
+        if (ok) await page.waitForSelector('.odd-grid .card-pick:not([disabled])', { timeout: 6000 });
+        else { await page.click('.continue'); await page.waitForSelector('.big-score'); }
+      }
+      await context.close();
+    }
+
     log('▶ languages');
     for (const [lang, locale] of [['it', 'it-IT'], ['fr', 'fr-FR'], ['es', 'es-ES'], ['de', 'de-DE'], ['pt', 'pt-BR']]) {
       const dict = (await import(join(ROOT, 'src', 'locales', `${lang}.js`))).default;
@@ -375,6 +442,15 @@ async function main() {
       await page.goto(`${BASE}#/guess`);
       await page.waitForSelector('.guess-slider');
       await audit(page, `${lang} closest guess`);
+      await page.goto(`${BASE}#/match`);
+      await page.waitForSelector('.target');
+      await audit(page, `${lang} match the card`);
+      await page.goto(`${BASE}#/odd`);
+      await page.waitForSelector('.odd-grid .card-pick');
+      await page.click('.odd-grid .card:nth-child(2) .card-pick');
+      await waitReveal(page);
+      await page.waitForSelector('.odd-why');
+      await audit(page, `${lang} odd one out`);
       await page.goto(`${BASE}#/online`);
       await page.waitForSelector('main .screen-title');
       await audit(page, `${lang} online`);

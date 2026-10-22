@@ -38,8 +38,9 @@ const pick = (list, rng) => list[Math.floor(rng() * list.length)];
  * next() returns { a, b }: two cards never shown together before, preferring
  * cards not seen yet in this session. Returns null when no legal pair is left.
  * With { sameCategory: true } the pool is one category and cards pair within it.
+ * With { maxGap } partners at most that many points apart are preferred (closer = harder).
  */
-export function createPairGenerator(pool, rng = Math.random, { sameCategory = false } = {}) {
+export function createPairGenerator(pool, rng = Math.random, { sameCategory = false, maxGap = 0 } = {}) {
   // Sort by id so the result never depends on file order.
   const entries = [...pool].sort((x, y) => (x.id < y.id ? -1 : x.id > y.id ? 1 : 0));
   const usedPairs = new Set();
@@ -48,7 +49,9 @@ export function createPairGenerator(pool, rng = Math.random, { sameCategory = fa
   const legalFor = (card) =>
     entries.filter((e) => isLegalPair(card, e, sameCategory) && !usedPairs.has(pairKey(card, e)));
 
-  function chooseOpponent(a, legal) {
+  function chooseOpponent(a, all) {
+    const near = maxGap ? all.filter((e) => Math.abs(e.value - a.value) <= maxGap) : [];
+    const legal = near.length ? near : all;
     // Cards not seen yet come first, then a coin flip keeps the answer
     // balanced: half the time the right card is higher.
     const fresh = legal.filter((e) => !seenIds.has(e.id));
