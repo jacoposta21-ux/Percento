@@ -21,7 +21,8 @@ const pointAt = (value, radius) => {
 };
 
 export const prefersReducedMotion = () =>
-  typeof window !== 'undefined' && window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  typeof window !== 'undefined' && (document.documentElement.classList.contains('reduce-motion')
+    || (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches));
 
 /** Damped oscillation from `from` to `to`; t in [0, 1]. Ends exactly on `to`. */
 export function needlePosition(from, to, t) {

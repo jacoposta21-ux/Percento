@@ -7,7 +7,7 @@ import { loadEntries, ROOT, argValue } from './lib/data.mjs';
 
 const mode = argValue('mode', 'production');
 const out = join(ROOT, argValue('out', 'dist'));
-const KEEP = ['id', 'text', 'value', 'source', 'sourceUrl', 'year', 'category', 'tone', 'status',
+const KEEP = ['id', 'text', 'detail', 'emoji', 'value', 'source', 'sourceUrl', 'year', 'category', 'tone', 'status',
   'addedOn', 'verifiedOn', 'country', 'reviewReason'];
 
 const all = loadEntries();

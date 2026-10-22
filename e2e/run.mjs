@@ -60,7 +60,7 @@ async function audit(page, label) {
     const seen = new Set();
     for (let t = walker.nextNode(); t; t = walker.nextNode()) {
       const el = t.parentElement;
-      if (!t.textContent.trim() || seen.has(el) || !visible(el) || el.closest('.skip, svg, .toast:not(.show)')) continue;
+      if (!t.textContent.trim() || seen.has(el) || !visible(el) || el.closest('.skip, svg, .toast:not(.show), [aria-hidden="true"]')) continue;
       seen.add(el);
       const s = getComputedStyle(el);
       const fg = parse(s.color);
@@ -195,7 +195,7 @@ async function main() {
         const page = await context.newPage();
         watch(page);
         await page.goto(BASE);
-        await page.waitForSelector('.menu');
+        await page.waitForSelector('.card-pick');
         await audit(page, `${label} home`);
         await page.screenshot({ path: join(SHOTS, `${label}-home.png`), fullPage: true });
         const score = await playEndless(page, label, { keyboard: scheme === 'dark' });

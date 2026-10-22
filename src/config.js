@@ -2,19 +2,19 @@
 // Pure data, no DOM access: this module is imported by Node and the browser.
 
 export const CATEGORIES = {
-  nature: { label: 'Nature', family: 'planet', emoji: '🌿' },
-  food: { label: 'Food', family: 'planet', emoji: '🍝' },
-  tech: { label: 'Tech', family: 'society', emoji: '💾' },
-  sport: { label: 'Sport', family: 'body', emoji: '🏅' },
-  health: { label: 'Health', family: 'body', emoji: '🩺' },
-  history: { label: 'History', family: 'past', emoji: '📜' },
-  economy: { label: 'Economy', family: 'society', emoji: '💶' },
-  everyday: { label: 'Everyday life', family: 'society', emoji: '☕' },
-  animals: { label: 'Animals', family: 'planet', emoji: '🦔' },
-  geography: { label: 'Geography', family: 'planet', emoji: '🗺️' },
-  body: { label: 'Human body', family: 'body', emoji: '🫀' },
-  space: { label: 'Space', family: 'planet', emoji: '🪐' },
-  habits: { label: 'Habits & oddities', family: 'society', emoji: '🧦' },
+  nature: { color: '#22c55e', label: 'Nature', family: 'planet', emoji: '🌿' },
+  food: { color: '#f59e0b', label: 'Food', family: 'planet', emoji: '🍝' },
+  tech: { color: '#3b82f6', label: 'Tech', family: 'society', emoji: '💾' },
+  sport: { color: '#ef4444', label: 'Sport', family: 'body', emoji: '🏅' },
+  health: { color: '#ec4899', label: 'Health', family: 'body', emoji: '🩺' },
+  history: { color: '#d4a017', label: 'History', family: 'past', emoji: '📜' },
+  economy: { color: '#14b8a6', label: 'Economy', family: 'society', emoji: '💶' },
+  everyday: { color: '#8b5cf6', label: 'Everyday life', family: 'society', emoji: '☕' },
+  animals: { color: '#f97316', label: 'Animals', family: 'planet', emoji: '🦔' },
+  geography: { color: '#10b981', label: 'Geography', family: 'planet', emoji: '🗺️' },
+  body: { color: '#f43f5e', label: 'Human body', family: 'body', emoji: '🫀' },
+  space: { color: '#6366f1', label: 'Space', family: 'planet', emoji: '🪐' },
+  habits: { color: '#a855f7', label: 'Habits & oddities', family: 'society', emoji: '🧦' },
 };
 
 export const CATEGORY_IDS = Object.keys(CATEGORIES);

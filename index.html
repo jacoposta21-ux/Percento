@@ -2,31 +2,38 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>PERCENTO: compare the incomparable</title>
-  <meta name="description" content="A higher-or-lower game with real, verified percentages about things that have nothing to do with each other.">
-  <meta name="theme-color" content="#fff7ec">
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%25%3C/text%3E%3C/svg%3E">
+  <meta name="description" content="Which percentage is higher? A game of real statistics about things that have nothing to do with each other.">
+  <meta name="theme-color" content="#0e1016">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%233ddbb0'/%3E%3Ctext x='50' y='72' font-size='64' font-weight='900' text-anchor='middle' font-family='Arial' fill='%230e1016'%3E%25%3C/text%3E%3C/svg%3E">
   <link rel="stylesheet" href="styles.css">
   <link rel="modulepreload" href="src/app.js">
   <link rel="modulepreload" href="src/data.js">
 </head>
 <body>
   <a class="skip" href="#app">Skip to game</a>
-  <header class="topbar">
-    <a class="logo" href="#/" aria-label="PERCENTO home">PERCENT<span>O</span></a>
-    <nav aria-label="Main">
-      <a href="#/endless">Endless</a>
-      <a href="#/daily">Daily</a>
-      <a href="#/sources">Sources</a>
-    </nav>
-  </header>
-  <main id="app" tabindex="-1">
-    <noscript><p>PERCENTO needs JavaScript to run.</p></noscript>
-  </main>
-  <footer class="footer">
-    <p>Every number is real and sourced. The comparisons are absurd on purpose.</p>
-  </footer>
+  <div class="layout">
+    <aside class="sidebar" aria-label="Navigation">
+      <a class="logo" href="#/" aria-label="PERCENTO, play">PERCENT<span class="logo-o">%</span></a>
+      <nav class="nav" aria-label="Main">
+        <a href="#/" data-route="play"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11.5 12 4l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg><span>Play</span></a>
+        <a href="#/daily" data-route="daily"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 2v2H5a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-2V2h-2v2H9V2zm-2 8h14v9H5zm2 2v2h2v-2zm4 0v2h2v-2z"/></svg><span>Daily</span></a>
+        <a href="#/leaderboard" data-route="leaderboard"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h12v2h3v3a5 5 0 0 1-4.6 5A6 6 0 0 1 13 16.9V19h4v2H7v-2h4v-2.1A6 6 0 0 1 7.6 13 5 5 0 0 1 3 8V5h3zm0 4H5v1a3 3 0 0 0 1.2 2.4A6 6 0 0 1 6 9zm12 0v2a6 6 0 0 1-.2 1.4A3 3 0 0 0 19 8V7z"/></svg><span>Leaderboard</span></a>
+        <a href="#/sources" data-route="sources"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 3h10l4 4v14H5zm9 1.5V8h3.5zM8 11v2h8v-2zm0 4v2h8v-2z"/></svg><span>Sources</span></a>
+        <a href="#/settings" data-route="settings"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10.3 2h3.4l.5 2.6 1.7.9 2.4-1.2 2.4 2.4-1.2 2.4.9 1.7 2.6.5v3.4l-2.6.5-.9 1.7 1.2 2.4-2.4 2.4-2.4-1.2-1.7.9-.5 2.6h-3.4l-.5-2.6-1.7-.9-2.4 1.2-2.4-2.4 1.2-2.4-.9-1.7L2 13.7v-3.4l2.6-.5.9-1.7-1.2-2.4 2.4-2.4 2.4 1.2 1.7-.9zM12 9a3 3 0 1 0 0 6 3 3 0 0 0 0-6z"/></svg><span>Settings</span></a>
+      </nav>
+      <div class="side-invite">
+        <p class="side-invite-title">🔥 Challenge your friends</p>
+        <p>Share the Daily Challenge and see who knows the world better.</p>
+        <button class="btn btn-ghost" type="button" data-invite>Share PERCENTO</button>
+      </div>
+    </aside>
+    <main id="app" tabindex="-1">
+      <noscript><p>PERCENTO needs JavaScript to run.</p></noscript>
+    </main>
+    <aside class="panel" id="panel" aria-label="Categories and leaderboard"></aside>
+  </div>
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
   <script type="module" src="src/app.js"></script>
 </body>
