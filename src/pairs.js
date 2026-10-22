@@ -34,10 +34,8 @@ const pick = (list, rng) => list[Math.floor(rng() * list.length)];
 
 /**
  * Creates a stateful generator for one session.
- * next(champion) returns { a, b, fresh } where `a` is the card that stays
- * (the champion) and `b` the newcomer. With no champion, or when the champion
- * has nothing legal left above it, a fresh pair of two new cards is drawn.
- * Returns null when the pool has no legal pair left at all.
+ * next() returns { a, b }: two cards never shown together before, preferring
+ * cards not seen yet in this session. Returns null when no legal pair is left.
  */
 export function createPairGenerator(pool, rng = Math.random) {
   // Sort by id so the result never depends on file order.
@@ -48,45 +46,30 @@ export function createPairGenerator(pool, rng = Math.random) {
   const legalFor = (card) =>
     entries.filter((e) => isLegalPair(card, e) && !usedPairs.has(pairKey(card, e)));
 
-  function chooseChallenger(champion, legal) {
-    // Keep the answer a coin flip: half the time the newcomer is higher.
-    // Decided first, so the other preferences cannot skew it.
-    const higher = legal.filter((e) => e.value > champion.value);
-    const lower = legal.filter((e) => e.value < champion.value);
-    let candidates = higher.length && lower.length ? (rng() < 0.5 ? higher : lower) : legal;
-    const fresh = candidates.filter((e) => !seenIds.has(e.id));
-    if (fresh.length) candidates = fresh;
-    const cross = candidates.filter((e) => isCrossFamily(champion, e));
+  function chooseOpponent(a, legal) {
+    // Cards not seen yet come first, then a coin flip keeps the answer
+    // balanced: half the time the right card is higher.
+    const fresh = legal.filter((e) => !seenIds.has(e.id));
+    let candidates = fresh.length ? fresh : legal;
+    const higher = candidates.filter((e) => e.value > a.value);
+    const lower = candidates.filter((e) => e.value < a.value);
+    if (higher.length && lower.length) candidates = rng() < 0.5 ? higher : lower;
+    const cross = candidates.filter((e) => isCrossFamily(a, e));
     if (cross.length && rng() < RULES.crossFamilyBias) candidates = cross;
     return pick(candidates, rng);
   }
 
-  function commit(a, b, fresh) {
-    usedPairs.add(pairKey(a, b));
-    seenIds.add(a.id);
-    seenIds.add(b.id);
-    return { a, b, fresh };
-  }
-
-  function freshPair() {
-    const unseen = entries.filter((e) => !seenIds.has(e.id) && legalFor(e).length);
-    const starters = unseen.length ? unseen : entries.filter((e) => legalFor(e).length);
-    if (!starters.length) return null;
-    const a = pick(starters, rng);
-    return commit(a, chooseChallenger(a, legalFor(a)), true);
-  }
-
   return {
-    next(champion = null) {
-      if (champion) {
-        const legal = legalFor(champion);
-        // A champion with nothing legal above it would make the answer obvious:
-        // retire it and start a fresh pair instead.
-        if (legal.some((e) => e.value > champion.value)) {
-          return commit(champion, chooseChallenger(champion, legal), false);
-        }
-      }
-      return freshPair();
+    next() {
+      const unseen = entries.filter((e) => !seenIds.has(e.id) && legalFor(e).length);
+      const starters = unseen.length ? unseen : entries.filter((e) => legalFor(e).length);
+      if (!starters.length) return null;
+      const a = pick(starters, rng);
+      const b = chooseOpponent(a, legalFor(a));
+      usedPairs.add(pairKey(a, b));
+      seenIds.add(a.id);
+      seenIds.add(b.id);
+      return { a, b };
     },
     usedPairs,
   };

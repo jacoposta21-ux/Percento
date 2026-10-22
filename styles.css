@@ -60,7 +60,6 @@ button { font: inherit; }
 main { padding: 16px 16px 96px; min-width: 0; }
 main:focus { outline: none; }
 .panel { padding: 0 16px 96px; display: grid; gap: 16px; align-content: start; }
-@media (max-width: 899px) { .panel-categories { display: none; } }
 
 @media (min-width: 900px) {
   .layout { grid-template-columns: 230px minmax(0, 1fr); }
@@ -173,6 +172,13 @@ main:focus { outline: none; }
 .feedback { min-height: 1.4em; margin: 0 0 8px; font-weight: 800; font-size: 1.08rem; }
 .feedback.ok { color: var(--ok); }
 .feedback.ko { color: var(--ko); }
+/* Shrinking bar: the next pair is coming by itself. */
+.auto-next { display: block; height: 4px; margin-top: 10px; border-radius: 999px; background: var(--accent); transform-origin: left; animation: auto-next var(--t) linear forwards; }
+@keyframes auto-next { to { transform: scaleX(0); } }
+.reduce-motion .auto-next { animation: none; opacity: 0.5; }
+.side-links { display: none; gap: 4px; margin-top: 12px; }
+@media (min-width: 900px) { .side-links { display: flex; } }
+.side-links a { display: inline-flex; align-items: center; min-height: 44px; padding: 0 8px; color: var(--muted); font-size: 0.85rem; }
 .dial-track { fill: none; stroke: var(--surface-2); stroke-width: 14; stroke-linecap: round; }
 .dial-tick { stroke: var(--muted); stroke-width: 1.2; }
 .dial-tick.major { stroke-width: 2.2; }
@@ -188,25 +194,7 @@ main:focus { outline: none; }
 .dots span.ko { background: var(--ko); }
 .dots span.now { outline: 2px solid var(--text); outline-offset: 2px; }
 
-/* ---------- examples ---------- */
-.examples { margin-top: 26px; }
-.examples-head { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-bottom: 12px; }
-.examples-head h2 { margin: 0; font-size: 1.05rem; }
-.examples-head a { display: inline-flex; align-items: center; justify-content: center; min-height: 44px; min-width: 44px; color: var(--accent); font-weight: 700; text-decoration: none; }
-.example-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 12px; }
-.example { background: var(--surface-2); border: 1px solid var(--line); border-radius: 14px; overflow: hidden; }
-.example-art { height: 64px; display: flex; align-items: center; justify-content: space-around; font-size: 2rem; background: linear-gradient(90deg, color-mix(in srgb, var(--ca) 40%, #10131a), color-mix(in srgb, var(--cb) 40%, #10131a)); }
-.example p { margin: 10px 12px; font-size: 0.88rem; }
-.example-vals { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; padding: 0 12px 12px; }
-.example-vals span { text-align: center; padding: 6px; border-radius: 999px; background: var(--surface); border: 1px solid var(--line); font-weight: 700; font-size: 0.85rem; }
-
 /* ---------- panel ---------- */
-.cat-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
-.cat-list a { display: flex; align-items: center; gap: 12px; min-height: 48px; text-decoration: none; border-radius: 12px; padding: 4px; }
-.cat-list a:hover { background: var(--surface-2); }
-.cat-icon { width: 40px; height: 40px; flex: none; border-radius: 12px; display: grid; place-items: center; font-size: 1.25rem; background: var(--c); }
-.cat-list strong { display: block; font-size: 0.95rem; }
-.cat-list small { color: var(--muted); }
 .board { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; }
 .board li { display: grid; grid-template-columns: 28px 26px 1fr auto; align-items: center; gap: 8px; padding: 9px 10px; border-radius: 12px; font-variant-numeric: tabular-nums; }
 .board li.me { background: color-mix(in srgb, var(--accent) 16%, transparent); color: var(--accent); font-weight: 800; }

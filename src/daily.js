@@ -1,6 +1,6 @@
 // Daily Challenge: date maths in Europe/Rome and the deterministic daily set.
 import { DAILY_TIMEZONE, RULES } from './config.js';
-import { createPairGenerator, hashString, higherOf, mulberry32 } from './pairs.js';
+import { createPairGenerator, hashString, mulberry32 } from './pairs.js';
 
 const partsFormatter = new Intl.DateTimeFormat('en-GB', {
   timeZone: DAILY_TIMEZONE,
@@ -67,15 +67,14 @@ export function dailyPool(pool, dateStr) {
 
 /** The 10 pairs for a date. Same input data and date → same pairs, everywhere. */
 export function dailyPairs(pool, dateStr, count = RULES.dailyPairs) {
-  const rng = mulberry32(hashString(`percento-daily:${dateStr}`));
+  // v2: since every round became two new cards, the seed changed with the format.
+  const rng = mulberry32(hashString(`percento-daily-v2:${dateStr}`));
   const gen = createPairGenerator(dailyPool(pool, dateStr), rng);
   const pairs = [];
-  let champion = null;
   while (pairs.length < count) {
-    const pair = gen.next(champion);
+    const pair = gen.next();
     if (!pair) break;
     pairs.push(pair);
-    champion = higherOf(pair);
   }
   return pairs;
 }

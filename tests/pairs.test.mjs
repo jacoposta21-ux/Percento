@@ -1,7 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { loadEntries } from '../scripts/lib/data.mjs';
-import { createPairGenerator, higherOf, isCrossFamily, isLegalPair, mulberry32, pairKey } from '../src/pairs.js';
+import { createPairGenerator, isCrossFamily, isLegalPair, mulberry32, pairKey } from '../src/pairs.js';
 import { RULES } from '../src/config.js';
 import { simulate } from '../scripts/simulate.mjs';
 
@@ -24,36 +24,30 @@ test('cross-family bias holds across many seeds', () => {
   }
 });
 
-test('the champion stays and the newcomer is higher about half the time', () => {
+test('every round is two new cards, the right one higher about half the time', () => {
   const gen = createPairGenerator(POOL, mulberry32(7));
-  let champion = null;
-  let higherNew = 0;
-  let total = 0;
-  for (let i = 0; i < 400; i++) {
-    const pair = gen.next(champion);
-    if (champion && !pair.fresh) {
-      assert.equal(pair.a.id, champion.id);
-      total++;
-      if (pair.b.value > pair.a.value) higherNew++;
-    }
-    champion = higherOf(pair);
+  const seen = new Set();
+  let rightHigher = 0;
+  const rounds = Math.floor(POOL.length / 2) - 10;
+  for (let i = 0; i < rounds; i++) {
+    const { a, b } = gen.next();
+    assert.ok(!seen.has(a.id) && !seen.has(b.id), `card reused in round ${i}`);
+    seen.add(a.id);
+    seen.add(b.id);
+    if (b.value > a.value) rightHigher++;
   }
-  const share = higherNew / total;
-  assert.ok(share > 0.3 && share < 0.7, `newcomer higher share ${share}`);
+  const share = rightHigher / rounds;
+  assert.ok(share > 0.3 && share < 0.7, `right card higher share ${share}`);
 });
 
 test('no pair repeats within a session, even across runs', () => {
   const gen = createPairGenerator(POOL, mulberry32(3));
   const seen = new Set();
-  for (let run = 0; run < 30; run++) {
-    let champion = null;
-    for (let i = 0; i < 15; i++) {
-      const pair = gen.next(champion);
-      const key = pairKey(pair.a, pair.b);
-      assert.ok(!seen.has(key), `repeat ${key}`);
-      seen.add(key);
-      champion = Math.random() < 0.7 ? higherOf(pair) : null;
-    }
+  for (let i = 0; i < 450; i++) {
+    const pair = gen.next();
+    const key = pairKey(pair.a, pair.b);
+    assert.ok(!seen.has(key), `repeat ${key}`);
+    seen.add(key);
   }
 });
 
@@ -72,7 +66,7 @@ test('a tiny pool is exhausted gracefully', () => {
     { id: 'y', category: 'space', value: 50 },
   ];
   const gen = createPairGenerator(tiny, mulberry32(1));
-  assert.ok(gen.next(null));
-  assert.equal(gen.next(null), null);
+  assert.ok(gen.next());
+  assert.equal(gen.next(), null);
   assert.ok(RULES.minGap === 3);
 });

@@ -15,7 +15,9 @@ const RUNS_KEY = 'percento:runs';
 const DAILY_HISTORY_KEY = 'percento:dailyHistory';
 const MOTION_KEY = 'percento:reduceMotion';
 const TITLE = 'Which percentage is higher?';
-const dailyKey = (date) => `percento:daily:${date}`;
+const dailyKey = (date) => `percento:daily2:${date}`;
+// Pause on a right answer before the next pair appears by itself.
+const AUTO_NEXT_MS = 1600;
 const app = document.getElementById('app');
 const panel = document.getElementById('panel');
 let cleanup = [];
@@ -95,14 +97,7 @@ function leaderboardList(limit, highlightIndex = -1) {
 
 // ---------- side panel ----------
 function renderPanel() {
-  const counts = Object.fromEntries(CATEGORY_IDS.map((c) => [c, ENTRIES.filter((e) => e.category === c).length]));
   panel.replaceChildren(
-    h('section', { class: 'box panel-categories' },
-      h('h2', {}, 'Categories'),
-      h('ul', { class: 'cat-list' }, CATEGORY_IDS.filter((c) => counts[c]).map((c) => h('li', {},
-        h('a', { href: `#/sources/${c}`, style: `--c:${CATEGORIES[c].color}` },
-          h('span', { class: 'cat-icon', 'aria-hidden': 'true' }, CATEGORIES[c].emoji),
-          h('span', {}, h('strong', {}, CATEGORIES[c].label), h('small', {}, `${counts[c]} statistics`))))))),
     h('section', { class: 'box' },
       h('h2', {}, 'Leaderboard ', h('small', {}, '(this device)')),
       leaderboardList(5)),
@@ -120,26 +115,13 @@ async function invite() {
   else if (result === 'failed') toast(`Copy this link: ${shareUrl()}`);
 }
 
-function examples() {
-  const rng = mulberry32(hashString(`examples:${romeDate()}`));
-  const gen = createPairGenerator(ENTRIES, rng);
-  const pairs = [];
-  for (let i = 0; i < 3; i++) { const p = gen.next(null); if (p) pairs.push(p); }
-  if (!pairs.length) return null;
-  return h('section', { class: 'box examples' },
-    h('div', { class: 'examples-head' }, h('h2', {}, '💡 Example questions'), h('a', { href: '#/sources' }, 'See all →')),
-    h('div', { class: 'example-grid' }, pairs.map(({ a, b }) => h('article', { class: 'example', style: `--ca:${colorOf(a)};--cb:${colorOf(b)}` },
-      h('div', { class: 'example-art', 'aria-hidden': 'true' }, h('span', {}, a.emoji), h('span', {}, b.emoji)),
-      h('p', {}, h('strong', {}, a.text), ' vs ', h('strong', {}, b.text)),
-      h('div', { class: 'example-vals' }, h('span', {}, formatValue(a.value)), h('span', {}, formatValue(b.value)))))));
-}
-
 // ---------- the round ----------
 /**
  * Renders one pair. Options: pair, headline, pill {value, label}, progress (node),
- * showA (champion value already known), onAnswer(correct), onContinue(correct), continueLabel.
+ * onAnswer(correct), onContinue(correct), continueLabel. A right answer moves on
+ * by itself; a wrong one waits for the button so the player can read the sources.
  */
-function renderRound({ pair, headline, pill, progress, showA, onAnswer, onContinue, continueLabel = 'Continue' }) {
+function renderRound({ pair, headline, pill, progress, onAnswer, onContinue, continueLabel = 'Continue' }) {
   const dial = createDial();
   const cards = { a: pair.a, b: pair.b };
   let phase = 'ask';
@@ -148,12 +130,11 @@ function renderRound({ pair, headline, pill, progress, showA, onAnswer, onContin
 
   const card = (id) => {
     const e = cards[id];
-    const known = id === 'a' && showA;
-    const value = h('span', { class: 'card-value' }, known ? formatValue(e.value) : '?');
+    const value = h('span', { class: 'card-value' }, '?');
     const pick = h('button', {
       class: 'card-pick',
       type: 'button',
-      'aria-label': `${id === 'a' ? 'Left' : 'Right'} card: ${e.text}, ${e.detail}${known ? `, ${formatValue(e.value)}` : ''}. Pick as higher.`,
+      'aria-label': `${id === 'a' ? 'Left' : 'Right'} card: ${e.text}, ${e.detail}. Pick as higher.`,
       onclick: () => choose(id),
     },
     h('span', { class: 'card-badge' }, h('i', { 'aria-hidden': 'true' }, CATEGORIES[e.category].emoji), h('span', {}, CATEGORIES[e.category].label)),
@@ -183,11 +164,9 @@ function renderRound({ pair, headline, pill, progress, showA, onAnswer, onContin
     duel,
     h('div', { class: 'answers' }, dom.a.answer, dom.b.answer),
     h('div', { class: 'reveal' }, dial.el, h('div', { class: 'reveal-side' }, feedback, next)),
-    progress,
-    examples());
+    progress);
 
-  if (showA) dial.show('a', pair.a.value);
-  dial.describe(showA ? `Percentometer showing the left card at ${formatValue(pair.a.value)}` : 'Percentometer, waiting for your pick');
+  dial.describe('Percentometer, waiting for your pick');
 
   async function choose(id) {
     if (phase !== 'ask') return;
@@ -200,7 +179,6 @@ function renderRound({ pair, headline, pill, progress, showA, onAnswer, onContin
     feedback.textContent = 'Measuring…';
     const swings = [];
     for (const k of ['a', 'b']) {
-      if (k === 'a' && showA) continue;
       const target = cards[k].value;
       swings.push(dial.swing(k, target, (r) => {
         dom[k].value.textContent = formatReading(r, target);
@@ -220,9 +198,15 @@ function renderRound({ pair, headline, pill, progress, showA, onAnswer, onContin
     dial.describe(`Percentometer: left card ${formatValue(pair.a.value)}, right card ${formatValue(pair.b.value)}`);
     feedback.className = `feedback ${correct ? 'ok' : 'ko'}`;
     feedback.textContent = `${correct ? '✓' : '✗'} ${pickFrom(correct ? RIGHT_QUIPS : WRONG_QUIPS)}`;
-    next.hidden = false;
-    next.focus({ preventScroll: true });
     phase = 'done';
+    if (correct) {
+      feedback.append(h('span', { class: 'auto-next', style: `--t:${AUTO_NEXT_MS}ms`, 'aria-hidden': 'true' }));
+      const timer = setTimeout(advance, AUTO_NEXT_MS);
+      cleanup.push(() => clearTimeout(timer));
+    } else {
+      next.hidden = false;
+      next.focus({ preventScroll: true });
+    }
   }
 
   function advance() {
@@ -245,24 +229,21 @@ let sessionGen = null;
 function startEndless() {
   if (!playable(ENTRIES)) return calibrating();
   if (!sessionGen) sessionGen = createPairGenerator(ENTRIES, Math.random);
-  let champion = null;
   let score = 0;
   let best = load(BEST_KEY, 0) || 0;
 
   const round = () => {
-    const pair = sessionGen.next(champion);
+    const pair = sessionGen.next();
     if (!pair) return endlessOver(score, best, true);
     renderRound({
       pair,
       headline: pickFrom(HEADLINES),
       pill: { value: score, label: `Streak · best ${best}` },
       progress: h('div', { class: 'progress' }, h('span', {}, `Score ${score}`), h('span', {}, `Personal best ${best}`)),
-      showA: champion !== null && !pair.fresh,
       onContinue: (correct) => {
         if (!correct) return endlessOver(score, best, false);
         score++;
         if (score > best) { best = score; save(BEST_KEY, best); }
-        champion = higherOf(pair);
         round();
       },
     });
@@ -316,7 +297,6 @@ function startDaily() {
       headline: headlines[i],
       pill: { value: state.answers.filter(Boolean).length, label: 'Correct today' },
       progress: h('div', { class: 'progress' }, h('span', { class: 'status' }, `Daily ${date} · Pair ${i + 1} of ${pairs.length}`), dots(i)),
-      showA: i > 0 && !pair.fresh,
       continueLabel: i === pairs.length - 1 ? 'See results' : 'Next pair',
       onAnswer: (correct) => {
         state.answers[i] = correct;

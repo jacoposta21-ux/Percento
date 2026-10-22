@@ -82,8 +82,23 @@ async function audit(page, label) {
 const cardTexts = (page) => page.$$eval('.card-text', (els) => els.map((e) => e.textContent));
 const readValue = async (page, sel) => parseFloat((await page.textContent(`${sel} .card-value`)).replace('%', ''));
 
+// Waits for the verdict. Returns true for a right answer.
 async function waitReveal(page) {
-  await page.waitForSelector('.continue:not([hidden])', { timeout: 8000 });
+  await page.waitForSelector('.feedback.ok, .feedback.ko', { timeout: 8000 });
+  return Boolean(await page.$('.feedback.ok'));
+}
+
+// A right answer must move on by itself; a wrong one must wait for the button.
+async function afterVerdict(page, label, correct, { keyboard = false, last = false } = {}) {
+  if (correct) {
+    check(await page.isHidden('.continue'), `${label}: no Continue button after a right answer`);
+    if (!last) await page.waitForSelector('.card-pick:not([disabled])', { timeout: 5000 });
+    return;
+  }
+  await page.waitForSelector('.continue:not([hidden])', { timeout: 3000 });
+  await page.waitForTimeout(1900);
+  check(await page.isVisible('.continue'), `${label}: wrong answer should wait for the button`);
+  if (keyboard) await page.keyboard.press('Enter'); else await page.click('.continue');
 }
 
 // ---------- scenarios ----------
@@ -93,34 +108,29 @@ async function playEndless(page, label, { keyboard = false } = {}) {
   await audit(page, `${label} endless round`);
   let rounds = 0;
   let correctStreak = 0;
-  let lastHigher = null;
+  const seen = new Set();
   while (rounds < 60) {
     const texts = await cardTexts(page);
-    // A champion with nothing higher left is retired: the round starts fresh with both values hidden.
-    const fresh = (await page.textContent('.card-a .card-value')).trim() === '?';
-    if (lastHigher && !fresh) check(texts[0] === lastHigher, `${label}: higher card should stay on top (round ${rounds})`);
-    // Alternate inputs; after a few rounds answer wrong on purpose to end.
+    check(texts.every((t) => !seen.has(t)), `${label}: round ${rounds} should show two new cards`);
+    texts.forEach((t) => seen.add(t));
+    const hidden = await page.$$eval('.card-value', (els) => els.every((e) => e.textContent.trim() === '?'));
+    check(hidden, `${label}: both values hidden before the pick (round ${rounds})`);
+    // Alternate inputs; a wrong answer ends the run.
     const pickA = rounds % 2 === 0;
     if (keyboard) await page.keyboard.press(pickA ? '1' : 'ArrowDown');
     else await page.click(pickA ? '.card-a .card-pick' : '.card-b .card-pick');
-    await waitReveal(page);
-    if (rounds === 0) await audit(page, `${label} endless reveal`);
+    const ok = await waitReveal(page);
     const [va, vb] = [await readValue(page, '.card-a'), await readValue(page, '.card-b')];
     const correct = pickA ? va > vb : vb > va;
     check(Math.abs(va - vb) >= 3, `${label}: pair values ${va} and ${vb} closer than 3 points`);
-    const ok = await page.$('.feedback.ok');
-    check(Boolean(ok) === correct, `${label}: feedback does not match answer`);
+    check(ok === correct, `${label}: feedback does not match answer`);
     const sources = await page.$$eval('.card-source:not([hidden]) a', (as) => as.map((a) => a.href));
     check(sources.length === 2, `${label}: both sources shown after reveal`);
+    if (!correct) await audit(page, `${label} endless reveal`);
     rounds++;
-    if (!correct) {
-      if (keyboard) await page.keyboard.press('Enter'); else await page.click('.continue');
-      break;
-    }
-    correctStreak++;
-    lastHigher = va > vb ? texts[0] : texts[1];
-    if (keyboard) await page.keyboard.press('Enter'); else await page.click('.continue');
-    await page.waitForSelector('.card-pick:not([disabled])');
+    if (correct) correctStreak++;
+    await afterVerdict(page, label, correct, { keyboard });
+    if (!correct) break;
   }
   await page.waitForSelector('.big-score', { timeout: 5000 });
   const score = Number(await page.textContent('.big-score span'));
@@ -134,6 +144,7 @@ async function playDaily(page, context, label, { reloadAt = 4 } = {}) {
   await page.goto(`${BASE}#/daily`);
   await page.waitForSelector('.card-pick');
   const firstPair = await cardTexts(page);
+  let audited = false;
   for (let i = 0; i < 10; i++) {
     const status = await page.textContent('.status');
     check(status.includes(`Pair ${i + 1} of 10`), `${label}: expected pair ${i + 1}, got "${status}"`);
@@ -152,10 +163,9 @@ async function playDaily(page, context, label, { reloadAt = 4 } = {}) {
       check(s.includes('Pair 8 of 10'), `${label}: answered pair must not replay after reload (got "${s}")`);
       continue;
     }
-    await waitReveal(page);
-    if (i === 0) await audit(page, `${label} daily reveal`);
-    await page.click('.continue');
-    if (i < 9) await page.waitForSelector('.card-pick:not([disabled])');
+    const correct = await waitReveal(page);
+    if (!correct && !audited) { await audit(page, `${label} daily reveal`); audited = true; }
+    await afterVerdict(page, label, correct, { last: i === 9 });
   }
   await page.waitForSelector('.share-text');
   const grid = await page.textContent('.grid');
