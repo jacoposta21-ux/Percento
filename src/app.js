@@ -129,7 +129,7 @@ function renderPanel() {
     h('section', { class: 'box friends' },
       icon('globe', 'icon icon-big'),
       h('h2', {}, 'Play online'),
-      h('p', { class: 'muted' }, 'Strangers or friends, up to 10 players. Same cards, 15 seconds each. Last one standing wins.'),
+      h('p', { class: 'muted' }, 'Strangers or friends, up to 10 players. Last one standing, or closest guess over 10 cards.'),
       h('a', { class: 'btn btn-primary', href: '#/online' }, 'Find a game')));
   online.init().then(() => worldBoard(board, 5));
 }
@@ -294,15 +294,33 @@ function home() {
       h('p', { class: 'lede' }, 'Real statistics about things that have nothing in common. Pick the bigger percentage and keep your streak alive.'),
       h('div', { class: 'actions' },
         h('a', { class: 'btn btn-primary btn-big', href: '#/endless' }, 'Play mixed'),
+        h('a', { class: 'btn', href: '#/guess' }, 'Closest guess'),
         h('a', { class: 'btn', href: '#/online' }, icon('globe'), 'Play online'),
         h('a', { class: 'btn', href: '#/daily' }, 'Daily challenge')),
       h('p', { class: 'hero-meta' }, h('span', {}, `Best streak ${best}`), h('span', {}, `${ENTRIES.length} statistics`), h('span', {}, `${cats.length} categories`))),
-    cats.length ? h('section', { class: 'cat-section' },
-      h('div', { class: 'section-head' }, h('h2', {}, 'Play by category'), h('p', { class: 'muted' }, 'Every pair from one topic. Harder than it looks.')),
-      h('ul', { class: 'cat-grid' }, cats.map((c) => h('li', {},
-        h('a', { class: 'cat-tile', href: `#/endless/${c}`, style: `--c:${CATEGORIES[c].color}` },
-          icon(c), h('strong', {}, CATEGORIES[c].label),
-          h('small', {}, `${categoryPool(c).length} stats · best ${load(catBestKey(c), 0) || 0}`)))))) : null);
+    cats.length ? categorySection(cats) : null);
+}
+
+// Category tiles, for either game: "higher or lower" or "closest guess".
+function categorySection(cats) {
+  const KEY = 'percento:homeMode';
+  const grid = h('ul', { class: 'cat-grid' });
+  const note = h('p', { class: 'muted' });
+  const buttons = [['endless', 'Higher or lower'], ['guess', 'Closest guess']].map(([id, label]) =>
+    h('button', { class: 'seg', type: 'button', 'data-mode': id, onclick: () => show(id) }, label));
+  const show = (mode) => {
+    save(KEY, mode);
+    for (const b of buttons) b.setAttribute('aria-pressed', String(b.dataset.mode === mode));
+    note.textContent = mode === 'guess' ? 'Ten cards from one topic. Guess each percentage.' : 'Every pair from one topic. Harder than it looks.';
+    grid.replaceChildren(...cats.map((c) => h('li', {},
+      h('a', { class: 'cat-tile', href: `#/${mode}/${c}`, style: `--c:${CATEGORIES[c].color}` },
+        icon(c), h('strong', {}, CATEGORIES[c].label),
+        h('small', {}, `${categoryPool(c).length} stats · best ${load(mode === 'guess' ? guessBestKey(c) : catBestKey(c), 0) || 0}`)))));
+  };
+  show(load(KEY, 'endless') === 'guess' ? 'guess' : 'endless');
+  return h('section', { class: 'cat-section' },
+    h('div', { class: 'section-head' }, h('h2', {}, 'Play by category'), h('div', { class: 'segmented', role: 'group', 'aria-label': 'Game for the categories' }, buttons)),
+    note, grid);
 }
 
 // ---------- endless ----------
@@ -360,6 +378,211 @@ function endlessOver({ cat, score, best, exhausted }) {
       h('a', { class: 'btn', href: '#/' }, cat ? 'Other categories' : 'Play by category'),
       h('a', { class: 'btn', href: '#/online' }, 'Play online')),
     cat ? null : h('section', { class: 'box' }, h('h2', {}, 'Your best runs'), leaderboardList(5, myIndex)));
+}
+
+// ---------- closest guess ----------
+// One card per round; set the percentage you think it is. 100 points for a
+// bull's-eye, 3 fewer for every point off. Solo here, online in room().
+const GUESS_ROUNDS = 10;
+const GUESS_TIME_MS = 15000;
+const guessPoints = (guess, value) => Math.max(0, Math.round(100 - 3 * Math.abs(guess - value)));
+const guessBestKey = (cat) => (cat ? `percento:guessBest:${cat}` : 'percento:guessBest');
+
+/** `n` different cards drawn with `rng` from the pool (sorted by id, so seeds agree everywhere). */
+function guessCards(pool, rng, n) {
+  const list = [...pool].sort((x, y) => (x.id < y.id ? -1 : 1));
+  for (let i = 0; i < Math.min(n, list.length); i++) {
+    const j = i + Math.floor(rng() * (list.length - i));
+    [list[i], list[j]] = [list[j], list[i]];
+  }
+  return list.slice(0, n);
+}
+
+// Labels near the ends of the ruler lean inwards so they stay on screen.
+const edge = (v) => (v < 8 ? ' edge-l' : v > 92 ? ' edge-r' : '');
+const FILL_ORDER = Array.from({ length: 100 }, (_, i) => (9 - Math.floor(i / 10)) * 10 + (i % 10));
+
+/**
+ * Renders one guessing round and returns a controller:
+ *   reveal({ pins: [{ name, guess, me }], message }) → Promise (animates the truth in)
+ * Options: entry, headline, pill, progress, deadline (local ms), onLock(guess, touched).
+ * The guess locks with the button, Enter, or by itself when the clock runs out.
+ */
+function renderGuess({ entry, headline, pill, progress, deadline, onLock }) {
+  const color = colorOf(entry);
+  let guess = 50;
+  let touched = false;
+  let locked = false;
+  const cells = Array.from({ length: 100 }, () => h('i'));
+  const paint = (cls, n) => FILL_ORDER.forEach((c, k) => cells[c].classList.toggle(cls, k < n));
+  const value = h('span', { class: 'card-value' }, '?');
+  const readout = h('output', { class: 'guess-readout', 'aria-live': 'off' }, '50', h('small', {}, '%'));
+  const slider = h('input', { class: 'guess-slider', type: 'range', min: 0, max: 100, step: 1, value: 50, 'aria-label': `Your guess for: ${entry.text}` });
+  const set = (v) => {
+    guess = Math.max(0, Math.min(100, Math.round(v)));
+    touched = true;
+    slider.value = String(guess);
+    readout.firstChild.textContent = String(guess);
+    slider.style.setProperty('--p', `${guess}%`);
+    paint('g', guess);
+  };
+  slider.addEventListener('input', () => set(Number(slider.value)));
+  const nudge = (d) => h('button', { class: 'btn nudge', type: 'button', 'aria-label': `${d > 0 ? 'Up' : 'Down'} one point`, onclick: () => !locked && set(guess + d) }, d > 0 ? '+' : '−');
+  const lockBtn = h('button', { class: 'btn btn-primary lock', type: 'button', onclick: () => lock() }, 'Lock in');
+  const status = h('p', { class: 'guess-status', role: 'status', 'aria-live': 'polite' }, 'Drag to set your percentage, then lock it in.');
+  const clockB = h('b', {}, '15');
+  const clock = h('div', { class: 'round-timer', role: 'timer', 'aria-label': 'Time left' },
+    h('span', { class: 'round-timer-bar', style: `--t:${Math.max(0, deadline - Date.now())}ms` }), clockB);
+  const ruler = h('div', { class: 'guess-ruler', hidden: true, 'aria-hidden': 'true' });
+  const card = h('div', { class: 'card guess-card', style: `--c:${color}` },
+    h('div', { class: 'card-pick' },
+      h('span', { class: 'card-top' }, h('span', { class: 'card-cat' }, icon(entry.category), CATEGORIES[entry.category].label), h('span', { class: 'card-side' }, 'How much?')),
+      h('span', { class: 'card-text' }, entry.text),
+      h('span', { class: 'card-detail' }, entry.detail),
+      h('span', { class: 'card-foot' }, h('span', { class: 'waffle', 'aria-hidden': 'true' }, cells), value)),
+    h('p', { class: 'card-source', hidden: true }, 'Source: ', h('a', { href: entry.sourceUrl, target: '_blank', rel: 'noopener' }, entry.source), ` · ${entry.year}`));
+  const controls = h('div', { class: 'guess-controls' }, readout, slider,
+    h('div', { class: 'guess-buttons' }, nudge(-1), nudge(+1), lockBtn));
+
+  mount(
+    h('header', { class: 'round-head' },
+      h('div', {}, h('p', { class: 'kicker' }, headline), h('h1', { class: 'screen-title' }, 'Guess the percentage'), h('p', { class: 'sub' }, 'Closest wins. 15 seconds.')),
+      pill ? h('div', { class: 'pill' }, icon('bolt', 'icon bolt'), h('span', {}, h('b', {}, String(pill.value)), h('small', {}, pill.label))) : null),
+    clock,
+    h('div', { class: 'guess-stage' }, card, h('div', { class: 'guess-side' }, controls, status, ruler)),
+    progress);
+  slider.style.setProperty('--p', '50%');
+  paint('g', 50);
+  touched = false;
+
+  let lastSec = null;
+  const timer = setInterval(() => {
+    const left = deadline - Date.now();
+    const secs = Math.max(0, Math.ceil(left / 1000));
+    if (secs !== lastSec) {
+      if (secs <= 5 && secs > 0 && !locked) audio.sfx('hurry');
+      clockB.textContent = String(secs);
+      lastSec = secs;
+    }
+    clock.classList.toggle('hurry', left <= 5000);
+    // Lock a moment early so the guess reaches the server before its clock stops.
+    if (left <= 300 && !locked) lock(true);
+  }, 100);
+  cleanup.push(() => clearInterval(timer));
+
+  function lock(auto = false) {
+    if (locked) return;
+    locked = true;
+    slider.disabled = true;
+    for (const b of controls.querySelectorAll('button')) b.disabled = true;
+    audio.sfx(auto ? 'timeout' : 'tap');
+    status.textContent = touched ? `Locked in at ${guess}%. Waiting for the reveal…` : 'Time is up: no guess this round.';
+    onLock?.(guess, touched);
+  }
+
+  setKeys((ev) => {
+    if (locked) return;
+    if (ev.key === 'Enter') { ev.preventDefault(); lock(); }
+    else if (ev.target !== slider && (ev.key === 'ArrowRight' || ev.key === 'ArrowUp')) { ev.preventDefault(); set(guess + 1); }
+    else if (ev.target !== slider && (ev.key === 'ArrowLeft' || ev.key === 'ArrowDown')) { ev.preventDefault(); set(guess - 1); }
+  });
+
+  return {
+    get locked() { return locked; },
+    lock,
+    /** Shows the true value, every guess on a ruler and a message. */
+    async reveal({ pins, message }) {
+      lock(true);
+      clearInterval(timer);
+      clock.classList.add('stopped');
+      paint('g', 0);
+      const truth = entry.value;
+      const dial = createDial();
+      await dial.swing('a', truth, (r) => { value.textContent = formatReading(r, truth); paint('on', Math.round(r)); });
+      value.textContent = formatValue(truth);
+      paint('on', Math.round(truth));
+      card.querySelector('.card-source').hidden = false;
+      card.classList.add('revealed');
+      ruler.hidden = false;
+      ruler.replaceChildren(
+        h('span', { class: `pin truth${edge(truth)}`, style: `left:${truth}%` }, h('b', {}, formatValue(truth))),
+        ...pins.filter((p) => p.guess !== null).map((p, k) => h('span', { class: `pin${p.me ? ' me' : ''}${k % 2 ? ' low' : ''}${edge(p.guess)}`, style: `left:${p.guess}%` },
+          h('b', {}, p.name), h('small', {}, `${p.guess}%`))));
+      status.textContent = message;
+      status.classList.add('done');
+    },
+  };
+}
+
+function startGuess(cat = null) {
+  const pool = cat ? categoryPool(cat) : ENTRIES;
+  if (pool.length < 2) return calibrating();
+  const cards = guessCards(pool, Math.random, GUESS_ROUNDS);
+  const label = cat ? CATEGORIES[cat].label : 'Mixed';
+  const results = [];
+  let total = 0;
+
+  const dots = (i) => h('span', { class: 'dots', 'aria-hidden': 'true' },
+    cards.map((_, k) => h('span', { class: k < results.length ? (results[k].points >= 70 ? 'ok' : results[k].points > 0 ? 'mid' : 'ko') : (k === i ? 'now' : '') })));
+
+  const round = (i) => {
+    if (i >= cards.length) return guessOver({ cat, total, results });
+    const entry = cards[i];
+    let ctl = null;
+    ctl = renderGuess({
+      entry,
+      headline: `Closest guess · ${label} · card ${i + 1} of ${cards.length}`,
+      pill: { value: total, label: 'Points' },
+      progress: h('div', { class: 'progress' }, h('span', { class: 'status' }, `Card ${i + 1} of ${cards.length}`), dots(i)),
+      deadline: Date.now() + GUESS_TIME_MS,
+      onLock: (guess, touched) => {
+        const points = touched ? guessPoints(guess, entry.value) : 0;
+        total += points;
+        results.push({ entry, guess: touched ? guess : null, points });
+        // Let the lock sound land before the reveal starts.
+        setTimeout(async () => {
+          const off = touched ? Math.abs(guess - entry.value) : null;
+          await ctl.reveal({
+            pins: touched ? [{ name: 'You', guess, me: true }] : [],
+            message: off === null ? 'No guess, no points.' : off < 0.5 ? `Bull's-eye! +${points}` : `${Number.isInteger(off) ? off : off.toFixed(1)} points off · +${points}`,
+          });
+          audio.sfx(points >= 70 ? 'right' : points > 0 ? 'tick' : 'wrong');
+          const next = h('button', { class: 'btn btn-primary continue', type: 'button', onclick: () => go() }, i === cards.length - 1 ? 'See results' : 'Next card');
+          app.querySelector('.guess-side').append(next);
+          next.focus({ preventScroll: true });
+          let gone = false;
+          const go = () => { if (!gone) { gone = true; round(i + 1); } };
+          const auto = setTimeout(go, 4000);
+          cleanup.push(() => clearTimeout(auto));
+          setKeys((ev) => { if (ev.key === 'Enter') { ev.preventDefault(); go(); } });
+        }, 250);
+      },
+    });
+  };
+  round(0);
+}
+
+function guessOver({ cat, total, results }) {
+  const key = guessBestKey(cat);
+  const best = load(key, 0) || 0;
+  const newBest = total > best;
+  if (newBest) save(key, total);
+  audio.sfx(newBest ? 'win' : 'gameover');
+  setKeys((ev) => { if (ev.key === 'Enter') { ev.preventDefault(); startGuess(cat); } });
+  mount(
+    h('p', { class: 'kicker' }, `Closest guess · ${cat ? CATEGORIES[cat].label : 'Mixed'}`),
+    h('h1', { class: 'screen-title' }, total >= 800 ? 'Human calculator.' : total >= 550 ? 'Sharp eye.' : total >= 300 ? 'Not bad at all.' : 'The numbers fooled you.'),
+    h('p', { class: 'big-score' }, h('span', {}, String(total)), h('small', {}, `of ${results.length * 100} points`)),
+    h('p', { class: 'muted' }, newBest ? `New personal best: ${total}!` : `Personal best: ${Math.max(best, total)}`),
+    h('div', { class: 'actions' },
+      h('button', { class: 'btn btn-primary', type: 'button', onclick: () => startGuess(cat) }, 'Play again'),
+      h('a', { class: 'btn', href: '#/online' }, 'Guess against friends'),
+      h('a', { class: 'btn', href: '#/' }, 'Home')),
+    h('section', { class: 'box' }, h('h2', {}, 'Your guesses'),
+      h('ol', { class: 'board guess-recap' }, results.map((r, k) => h('li', {},
+        h('span', { class: 'rank' }, String(k + 1)), h('span', {}, ''),
+        h('span', { class: 'who' }, r.entry.text, h('small', {}, r.guess === null ? `no guess · real ${formatValue(r.entry.value)}` : `you ${r.guess}% · real ${formatValue(r.entry.value)}`)),
+        h('span', { class: 'score' }, `+${r.points}`))))));
 }
 
 // ---------- daily ----------
@@ -712,21 +935,39 @@ async function friends() {
     if (res.error) { message.textContent = res.error; btn.disabled = false; return; }
     location.hash = `#/room/${res.code}`;
   };
+  const MODE_KEY = 'percento:onlineMode';
+  const MODES = {
+    standing: ['Last one standing', 'Up to 10 players get the same pairs in the same order. 15 seconds per pair. One mistake and you are out: whoever goes furthest wins.'],
+    guess: ['Closest guess', 'One card at a time, the same for everyone. 15 seconds to set the percentage you think it is. 10 cards; the closest guesses score most.'],
+  };
+  let mode = MODES[load(MODE_KEY, 'standing')] ? load(MODE_KEY, 'standing') : 'standing';
+  const title = h('h1', { class: 'screen-title' });
+  const lede = h('p', { class: 'lede' });
+  const modeButtons = Object.entries(MODES).map(([id, [label]]) => h('button', { class: 'seg', type: 'button', 'data-mode': id, onclick: () => setMode(id) }, label));
+  const setMode = (id) => {
+    mode = id;
+    save(MODE_KEY, id);
+    title.textContent = MODES[id][0];
+    lede.textContent = MODES[id][1];
+    for (const b of modeButtons) b.setAttribute('aria-pressed', String(b.dataset.mode === id));
+  };
+  setMode(mode);
   mount(
     h('p', { class: 'kicker' }, 'Online'),
-    h('h1', { class: 'screen-title' }, 'Last one standing'),
-    h('p', { class: 'lede' }, 'Up to 10 players get the same cards in the same order. 15 seconds per card. One mistake and you are out: whoever goes furthest wins.'),
+    title,
+    h('div', { class: 'segmented', role: 'group', 'aria-label': 'Game mode' }, modeButtons),
+    lede,
     h('div', { class: 'online-grid' },
       h('section', { class: 'box box-feature' },
         icon('globe', 'icon icon-big'),
         h('h2', {}, 'Play with strangers'),
         h('p', { class: 'muted' }, 'Jump into the next public game. It starts 20 seconds after a second player joins, or at once with 10.'),
-        h('button', { class: 'btn btn-primary btn-big', type: 'button', onclick: (ev) => busy(ev.currentTarget, online.quickMatch) }, 'Find a game')),
+        h('button', { class: 'btn btn-primary btn-big', type: 'button', onclick: (ev) => busy(ev.currentTarget, () => online.quickMatch(mode)) }, 'Find a game')),
       h('section', { class: 'box form' },
         h('h2', {}, 'Room with friends'),
         h('p', { class: 'muted' }, 'Create a private room, send the link, start when everybody is in.'),
         h('label', { class: 'field' }, h('span', {}, 'Cards from'), category),
-        h('button', { class: 'btn', type: 'button', onclick: (ev) => busy(ev.currentTarget, () => online.createRoom(category.value || null)) }, 'Create a room')),
+        h('button', { class: 'btn', type: 'button', onclick: (ev) => busy(ev.currentTarget, () => online.createRoom(category.value || null, mode)) }, 'Create a room')),
       h('form', { class: 'box form', onsubmit: (ev) => {
         ev.preventDefault();
         const c = code.value.trim().toUpperCase();
@@ -793,7 +1034,9 @@ async function room(code) {
     const player = mine();
     // Mid-game, updates only refresh the live standings; the round is never interrupted.
     if (view === 'playing') { standingsBox?.replaceChildren(standings(true)); return; }
+    if (view === 'guess') return; // the guessing game runs on its own clock
     if (status === 'lobby') return lobby();
+    if (data.room.mode === 'guess') return guessGame();
     if (status === 'playing' && player?.alive && !out) return play();
     view = 'standings';
     results();
@@ -814,12 +1057,13 @@ async function room(code) {
     tick = setInterval(updateCountdown, 500);
     updateCountdown();
     const cat = data.room.category ? CATEGORIES[data.room.category]?.label : null;
+    const guessMode = data.room.mode === 'guess';
     mount(
-      h('p', { class: 'kicker' }, isPublic ? 'Public game' : 'Private room', cat ? ` · ${cat} only` : ''),
+      h('p', { class: 'kicker' }, isPublic ? 'Public game' : 'Private room', ` · ${guessMode ? 'Closest guess' : 'Last one standing'}`, cat ? ` · ${cat} only` : ''),
       h('h1', { class: 'screen-title' }, isPublic ? 'Finding players…' : `Room ${code}`),
       h('p', { class: 'lede' }, isPublic
         ? (n < 2 ? 'Waiting for at least one more player. The game starts 20 seconds after the second player joins, or at once with 10.' : h('span', {}, 'Game starts in ', countdown, `. ${n} of ${online.ROOM_SIZE} players.`))
-        : `${n} of ${online.ROOM_SIZE} players. Same cards for everyone, 15 seconds each, last one standing wins.`),
+        : `${n} of ${online.ROOM_SIZE} players. ${guessMode ? `${data.room.rounds} cards, ${data.room.round_seconds} seconds each to set your percentage. Closest scores most.` : 'Same cards for everyone, 15 seconds each, last one standing wins.'}`),
       h('div', { class: 'actions' },
         h('button', { class: isPublic ? 'btn' : 'btn btn-primary', type: 'button', onclick: async () => {
           const r = await shareResult(`Join my PERCENTO game ${code}: which percentage is higher? ${link}`);
@@ -868,6 +1112,123 @@ async function room(code) {
     round();
   }
 
+  // ---- closest guess, online: rounds follow the server clock ----
+  async function guessGame() {
+    view = 'guess';
+    clearInterval(tick);
+    const r = data.room;
+    const offset = await online.serverOffset().catch(() => 0);
+    if (location.hash !== hash) return;
+    const roundMs = r.round_seconds * 1000;
+    const period = (r.round_seconds + r.reveal_seconds) * 1000;
+    const start = Date.parse(r.started_at);
+    const cat = r.category && categoryPool(r.category).length >= MIN_CATEGORY_CARDS ? r.category : null;
+    const cards = guessCards(cat ? categoryPool(cat) : ENTRIES, mulberry32(Number(r.seed)), r.rounds);
+    const now = () => Date.now() + offset;
+    let shown = -1;
+    let phase = null;
+    let ctl = null;
+    let guesses = [];
+    let board = null;
+
+    const name = (id) => data.players.find((p) => p.user_id === id)?.username ?? '?';
+    const totals = (upTo) => {
+      const sum = new Map(data.players.map((p) => [p.user_id, 0]));
+      for (const g of guesses) if (g.round <= upTo && cards[g.round]) sum.set(g.user_id, (sum.get(g.user_id) || 0) + guessPoints(Number(g.guess), cards[g.round].value));
+      return [...sum.entries()].map(([id, pts]) => ({ id, name: name(id), pts })).sort((a, b) => b.pts - a.pts);
+    };
+    const table = (upTo) => h('ol', { class: 'board room-board' }, totals(upTo).slice(0, 10).map((t, k) => h('li', { class: t.id === me.id ? 'me' : '' },
+      h('span', { class: `rank rank-${k + 1}` }, String(k + 1)), h('span', {}, ''),
+      h('span', { class: 'who' }, t.name), h('span', { class: 'score' }, String(t.pts)))));
+    const refreshGuesses = async () => { guesses = await online.fetchGuesses(r.id).catch(() => guesses); };
+
+    const ask = (i) => {
+      shown = i;
+      phase = 'ask';
+      board = h('div', { class: 'box room-live' }, h('h2', {}, 'Points'), table(i - 1));
+      ctl = renderGuess({
+        entry: cards[i],
+        headline: `${r.is_public ? 'Public game' : `Room ${code}`} · card ${i + 1} of ${r.rounds}`,
+        pill: { value: totals(i - 1).find((t) => t.id === me.id)?.pts ?? 0, label: 'Your points' },
+        progress: board,
+        deadline: start + i * period + roundMs - offset,
+        onLock: (guess, touched) => { if (touched) online.submitGuess(code, i, guess).catch(() => {}); },
+      });
+    };
+
+    const reveal = async (i) => {
+      if (shown !== i) ask(i); // joined or reloaded during the reveal
+      phase = 'reveal';
+      ctl.lock(true);
+      // Give last-second guesses time to land, then show everyone's.
+      await new Promise((res) => setTimeout(res, 700));
+      await refreshGuesses();
+      if (shown !== i || location.hash !== hash) return;
+      const round = guesses.filter((g) => g.round === i);
+      const value = cards[i].value;
+      const dist = (g) => Math.abs(Number(g.guess) - value);
+      const bestDist = round.length ? Math.min(...round.map(dist)) : null;
+      const winners = round.filter((g) => dist(g) === bestDist).map((g) => g.user_id);
+      const mine = round.find((g) => g.user_id === me.id);
+      await ctl.reveal({
+        pins: round.map((g) => ({ name: g.user_id === me.id ? 'You' : name(g.user_id), guess: Number(g.guess), me: g.user_id === me.id })),
+        message: !round.length ? 'Nobody guessed this one.'
+          : winners.includes(me.id) ? `You were closest! +${guessPoints(Number(mine.guess), value)}`
+            : `${winners.map(name).join(' & ')} ${winners.length > 1 ? 'were' : 'was'} closest.${mine ? ` You: +${guessPoints(Number(mine.guess), value)}` : ' You did not guess.'}`,
+      });
+      audio.sfx(winners.includes(me.id) ? 'right' : 'tick');
+      board?.replaceChildren(h('h2', {}, 'Points'), table(i));
+    };
+
+    const final = async () => {
+      phase = 'final';
+      clearInterval(loop);
+      await refreshGuesses();
+      if (location.hash !== hash) return;
+      const ranking = totals(r.rounds - 1);
+      const top = ranking[0]?.pts ?? 0;
+      const winners = ranking.filter((t) => t.pts === top);
+      const iWon = winners.some((t) => t.id === me.id);
+      audio.sfx(iWon ? 'win' : 'gameover');
+      mount(
+        h('p', { class: 'kicker' }, `${r.is_public ? 'Public game' : `Room ${code}`} · Closest guess`),
+        h('h1', { class: 'screen-title' }, winners.length > 1 ? `🏆 It's a tie: ${winners.map((t) => t.name).join(' & ')}!` : iWon ? '🏆 You win!' : `🏆 ${winners[0]?.name ?? '?'} wins!`),
+        h('p', { class: 'big-score' }, h('span', {}, String(ranking.find((t) => t.id === me.id)?.pts ?? 0)), h('small', {}, `of ${r.rounds * 100} points`)),
+        h('section', { class: 'box' }, h('h2', {}, 'Final standings'), table(r.rounds - 1)),
+        h('div', { class: 'actions' },
+          h('button', { class: 'btn btn-primary', type: 'button', onclick: async () => {
+            const res = r.is_public ? await online.quickMatch('guess') : await online.createRoom(r.category, 'guess');
+            if (res.error) toast(res.error); else location.hash = `#/room/${res.code}`;
+          } }, r.is_public ? 'Find another game' : 'New room'),
+          h('a', { class: 'btn', href: '#/guess' }, 'Practise solo')));
+    };
+
+    const ready = h('span', { class: 'countdown' });
+    const step = () => {
+      if (location.hash !== hash) return;
+      const t = now() - start;
+      if (t < 0) {
+        if (phase !== 'ready') {
+          phase = 'ready';
+          audio.sfx('start');
+          mount(h('p', { class: 'kicker' }, 'Closest guess'), h('h1', { class: 'screen-title' }, 'Get ready…'),
+            h('p', { class: 'big-score' }, ready, h('small', {}, `${r.rounds} cards · ${r.round_seconds} seconds each`)));
+        }
+        ready.textContent = String(Math.ceil(-t / 1000));
+        return;
+      }
+      const i = Math.floor(t / period);
+      if (i >= r.rounds) { if (phase !== 'final') final(); return; }
+      const inRound = t - i * period < roundMs;
+      if (inRound && (shown !== i || phase !== 'ask')) ask(i);
+      else if (!inRound && (shown !== i || phase === 'ask')) reveal(i);
+    };
+    const loop = setInterval(step, 200);
+    cleanup.push(() => clearInterval(loop));
+    await refreshGuesses();
+    step();
+  }
+
   let fanfare = false;
   function results() {
     const status = data.room.status;
@@ -885,7 +1246,7 @@ async function room(code) {
       h('section', { class: 'box' }, h('h2', {}, 'Standings'), standings(false)),
       h('div', { class: 'actions' },
         h('button', { class: 'btn btn-primary', type: 'button', onclick: async () => {
-          const res = data.room.is_public ? await online.quickMatch() : await online.createRoom(data.room.category);
+          const res = data.room.is_public ? await online.quickMatch('standing') : await online.createRoom(data.room.category, 'standing');
           if (res.error) toast(res.error); else location.hash = `#/room/${res.code}`;
         } }, data.room.is_public ? 'Find another game' : 'New room'),
         h('a', { class: 'btn', href: '#/' }, 'Play solo')));
@@ -896,7 +1257,7 @@ async function room(code) {
 
 // ---------- router ----------
 const ROUTES = {
-  '': ['play', home], '#/': ['play', home], '#/endless': ['play', () => startEndless()], '#/friends': ['online', () => { location.hash = '#/online'; }],
+  '': ['play', home], '#/': ['play', home], '#/endless': ['play', () => startEndless()], '#/guess': ['play', () => startGuess()], '#/friends': ['online', () => { location.hash = '#/online'; }],
   '#/daily': ['daily', startDaily], '#/leaderboard': ['leaderboard', leaderboard],
   '#/sources': ['sources', () => sources()], '#/settings': ['account', settings], '#/review': ['sources', review],
   '#/account': ['account', () => account()], '#/account/new': ['account', () => account('signup')], '#/online': ['online', friends],
@@ -911,6 +1272,7 @@ function route() {
   if (!entry && hash.startsWith('#/sources/')) entry = ['sources', () => sources(hash.slice(10))];
   if (!entry && /^#\/room\/[A-Za-z0-9]{6}$/.test(hash)) entry = ['online', () => room(hash.slice(7).toUpperCase())];
   if (!entry && /^#\/endless\/[a-z]+$/.test(hash) && CATEGORIES[hash.slice(10)]) entry = ['play', () => startEndless(hash.slice(10))];
+  if (!entry && /^#\/guess\/[a-z]+$/.test(hash) && CATEGORIES[hash.slice(8)]) entry = ['play', () => startGuess(hash.slice(8))];
   entry ||= ROUTES[''];
   for (const a of document.querySelectorAll('.nav a')) {
     const active = a.dataset.route === entry[0];

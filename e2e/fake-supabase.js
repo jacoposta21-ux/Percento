@@ -7,12 +7,17 @@
   const DB_KEY = 'fake-supabase-db';
   const SESSION_KEY = 'fake-supabase-session';
   const read = () => JSON.parse(localStorage.getItem(DB_KEY) || 'null') || {
-    users: [], profiles: [], runs: [], daily_results: [], rooms: [], room_players: [], seq: 1,
+    users: [], profiles: [], runs: [], daily_results: [], rooms: [], room_players: [], room_guesses: [], seq: 1,
   };
   const write = (db) => localStorage.setItem(DB_KEY, JSON.stringify(db));
   const session = () => JSON.parse(sessionStorage.getItem(SESSION_KEY) || 'null');
   const uid = () => session()?.user.id ?? null;
   const err = (message) => ({ data: null, error: { message } });
+  // Guessing games run on short clocks here (15 s + 6 s × 10 rounds on the server).
+  const GUESS_CLOCK = { round_seconds: 4, reveal_seconds: 3, rounds: 3 };
+  const roomDefaults = (mode) => ({ mode: mode || 'standing', ...GUESS_CLOCK, started_at: null });
+  const startNow = (r) => { r.status = 'playing'; r.started_at = new Date(Date.now() + (r.mode === 'guess' ? 1500 : 0)).toISOString(); };
+  const roundOpens = (r, round) => Date.parse(r.started_at) + round * (r.round_seconds + r.reveal_seconds) * 1000;
 
   function tableRows(db, table) {
     if (table === 'leaderboard') {
@@ -23,6 +28,14 @@
         best.set(name, { username: name, best: Math.max(cur.best, r.score), runs: cur.runs + 1 });
       }
       return [...best.values()];
+    }
+    if (table === 'room_guesses') {
+      // Row level security: your own guesses, everyone's once the round's clock stops.
+      const me = uid();
+      return db.room_guesses.filter((g) => {
+        const r = db.rooms.find((x) => x.id === g.room_id);
+        return g.user_id === me || (r?.started_at && Date.now() >= roundOpens(r, g.round) + r.round_seconds * 1000);
+      });
     }
     if (table === 'daily_results') {
       return db.daily_results.map((d) => ({ ...d, profiles: { username: db.profiles.find((p) => p.id === d.user_id)?.username } }));
@@ -94,15 +107,18 @@
     const PUBLIC_START_MS = 3000;
     const tick = (r) => {
       const n = db.room_players.filter((p) => p.room_id === r.id).length;
+      if (r.status === 'playing' && r.mode === 'guess' && Date.now() >= roundOpens(r, r.rounds)) r.status = 'finished';
       if (r.status !== 'lobby' || !r.is_public) return;
       if (n >= 2 && !r.starts_at) r.starts_at = new Date(Date.now() + PUBLIC_START_MS).toISOString();
       if (n < 2) r.starts_at = null;
-      if (r.starts_at && Date.parse(r.starts_at) <= Date.now() && n >= 2) r.status = 'playing';
+      if (r.starts_at && Date.parse(r.starts_at) <= Date.now() && n >= 2) startNow(r);
     };
+    if (name === 'server_time') return { data: new Date().toISOString(), error: null };
     if (name === 'quick_match') {
-      let r = db.rooms.find((x) => x.is_public && x.status === 'lobby' && db.room_players.filter((p) => p.room_id === x.id).length < 10);
+      const mode = args?.room_mode || 'standing';
+      let r = db.rooms.find((x) => x.is_public && x.status === 'lobby' && x.mode === mode && db.room_players.filter((p) => p.room_id === x.id).length < 10);
       if (!r) {
-        r = { id: `room-${db.seq++}`, code: newCode(), host_id: me, seed: Math.floor(Math.random() * 2 ** 31), status: 'lobby', is_public: true, starts_at: null, category: null };
+        r = { id: `room-${db.seq++}`, code: newCode(), host_id: me, seed: Math.floor(Math.random() * 2 ** 31), status: 'lobby', is_public: true, starts_at: null, category: null, ...roomDefaults(mode) };
         db.rooms.push(r);
       }
       if (!db.room_players.some((p) => p.room_id === r.id && p.user_id === me)) {
@@ -113,7 +129,7 @@
       return { data: r.code, error: null };
     }
     if (name === 'create_room') {
-      const r = { id: `room-${db.seq++}`, code: newCode(), host_id: me, seed: Math.floor(Math.random() * 2 ** 31), status: 'lobby', is_public: false, starts_at: null, category: args?.room_category ?? null };
+      const r = { id: `room-${db.seq++}`, code: newCode(), host_id: me, seed: Math.floor(Math.random() * 2 ** 31), status: 'lobby', is_public: false, starts_at: null, category: args?.room_category ?? null, ...roomDefaults(args?.room_mode) };
       db.rooms.push(r);
       db.room_players.push({ room_id: r.id, user_id: me, username: profile.username, score: 0, alive: true, joined_at: new Date().toISOString() });
       touch();
@@ -142,8 +158,17 @@
     }
     if (name === 'start_room') {
       if (room.host_id !== me || room.status !== 'lobby' || room.is_public) return err('Only the host can start this room');
-      room.status = 'playing';
+      startNow(room);
       touch();
+      return { data: null, error: null };
+    }
+    if (name === 'submit_guess') {
+      if (room.mode !== 'guess' || room.status !== 'playing') return err('No guessing game running here');
+      const opens = roundOpens(room, args.round_no);
+      if (Date.now() < opens || Date.now() > opens + (room.round_seconds + 1.5) * 1000) return err('Too late for this round');
+      db.room_guesses = db.room_guesses.filter((g) => !(g.room_id === room.id && g.user_id === me && g.round === args.round_no));
+      db.room_guesses.push({ room_id: room.id, user_id: me, round: args.round_no, guess: Math.round(args.value * 10) / 10 });
+      write(db);
       return { data: null, error: null };
     }
     if (name === 'report_room_score') {

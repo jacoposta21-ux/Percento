@@ -173,15 +173,35 @@ export async function dailyBoard(day, limit = 10) {
 }
 
 // ---------- friend rooms ----------
-export async function createRoom(category = null) {
-  const { data, error } = category ? await client.rpc('create_room', { room_category: category }) : await client.rpc('create_room');
+/** mode: 'standing' (last one standing) or 'guess' (closest guess). */
+export async function createRoom(category = null, mode = 'standing') {
+  const { data, error } = await client.rpc('create_room', { room_category: category, room_mode: mode });
   return error ? { error: fail(error) } : { code: data };
 }
 
-/** Joins the next public game with strangers (or opens one). */
-export async function quickMatch() {
-  const { data, error } = await client.rpc('quick_match');
+/** Joins the next public game of `mode` with strangers (or opens one). */
+export async function quickMatch(mode = 'standing') {
+  const { data, error } = await client.rpc('quick_match', { room_mode: mode });
   return error ? { error: fail(error) } : { code: data };
+}
+
+/** Milliseconds to add to Date.now() to get the server clock (rounds run on it). */
+export async function serverOffset() {
+  const t0 = Date.now();
+  const { data, error } = await client.rpc('server_time');
+  if (error || !data) return 0;
+  return Date.parse(data) - (t0 + Date.now()) / 2;
+}
+
+export async function submitGuess(code, round, value) {
+  const { error } = await client.rpc('submit_guess', { room_code: code, round_no: round, value });
+  return { error: fail(error) };
+}
+
+/** Every guess this player may see: their own, and everyone's for finished rounds. */
+export async function fetchGuesses(roomId) {
+  const { data } = await client.from('room_guesses').select('user_id, round, guess').eq('room_id', roomId);
+  return data || [];
 }
 
 export async function heartbeat(code) {
@@ -207,7 +227,7 @@ export async function reportScore(code, score, alive) {
 }
 
 export async function fetchRoom(code) {
-  const { data: room } = await client.from('rooms').select('id, code, host_id, seed, status, started_at, starts_at, is_public, category').eq('code', code).maybeSingle();
+  const { data: room } = await client.from('rooms').select('id, code, host_id, seed, status, started_at, starts_at, is_public, category, mode, round_seconds, reveal_seconds, rounds').eq('code', code).maybeSingle();
   if (!room) return null;
   const { data: players } = await client.from('room_players').select('user_id, username, score, alive, finished_at, joined_at')
     .eq('room_id', room.id).order('joined_at');

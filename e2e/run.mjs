@@ -104,6 +104,11 @@ async function afterVerdict(page, label, correct, { keyboard = false, last = fal
   if (keyboard) await page.keyboard.press('Enter'); else await page.click('.continue');
 }
 
+async function setGuess(page, value) {
+  await page.fill('.guess-slider', String(value));
+  await page.dispatchEvent('.guess-slider', 'input');
+}
+
 // ---------- scenarios ----------
 async function playEndless(page, label, { keyboard = false } = {}) {
   await page.goto(`${BASE}#/endless`);
@@ -249,6 +254,38 @@ async function main() {
     }
     check(new Set(dailyFirstPairs.map((p) => JSON.stringify(p))).size === 1, 'daily: identical first pair across separate devices/contexts');
 
+    log('▶ closest guess solo');
+    {
+      const context = await newContext({ viewport: { width: 380, height: 820 } });
+      const page = await context.newPage();
+      watch(page);
+      await page.goto(`${BASE}#/`);
+      await page.click('.cat-section .seg:has-text("Closest guess")');
+      check((await page.getAttribute('.cat-tile >> nth=0', 'href')).startsWith('#/guess/'), 'home: category tiles switch to closest guess');
+      await page.goto(`${BASE}#/guess`);
+      let expected = 0;
+      for (let i = 0; i < 10; i++) {
+        await page.waitForSelector('.guess-slider:not([disabled])');
+        if (i === 0) await audit(page, 'guess solo round');
+        const guess = (i * 11) % 100;
+        await setGuess(page, guess);
+        check((await page.textContent('.guess-readout')).startsWith(String(guess)), `guess solo: readout follows the slider (${guess})`);
+        await page.click('.lock');
+        await page.waitForSelector('.continue');
+        const truth = parseFloat((await page.textContent('.card-value')).replace('%', ''));
+        expected += Math.max(0, Math.round(100 - 3 * Math.abs(guess - truth)));
+        check(Boolean(await page.$('.pin.me')) && Boolean(await page.$('.pin.truth')), 'guess solo: your pin and the real value on the ruler');
+        if (i === 0) await audit(page, 'guess solo reveal');
+        await page.click('.continue');
+      }
+      await page.waitForSelector('text=of 1000 points');
+      const total = Number(await page.textContent('.big-score span'));
+      check(total === expected, `guess solo: total ${total} matches the rule (${expected})`);
+      await audit(page, 'guess solo results');
+      await page.screenshot({ path: join(SHOTS, 'guess-solo-results.png'), fullPage: true });
+      await context.close();
+    }
+
     log('▶ storage blocked');
     {
       const context = await newContext({ viewport: { width: 360, height: 760 } });
@@ -375,6 +412,34 @@ async function main() {
       await p2.waitForSelector('.round-timer', { timeout: 15000 });
       check(JSON.stringify(await cardTexts(p1)) === JSON.stringify(await cardTexts(p2)), 'quick match: same cards for both');
       await audit(p2, 'quick match round');
+
+      // Closest guess with a friend: same card, the guesses meet on a ruler,
+      // a guess that is not locked in is sent when the clock runs out.
+      await p1.goto(`${BASE}#/online`);
+      await p1.click('.seg:has-text("Closest guess")');
+      await p1.click('main button:has-text("Create a room")');
+      await p1.waitForSelector('text=Closest guess');
+      const guessRoom = p1.url().split('#/room/')[1];
+      await p2.goto(`${BASE}#/room/${guessRoom}`);
+      await p2.waitForSelector('text=Waiting for the host');
+      await p1.waitForSelector('text=Start the game', { timeout: 8000 });
+      await p1.click('text=Start the game');
+      await p1.waitForSelector('.guess-slider:not([disabled])', { timeout: 10000 });
+      await p2.waitForSelector('.guess-slider:not([disabled])', { timeout: 10000 });
+      check((await p1.textContent('.card-text')) === (await p2.textContent('.card-text')), 'guess room: same card for both');
+      await audit(p1, 'guess room round');
+      await setGuess(p1, 30);
+      await p1.click('.lock');
+      await setGuess(p2, 70);
+      await p1.waitForSelector('.guess-ruler:not([hidden]) .pin:has-text("Bob")', { timeout: 10000 });
+      await p2.waitForSelector('.guess-ruler:not([hidden]) .pin:has-text("Anna_1")', { timeout: 10000 });
+      check((await p2.textContent('.guess-ruler')).includes('70%'), 'guess room: an unlocked guess is sent when time runs out');
+      check(/closest/i.test(await p1.textContent('.guess-status')), 'guess room: the closest player is announced');
+      await audit(p1, 'guess room reveal');
+      await p1.waitForSelector('.screen-title:has-text("🏆")', { timeout: 40000 });
+      await p2.waitForSelector('.screen-title:has-text("🏆")', { timeout: 8000 });
+      check((await p1.textContent('main')).includes('Final standings'), 'guess room: final standings');
+      await p1.screenshot({ path: join(SHOTS, 'guess-room-results.png'), fullPage: true });
 
       // Solo runs count on the world board once signed in.
       await playEndless(p1, 'signed-in');

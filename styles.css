@@ -397,3 +397,88 @@ select.input { appearance: none; background-image: linear-gradient(45deg, transp
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { transition: none !important; animation: none !important; }
 }
+
+/* ---------- segmented control (game mode) ---------- */
+.segmented { display: inline-flex; gap: 0; margin: 12px 0 4px; border: 2px solid var(--line); border-radius: 4px; padding: 2px; background: var(--bg); }
+.seg {
+  min-height: 44px; padding: 6px 14px; border: 0; border-radius: 2px; background: none; color: var(--muted);
+  font-weight: 700; cursor: pointer;
+}
+.seg[aria-pressed="true"] { background: var(--paper); color: var(--ink); }
+.section-head .segmented { margin: 0; }
+.cat-section > .muted { margin: -4px 0 12px; }
+
+/* ---------- closest guess ---------- */
+.guess-stage { display: grid; grid-template-columns: minmax(0, 1fr); gap: 18px; margin-top: 18px; }
+.guess-card .card-pick { min-height: 250px; cursor: default; border-radius: 2px 2px 16px 2px; }
+.guess-card .card-text { font-size: clamp(1.25rem, 4.6vw, 1.7rem); }
+.guess-card .waffle { width: 44%; max-width: 150px; }
+.waffle i.g { background: color-mix(in srgb, var(--c) 38%, var(--paper-2)); }
+.guess-card.revealed .card-pick { box-shadow: 5px 5px 0 #000, 0 0 0 3px var(--c); }
+.guess-side { display: grid; gap: 12px; align-content: start; min-width: 0; }
+.guess-controls { background: var(--surface); border: 2px solid var(--line); border-radius: 3px; padding: 14px 16px 16px; display: grid; gap: 12px; }
+.guess-readout { font-family: var(--display); font-weight: 800; font-stretch: 75%; font-size: 4.2rem; line-height: 0.9; color: var(--accent); font-variant-numeric: tabular-nums; }
+.guess-readout small { font-size: 0.5em; margin-left: 2px; color: var(--text); }
+/* The slider looks like a ruler; the filled part is the guess. */
+.guess-slider {
+  --p: 50%;
+  -webkit-appearance: none; appearance: none; width: 100%; height: 44px; margin: 0; background: transparent; cursor: pointer;
+}
+.guess-slider::-webkit-slider-runnable-track {
+  height: 14px; border: 2px solid #000;
+  background:
+    repeating-linear-gradient(90deg, rgb(0 0 0 / 0.35) 0 1px, transparent 1px 10%),
+    linear-gradient(90deg, var(--accent) var(--p), var(--paper) var(--p));
+}
+.guess-slider::-moz-range-track {
+  height: 10px; border: 2px solid #000;
+  background:
+    repeating-linear-gradient(90deg, rgb(0 0 0 / 0.35) 0 1px, transparent 1px 10%),
+    linear-gradient(90deg, var(--accent) var(--p), var(--paper) var(--p));
+}
+.guess-slider::-webkit-slider-thumb {
+  -webkit-appearance: none; width: 30px; height: 36px; margin-top: -13px;
+  background: var(--paper); border: 2px solid #000; border-radius: 3px; box-shadow: 3px 3px 0 #000;
+}
+.guess-slider::-moz-range-thumb { width: 26px; height: 32px; background: var(--paper); border: 2px solid #000; border-radius: 3px; box-shadow: 3px 3px 0 #000; }
+.guess-slider:disabled { cursor: default; opacity: 0.7; }
+.guess-buttons { display: grid; grid-template-columns: 56px 56px 1fr; gap: 10px; }
+.nudge { font-family: var(--mono); font-size: 1.4rem; padding: 0; }
+.guess-status { margin: 0; font-weight: 700; min-height: 1.4em; }
+.guess-status.done { font-size: 1.1rem; }
+.guess-ruler {
+  position: relative; height: 92px; margin: 4px 14px 0;
+  background:
+    linear-gradient(var(--muted), var(--muted)) 0 46px / 100% 2px no-repeat,
+    repeating-linear-gradient(90deg, var(--muted) 0 1px, transparent 1px 10%) 0 40px / 100% 8px no-repeat;
+}
+.pin { position: absolute; top: 4px; transform: translateX(-50%); display: grid; justify-items: center; font-size: 0.72rem; white-space: nowrap; }
+.pin::after { content: ""; width: 2px; height: 16px; background: var(--text); order: 3; }
+.pin b { font-family: var(--mono); font-weight: 600; background: var(--surface-2); color: var(--text); padding: 1px 5px; border: 1px solid var(--line); }
+.pin small { font-family: var(--mono); color: var(--muted); }
+.pin.me b { background: var(--accent); color: var(--ink); border-color: #000; }
+.pin.low { top: 48px; }
+.pin.low::after { order: -1; }
+.pin.truth { top: 26px; z-index: 2; }
+.pin.truth b { background: var(--ok); color: var(--ink); border-color: #000; font-size: 0.8rem; }
+.pin.truth::after { display: none; }
+.pin.edge-l { transform: translateX(-12%); justify-items: start; }
+.pin.edge-r { transform: translateX(-88%); justify-items: end; }
+.dots span.mid { background: var(--gold); }
+.guess-recap .who { font-size: 0.92rem; }
+
+@media (max-width: 899px) {
+  /* Keep the slider above the fold on phones: a compact card. */
+  .guess-stage { gap: 12px; margin-top: 12px; }
+  .round-head .sub { display: none; }
+  .guess-card .card-pick { min-height: 0; }
+  .guess-card .card-text { font-size: 1.15rem; }
+  .guess-card .waffle { width: 30%; max-width: 92px; }
+  .guess-card .card-value { font-size: 2.6rem; }
+  .guess-readout { font-size: 3rem; }
+  .guess-controls { padding: 10px 12px 12px; gap: 8px; }
+}
+@media (min-width: 900px) {
+  .guess-stage { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: start; }
+  .guess-card .card-pick { min-height: 340px; }
+}
