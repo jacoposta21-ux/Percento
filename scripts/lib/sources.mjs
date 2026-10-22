@@ -25,6 +25,8 @@ export const AUTHORITATIVE_DOMAINS = [
   'boj.or.jp', 'sport.ec.europa.eu', 'sportengland.org', 'ausport.gov.au', 'mext.go.jp', 'insee.fr', 'ined.fr', 'cnrs.fr',
   // Major surveys
   'gallup.com', 'pewresearch.org', 'eurofound.europa.eu',
+  // Parliaments and sports federations' own records
+  'parliament.uk', 'paralympic.org', 'genome.gov',
   // Peer-reviewed publishers and indexes
   'doi.org', 'apa.org', 'nature.com', 'science.org', 'plos.org', 'pnas.org', 'cell.com', 'thelancet.com',
   'bmj.com', 'jamanetwork.com', 'nejm.org', 'wiley.com', 'springer.com', 'sciencedirect.com',

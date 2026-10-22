@@ -216,9 +216,22 @@ async function main() {
         const page = await context.newPage();
         watch(page);
         await page.goto(BASE);
-        await page.waitForSelector('.card-pick');
+        await page.waitForSelector('.cat-tile');
         await audit(page, `${label} home`);
         await page.screenshot({ path: join(SHOTS, `${label}-home.png`), fullPage: true });
+        check((await page.$$('.cat-tile')).length === 13, `${label}: every category is playable from home`);
+        await page.click('[data-sound-toggle]');
+        check((await page.getAttribute('[data-sound-toggle]', 'aria-pressed')) === 'true', `${label}: sound toggle mutes`);
+        await page.click('[data-sound-toggle]');
+        check((await page.getAttribute('[data-sound-toggle]', 'aria-pressed')) === 'false', `${label}: sound toggle unmutes`);
+        // Category play: both cards from the chosen category.
+        await page.click('.cat-tile >> text=Space');
+        await page.waitForSelector('.card-pick');
+        const cats = await page.$$eval('.card-cat', (els) => els.map((e) => e.textContent.trim()));
+        check(cats.length === 2 && cats.every((c) => c === 'Space'), `${label}: category play keeps to one category (${cats})`);
+        check((await page.$$('.card-a .waffle i')).length === 100, `${label}: each card has a 10×10 grid`);
+        await audit(page, `${label} category round`);
+        await page.screenshot({ path: join(SHOTS, `${label}-round.png`), fullPage: true });
         const score = await playEndless(page, label, { keyboard: scheme === 'dark' });
         const best = Number(await page.evaluate(() => localStorage.getItem('percento:best')) || 0);
         check(best >= score, `${label}: personal best saved (${best} vs ${score})`);
@@ -283,16 +296,16 @@ async function main() {
         await page.click('button[type=submit]');
       };
       // Guest asks for friends → account → back to friends, signed in.
-      await p1.goto(`${BASE}#/friends`);
-      await p1.waitForSelector('text=Rooms need an account');
+      await p1.goto(`${BASE}#/online`);
+      await p1.waitForSelector('text=Online games need an account');
       await signUp(p1, 'Anna_1', 'anna@example.com');
-      await p1.waitForSelector('main >> text=New room');
-      check(p1.url().endsWith('#/friends'), `room flow: back to friends after sign-up (${p1.url()})`);
+      await p1.waitForSelector('main >> text=Room with friends');
+      check(p1.url().endsWith('#/online'), `room flow: back to the online page after sign-up (${p1.url()})`);
       await p1.waitForFunction(() => document.querySelector('[data-account-label]').textContent === 'Anna_1', null, { timeout: 3000 })
         .then(() => check(true, ''), () => check(false, 'account: nav shows the player name'));
       await audit(p1, 'friends');
       await p1.click('main button:has-text("Create a room")');
-      await p1.waitForSelector('text=Waiting room');
+      await p1.waitForSelector('text=Private room');
       const code = p1.url().split('#/room/')[1];
       check(/^[A-Z0-9]{6}$/.test(code), `room: code in the URL (${code})`);
       check(await p1.isDisabled('text=Start (needs 2 players)'), 'room: host cannot start alone');
@@ -324,7 +337,7 @@ async function main() {
         await p2.click('.continue');
         await p2.waitForSelector('.room-board');
         const t2 = await p2.textContent('.screen-title');
-        check(/You are out!|wins!/.test(t2), `room: out after the clock runs out (${t2})`);
+        check(/You are out!|wins!|tie/.test(t2), `room: out after the clock runs out (${t2})`);
       })();
       const anna = (async () => {
         let annaScore = 0;
@@ -344,9 +357,24 @@ async function main() {
       if (annaScore > 0) check((await p1.textContent('.screen-title')).includes('You win!'), 'room: the winner is told so');
       check((await p2.textContent('.room-board')).includes('Anna_1'), 'room: final standings list every player');
       const headline = await p2.textContent('.screen-title');
-      check(annaScore > 0 ? headline.includes('Anna_1 wins') : headline.includes('Anna_1 & Bob wins'), `room: winner announced (${headline}, Anna scored ${annaScore})`);
+      check(annaScore > 0 ? headline.includes('Anna_1 wins') : headline.includes("It's a tie"), `room: winner announced (${headline}, Anna scored ${annaScore})`);
       await audit(p1, 'room results');
       await p1.screenshot({ path: join(SHOTS, 'room-results.png'), fullPage: true });
+
+      // Strangers: two players looking for a public game land in the same one,
+      // and it starts by itself once a second player is in.
+      await p1.goto(`${BASE}#/online`);
+      await p1.click('main button:has-text("Find a game")');
+      await p1.waitForSelector('text=Finding players');
+      check((await p1.textContent('main')).includes('at least one more player'), 'quick match: waits for a second player');
+      await p2.goto(`${BASE}#/online`);
+      await p2.click('main button:has-text("Find a game")');
+      await p2.waitForSelector('text=Finding players');
+      check(p1.url() === p2.url(), `quick match: same public game (${p1.url()} vs ${p2.url()})`);
+      await p1.waitForSelector('.round-timer', { timeout: 15000 });
+      await p2.waitForSelector('.round-timer', { timeout: 15000 });
+      check(JSON.stringify(await cardTexts(p1)) === JSON.stringify(await cardTexts(p2)), 'quick match: same cards for both');
+      await audit(p2, 'quick match round');
 
       // Solo runs count on the world board once signed in.
       await playEndless(p1, 'signed-in');
@@ -358,7 +386,7 @@ async function main() {
       // Sign out, wrong password, Google not enabled, then back in.
       await p1.goto(`${BASE}#/account`);
       await p1.click('text=Sign out');
-      await p1.waitForSelector('.card-pick');
+      await p1.waitForSelector('.cat-tile');
       await p1.waitForFunction(() => document.querySelector('[data-account-label]').textContent === 'Sign in', null, { timeout: 3000 })
         .then(() => check(true, ''), () => check(false, 'account: signed out'));
       await p1.goto(`${BASE}#/account`);
@@ -388,7 +416,7 @@ async function main() {
       await page.goto(`${BASE}#/account`);
       await page.waitForSelector('text=Accounts are unavailable');
       await page.goto(`${BASE}#/`);
-      await page.waitForSelector('.card-pick');
+      await page.waitForSelector('.cat-tile');
       check(Boolean(await page.$('text=(this device)')), 'offline: leaderboard falls back to this device');
       await context.close();
     }

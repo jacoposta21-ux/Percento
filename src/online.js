@@ -173,9 +173,23 @@ export async function dailyBoard(day, limit = 10) {
 }
 
 // ---------- friend rooms ----------
-export async function createRoom() {
-  const { data, error } = await client.rpc('create_room');
+export async function createRoom(category = null) {
+  const { data, error } = category ? await client.rpc('create_room', { room_category: category }) : await client.rpc('create_room');
   return error ? { error: fail(error) } : { code: data };
+}
+
+/** Joins the next public game with strangers (or opens one). */
+export async function quickMatch() {
+  const { data, error } = await client.rpc('quick_match');
+  return error ? { error: fail(error) } : { code: data };
+}
+
+export async function heartbeat(code) {
+  await client.rpc('room_heartbeat', { room_code: code });
+}
+
+export async function leaveRoom(code) {
+  await client.rpc('leave_room', { room_code: code });
 }
 
 export async function joinRoom(code) {
@@ -193,7 +207,7 @@ export async function reportScore(code, score, alive) {
 }
 
 export async function fetchRoom(code) {
-  const { data: room } = await client.from('rooms').select('id, code, host_id, seed, status, started_at').eq('code', code).maybeSingle();
+  const { data: room } = await client.from('rooms').select('id, code, host_id, seed, status, started_at, starts_at, is_public, category').eq('code', code).maybeSingle();
   if (!room) return null;
   const { data: players } = await client.from('room_players').select('user_id, username, score, alive, finished_at, joined_at')
     .eq('room_id', room.id).order('joined_at');

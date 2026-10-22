@@ -70,3 +70,15 @@ test('a tiny pool is exhausted gracefully', () => {
   assert.equal(gen.next(), null);
   assert.ok(RULES.minGap === 3);
 });
+
+test('category play: every category gives at least 40 rounds of legal same-category pairs', () => {
+  for (const cat of [...new Set(POOL.map((e) => e.category))]) {
+    const gen = createPairGenerator(POOL.filter((e) => e.category === cat), mulberry32(11), { sameCategory: true });
+    for (let i = 0; i < 40; i++) {
+      const pair = gen.next();
+      assert.ok(pair, `${cat}: ran out of pairs at round ${i}`);
+      assert.equal(pair.a.category, cat);
+      assert.ok(isLegalPair(pair.a, pair.b, true));
+    }
+  }
+});

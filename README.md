@@ -2,8 +2,9 @@
 
 *Compare the incomparable.* A mobile-first higher-or-lower web game. Two cards, each holding a real, sourced percentage about topics that have nothing to do with each other. Pick the higher one; the **Percentometer** dial reveals both values with source and year.
 
-- **Endless**: two new cards every round; a right answer moves on by itself, one wrong answer ends the run.
-- **Friends rooms**: up to 10 signed-in players get the same cards in the same order, 15 seconds per card; one mistake (or the clock) and you are out, whoever goes furthest wins. Live standings.
+- **Endless**: two new cards every round; a right answer moves on by itself, one wrong answer ends the run. Play **mixed** (cards from different categories) or **by category** (both cards from one of 13 topics; best streak per category).
+- **Online, last one standing**: up to 10 signed-in players get the same cards in the same order, 15 seconds per card; one mistake (or the clock) and you are out, whoever goes furthest wins. Live standings. **Find a game** matches strangers (a public game starts 20 s after a second player joins, at once with 10); **Room with friends** is private, optionally limited to one category, started by the host.
+- **Sound**: effects and a generative music loop made with the Web Audio API (no audio files); one mute button, separate switches in Settings.
 - **Accounts** (optional): email + password or Google. Endless runs and Daily answers are saved to the account and count on the world leaderboard. Guests keep everything on their device.
 - **Daily Challenge**: 10 pairs, the same for everyone, new at midnight Europe/Rome. One attempt per day, each answer saved immediately (reload resumes, never replays). Share a 🟩🟥 grid and a link.
 - **Sources**: every statistic in the game with its link and year.
@@ -64,6 +65,10 @@ The validator (`scripts/validate.mjs`) fails the build on: missing or unknown fi
 
 **Daily stability.** An entry may appear in a daily set only from the day *after* its `addedOn` (or `verifiedOn`, if it was promoted later). The set is seeded from the Rome date and computed over the pool sorted by id, so adding or promoting data never changes today's or past challenges.
 
+## Approximate entries
+
+`data/entries/approx-*.json` (about 200 cards) were added for category play from well-established general knowledge, at the founder's request, without opening the source page. They carry `reviewReason: "APPROX: …"`, are listed in DATA_REVIEW.md, and like every unverified entry are served only by the dev build.
+
 ## Current status: data is not yet verified
 
 The game, tooling and tests are complete, but **production currently serves 0 statistics**. The research environment could not open any statistics website: its network policy allowed only package registries, and the page fetcher could not resolve any host. All 328 candidates were collected from search excerpts restricted to the official source domain, with the exact wording quoted in `evidence`. The data rules require the source page itself to be opened, so every entry is `unverified` and listed in [DATA_REVIEW.md](DATA_REVIEW.md).
@@ -89,6 +94,8 @@ src/dial.js                 Percentometer SVG + needle physics
 src/copy.js                 headlines, quips, end-screen lines
 src/share.js, storage.js    share/copy flow, safe localStorage
 src/online.js               accounts, saved progress, leaderboards, rooms (Supabase)
+src/audio.js, icons.js      synthesised sound and music; line icons for categories
+vendor/fonts/               Bricolage Grotesque + IBM Plex Mono (OFL), self-hosted
 vendor/                     supabase-js UMD build (pinned)
 supabase/migrations/        database schema and rules
 scripts/                    validate, build, serve, simulate, verify-sources, review

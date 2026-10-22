@@ -67,8 +67,8 @@ export function dailyPool(pool, dateStr) {
 
 /** The 10 pairs for a date. Same input data and date → same pairs, everywhere. */
 export function dailyPairs(pool, dateStr, count = RULES.dailyPairs) {
-  // v2: since every round became two new cards, the seed changed with the format.
-  const rng = mulberry32(hashString(`percento-daily-v2:${dateStr}`));
+  // v3: the seed changes whenever the pairing algorithm does.
+  const rng = mulberry32(hashString(`percento-daily-v3:${dateStr}`));
   const gen = createPairGenerator(dailyPool(pool, dateStr), rng);
   const pairs = [];
   while (pairs.length < count) {

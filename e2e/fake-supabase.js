@@ -89,15 +89,49 @@
     const room = args?.room_code && db.rooms.find((r) => r.code === args.room_code.toUpperCase());
     const players = room ? db.room_players.filter((p) => p.room_id === room.id) : [];
     const touch = () => { write(db); channels.forEach((c) => c.handlers.forEach((fn) => fn())); };
+    const newCode = () => Math.random().toString(36).slice(2, 8).toUpperCase().padEnd(6, 'X');
+    // Public games start PUBLIC_START_MS after the second player (20 s on the server; shorter here).
+    const PUBLIC_START_MS = 3000;
+    const tick = (r) => {
+      const n = db.room_players.filter((p) => p.room_id === r.id).length;
+      if (r.status !== 'lobby' || !r.is_public) return;
+      if (n >= 2 && !r.starts_at) r.starts_at = new Date(Date.now() + PUBLIC_START_MS).toISOString();
+      if (n < 2) r.starts_at = null;
+      if (r.starts_at && Date.parse(r.starts_at) <= Date.now() && n >= 2) r.status = 'playing';
+    };
+    if (name === 'quick_match') {
+      let r = db.rooms.find((x) => x.is_public && x.status === 'lobby' && db.room_players.filter((p) => p.room_id === x.id).length < 10);
+      if (!r) {
+        r = { id: `room-${db.seq++}`, code: newCode(), host_id: me, seed: Math.floor(Math.random() * 2 ** 31), status: 'lobby', is_public: true, starts_at: null, category: null };
+        db.rooms.push(r);
+      }
+      if (!db.room_players.some((p) => p.room_id === r.id && p.user_id === me)) {
+        db.room_players.push({ room_id: r.id, user_id: me, username: profile.username, score: 0, alive: true, joined_at: new Date().toISOString() });
+      }
+      tick(r);
+      touch();
+      return { data: r.code, error: null };
+    }
     if (name === 'create_room') {
-      const code = Math.random().toString(36).slice(2, 8).toUpperCase().padEnd(6, 'X');
-      const r = { id: `room-${db.seq++}`, code, host_id: me, seed: Math.floor(Math.random() * 2 ** 31), status: 'lobby' };
+      const r = { id: `room-${db.seq++}`, code: newCode(), host_id: me, seed: Math.floor(Math.random() * 2 ** 31), status: 'lobby', is_public: false, starts_at: null, category: args?.room_category ?? null };
       db.rooms.push(r);
       db.room_players.push({ room_id: r.id, user_id: me, username: profile.username, score: 0, alive: true, joined_at: new Date().toISOString() });
       touch();
-      return { data: code, error: null };
+      return { data: r.code, error: null };
     }
-    if (!room) return err('Room not found');
+    if (!room) return name === 'room_heartbeat' || name === 'leave_room' ? { data: null, error: null } : err('Room not found');
+    if (name === 'room_heartbeat') {
+      const before = room.status;
+      tick(room);
+      if (room.status !== before) touch(); else write(db);
+      return { data: null, error: null };
+    }
+    if (name === 'leave_room') {
+      if (room.status === 'lobby') db.room_players = db.room_players.filter((p) => !(p.room_id === room.id && p.user_id === me));
+      tick(room);
+      touch();
+      return { data: null, error: null };
+    }
     if (name === 'join_room') {
       if (players.some((p) => p.user_id === me)) return { data: room.id, error: null };
       if (room.status !== 'lobby') return err('This game has already started');
@@ -107,7 +141,7 @@
       return { data: room.id, error: null };
     }
     if (name === 'start_room') {
-      if (room.host_id !== me || room.status !== 'lobby') return err('Only the host can start this room');
+      if (room.host_id !== me || room.status !== 'lobby' || room.is_public) return err('Only the host can start this room');
       room.status = 'playing';
       touch();
       return { data: null, error: null };

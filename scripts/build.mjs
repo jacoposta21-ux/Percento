@@ -20,7 +20,7 @@ mkdirSync(join(out, 'src'), { recursive: true });
 cpSync(join(ROOT, 'index.html'), join(out, 'index.html'));
 cpSync(join(ROOT, 'styles.css'), join(out, 'styles.css'));
 cpSync(join(ROOT, 'vendor'), join(out, 'vendor'), { recursive: true });
-for (const f of ['app.js', 'config.js', 'pairs.js', 'daily.js', 'dial.js', 'storage.js', 'share.js', 'copy.js', 'online.js', 'online-config.js']) {
+for (const f of ['app.js', 'config.js', 'pairs.js', 'daily.js', 'dial.js', 'storage.js', 'share.js', 'copy.js', 'online.js', 'online-config.js', 'audio.js', 'icons.js']) {
   cpSync(join(ROOT, 'src', f), join(out, 'src', f));
 }
 const build = { mode, builtOn: new Date().toISOString().slice(0, 10), count: entries.length };

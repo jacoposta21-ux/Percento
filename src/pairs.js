@@ -2,8 +2,9 @@
 // Challenge, the validator and the simulator share one implementation.
 import { RULES, familyOf } from './config.js';
 
-export const isLegalPair = (a, b) =>
-  a.id !== b.id && a.category !== b.category && Math.abs(a.value - b.value) >= RULES.minGap;
+// Mixed play pairs different categories; category play (sameCategory) pairs within one.
+export const isLegalPair = (a, b, sameCategory = false) =>
+  a.id !== b.id && (sameCategory || a.category !== b.category) && Math.abs(a.value - b.value) >= RULES.minGap;
 
 export const pairKey = (a, b) => (a.id < b.id ? `${a.id}|${b.id}` : `${b.id}|${a.id}`);
 
@@ -36,15 +37,16 @@ const pick = (list, rng) => list[Math.floor(rng() * list.length)];
  * Creates a stateful generator for one session.
  * next() returns { a, b }: two cards never shown together before, preferring
  * cards not seen yet in this session. Returns null when no legal pair is left.
+ * With { sameCategory: true } the pool is one category and cards pair within it.
  */
-export function createPairGenerator(pool, rng = Math.random) {
+export function createPairGenerator(pool, rng = Math.random, { sameCategory = false } = {}) {
   // Sort by id so the result never depends on file order.
   const entries = [...pool].sort((x, y) => (x.id < y.id ? -1 : x.id > y.id ? 1 : 0));
   const usedPairs = new Set();
   const seenIds = new Set();
 
   const legalFor = (card) =>
-    entries.filter((e) => isLegalPair(card, e) && !usedPairs.has(pairKey(card, e)));
+    entries.filter((e) => isLegalPair(card, e, sameCategory) && !usedPairs.has(pairKey(card, e)));
 
   function chooseOpponent(a, legal) {
     // Cards not seen yet come first, then a coin flip keeps the answer
@@ -54,22 +56,31 @@ export function createPairGenerator(pool, rng = Math.random) {
     const higher = candidates.filter((e) => e.value > a.value);
     const lower = candidates.filter((e) => e.value < a.value);
     if (higher.length && lower.length) candidates = rng() < 0.5 ? higher : lower;
-    const cross = candidates.filter((e) => isCrossFamily(a, e));
+    const cross = sameCategory ? [] : candidates.filter((e) => isCrossFamily(a, e));
     if (cross.length && rng() < RULES.crossFamilyBias) candidates = cross;
     return pick(candidates, rng);
   }
 
   return {
     next() {
-      const unseen = entries.filter((e) => !seenIds.has(e.id) && legalFor(e).length);
-      const starters = unseen.length ? unseen : entries.filter((e) => legalFor(e).length);
-      if (!starters.length) return null;
-      const a = pick(starters, rng);
-      const b = chooseOpponent(a, legalFor(a));
-      usedPairs.add(pairKey(a, b));
-      seenIds.add(a.id);
-      seenIds.add(b.id);
-      return { a, b };
+      // Unseen cards first; try them in random order until one has a legal partner.
+      const unseen = entries.filter((e) => !seenIds.has(e.id));
+      for (const list of [unseen, entries]) {
+        const order = [...list];
+        for (let i = 0; i < order.length; i++) {
+          const j = i + Math.floor(rng() * (order.length - i));
+          [order[i], order[j]] = [order[j], order[i]];
+          const a = order[i];
+          const legal = legalFor(a);
+          if (!legal.length) continue;
+          const b = chooseOpponent(a, legal);
+          usedPairs.add(pairKey(a, b));
+          seenIds.add(a.id);
+          seenIds.add(b.id);
+          return { a, b };
+        }
+      }
+      return null;
     },
     usedPairs,
   };
