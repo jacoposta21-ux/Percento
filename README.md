@@ -2,11 +2,25 @@
 
 *Compare the incomparable.* A mobile-first higher-or-lower web game. Two cards, each holding a real, sourced percentage about topics that have nothing to do with each other. Pick the higher one; the **Percentometer** dial reveals both values with source and year.
 
-- **Endless**: the higher card stays, a new card arrives, one wrong answer ends the run. Personal best is saved on the device.
+- **Endless**: two new cards every round; a right answer moves on by itself, one wrong answer ends the run.
+- **Friends rooms**: up to 10 signed-in players get the same cards in the same order, 15 seconds per card; one mistake (or the clock) and you are out, whoever goes furthest wins. Live standings.
+- **Accounts** (optional): email + password or Google. Endless runs and Daily answers are saved to the account and count on the world leaderboard. Guests keep everything on their device.
 - **Daily Challenge**: 10 pairs, the same for everyone, new at midnight Europe/Rome. One attempt per day, each answer saved immediately (reload resumes, never replays). Share a 🟩🟥 grid and a link.
 - **Sources**: every statistic in the game with its link and year.
 
-No runtime dependencies: plain HTML, CSS and ES modules. Node ≥ 20 for the tooling.
+Plain HTML, CSS and ES modules. The only runtime library is supabase-js (vendored in `vendor/`, loaded in the background); if it or the server is unreachable, the game keeps working as a guest. Node ≥ 20 for the tooling.
+
+## Online backend (Supabase)
+
+Project `percento` (eu-central-1). Schema, row level security and the room functions are in `supabase/migrations/`. The browser uses the publishable key in `src/online-config.js`; the database rules decide what it may do (players write only their own rows; rooms are created, joined, started and scored only through `create_room`, `join_room`, `start_room`, `report_room_score`, which enforce 10 players, host-only start and no joining after the start).
+
+One-time settings in the Supabase dashboard (Authentication):
+
+1. **URL Configuration**: Site URL `https://percento-virid.vercel.app`, and add it to Redirect URLs. Without this, confirmation emails and Google sign-in send players to localhost.
+2. **Email**: the built-in mailer only delivers to members of the Supabase team and a few emails per hour. Either set up custom SMTP (Authentication → Emails → SMTP, e.g. Resend or Brevo), or switch off "Confirm email" (Sign In / Providers → Email) so players are signed in immediately.
+3. **Google**: create an OAuth client in Google Cloud Console (Web application, redirect URI `https://tsbdkvgfdnalxgahnvnp.supabase.co/auth/v1/callback`), then paste its client ID and secret in Sign In / Providers → Google. Until then the Google button explains it is not switched on.
+
+The e2e suite never touches the real backend: `e2e/fake-supabase.js` stands in for it in the browser (two tabs play a full room against each other).
 
 ## Run
 
@@ -15,7 +29,7 @@ npm run dev            # validate (dev), build with ALL entries incl. unverified
 npm run build          # production gate: validate (production) then build dist/ with verified entries only
 npm run serve          # serve dist/ on http://127.0.0.1:8080 (PORT=… to change)
 npm test               # unit tests: validator, pair rules, 1,000-pair simulation, daily/DST, share, verifier
-npm run test:e2e       # headless Chromium: full games at 360px and 1280px, light/dark, a11y checks
+npm run test:e2e       # headless Chromium: full games at 360px and 1280px, a11y checks, accounts and a 2-player room
 npm run simulate -- --mode=dev     # pairing-rule report (--mode=production for the verified pool)
 npm run verify-sources # open every source page, promote entries whose evidence is on the page
 npm run review         # regenerate DATA_REVIEW.md
@@ -25,7 +39,7 @@ npm run review         # regenerate DATA_REVIEW.md
 
 ## Deploy
 
-`dist/` is a static site: upload it to any static host (Netlify, Vercel, GitHub Pages, S3 + CloudFront, nginx). No server code, no build step on the host. Routing uses `#/` hashes, so no rewrite rules are needed.
+`dist/` is a static site: upload it to any static host (Netlify, Vercel, GitHub Pages, S3 + CloudFront, nginx). No server code, no build step on the host. Routing uses `#/` hashes, so no rewrite rules are needed. Accounts and rooms talk to Supabase directly from the browser.
 
 ```bash
 npm ci && npm run build   # fails unless the production pool meets every target
@@ -74,6 +88,9 @@ src/daily.js                Rome date, DST-safe midnight, deterministic daily se
 src/dial.js                 Percentometer SVG + needle physics
 src/copy.js                 headlines, quips, end-screen lines
 src/share.js, storage.js    share/copy flow, safe localStorage
+src/online.js               accounts, saved progress, leaderboards, rooms (Supabase)
+vendor/                     supabase-js UMD build (pinned)
+supabase/migrations/        database schema and rules
 scripts/                    validate, build, serve, simulate, verify-sources, review
 data/entries/               dataset, one file per source family
 tests/, e2e/                unit tests (node:test), browser QA (playwright-core)

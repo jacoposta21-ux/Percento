@@ -3,6 +3,8 @@
 //   - full Endless and Daily games at 360px and desktop widths
 //   - no horizontal scroll, no tap target under 44px, WCAG AA text contrast
 //   - keyboard play, reduced motion, storage blocked, reload-resume, share/copy
+//   - accounts, world leaderboard and a 2-player friends room against an
+//     in-browser fake of Supabase (e2e/fake-supabase.js); offline fallback
 import { mkdirSync } from 'node:fs';
 import { join } from 'node:path';
 import { execFileSync } from 'node:child_process';
@@ -13,6 +15,7 @@ import { ROOT } from '../scripts/lib/data.mjs';
 const PORT = 8097;
 const BASE = `http://127.0.0.1:${PORT}/`;
 const SHOTS = join(ROOT, 'e2e', 'screenshots');
+const FAKE_SUPABASE = join(ROOT, 'e2e', 'fake-supabase.js');
 const EXECUTABLE = process.env.CHROMIUM_PATH || '/opt/pw-browsers/chromium-1194/chrome-linux/chrome';
 mkdirSync(SHOTS, { recursive: true });
 
@@ -193,6 +196,12 @@ async function main() {
   const server = await startServer(PORT);
   const browser = await chromium.launch({ executablePath: EXECUTABLE });
   const errors = [];
+  // Every context talks to the fake backend, never to the real one.
+  const newContext = async (opts) => {
+    const context = await browser.newContext(opts);
+    await context.addInitScript({ path: FAKE_SUPABASE });
+    return context;
+  };
   const watch = (page) => {
     page.on('pageerror', (e) => errors.push(e.message));
     page.on('console', (m) => { if (m.type() === 'error') errors.push(m.text()); });
@@ -203,7 +212,7 @@ async function main() {
       for (const scheme of ['light', 'dark']) {
         const label = `${name}-${scheme}`;
         log(`▶ ${label}`);
-        const context = await browser.newContext({ viewport: { width: w, height: h }, colorScheme: scheme, permissions: ['clipboard-read', 'clipboard-write'] });
+        const context = await newContext({ viewport: { width: w, height: h }, colorScheme: scheme, permissions: ['clipboard-read', 'clipboard-write'] });
         const page = await context.newPage();
         watch(page);
         await page.goto(BASE);
@@ -229,7 +238,7 @@ async function main() {
 
     log('▶ storage blocked');
     {
-      const context = await browser.newContext({ viewport: { width: 360, height: 760 } });
+      const context = await newContext({ viewport: { width: 360, height: 760 } });
       await context.addInitScript(() => {
         Object.defineProperty(window, 'localStorage', { get() { throw new Error('blocked'); } });
       });
@@ -245,7 +254,7 @@ async function main() {
 
     log('▶ reduced motion');
     {
-      const context = await browser.newContext({ viewport: { width: 360, height: 760 }, reducedMotion: 'reduce' });
+      const context = await newContext({ viewport: { width: 360, height: 760 }, reducedMotion: 'reduce' });
       const page = await context.newPage();
       watch(page);
       await page.goto(`${BASE}#/endless`);
@@ -257,12 +266,139 @@ async function main() {
       await context.close();
     }
 
+    log('▶ accounts and friends room');
+    {
+      const context = await newContext({ viewport: { width: 1280, height: 800 }, permissions: ['clipboard-read', 'clipboard-write'] });
+      const p1 = await context.newPage();
+      const p2 = await context.newPage();
+      watch(p1);
+      watch(p2);
+      const signUp = async (page, name, email) => {
+        await page.waitForSelector('text=Create account');
+        await page.click('.actions >> text=Create account');
+        await page.waitForSelector('input[name=username]');
+        await page.fill('input[name=username]', name);
+        await page.fill('input[name=email]', email);
+        await page.fill('input[name=password]', 'secret123');
+        await page.click('button[type=submit]');
+      };
+      // Guest asks for friends → account → back to friends, signed in.
+      await p1.goto(`${BASE}#/friends`);
+      await p1.waitForSelector('text=Rooms need an account');
+      await signUp(p1, 'Anna_1', 'anna@example.com');
+      await p1.waitForSelector('main >> text=New room');
+      check(p1.url().endsWith('#/friends'), `room flow: back to friends after sign-up (${p1.url()})`);
+      await p1.waitForFunction(() => document.querySelector('[data-account-label]').textContent === 'Anna_1', null, { timeout: 3000 })
+        .then(() => check(true, ''), () => check(false, 'account: nav shows the player name'));
+      await audit(p1, 'friends');
+      await p1.click('main button:has-text("Create a room")');
+      await p1.waitForSelector('text=Waiting room');
+      const code = p1.url().split('#/room/')[1];
+      check(/^[A-Z0-9]{6}$/.test(code), `room: code in the URL (${code})`);
+      check(await p1.isDisabled('text=Start (needs 2 players)'), 'room: host cannot start alone');
+      await audit(p1, 'room lobby');
+
+      // The invite link signs the friend up and drops them in the lobby.
+      await p2.goto(`${BASE}#/room/${code}`);
+      await p2.waitForSelector(`text=Your friend invited you`);
+      await signUp(p2, 'anna_1', 'bob@example.com');
+      await p2.waitForSelector('.form-message');
+      check((await p2.textContent('.form-message')).includes('taken'), 'account: player names are unique, case-insensitive');
+      await p2.fill('input[name=username]', 'Bob');
+      await p2.click('button[type=submit]');
+      await p2.waitForSelector('text=Waiting for the host');
+      await p1.waitForSelector('text=Start the game', { timeout: 8000 });
+      check((await p1.textContent('.room-board')).includes('Bob'), 'room: host sees the friend join');
+      await p1.click('text=Start the game');
+      await p1.waitForSelector('.round-timer');
+      await p2.waitForSelector('.round-timer', { timeout: 8000 });
+      const t = Number(await p1.textContent('.round-timer b'));
+      check(t >= 13 && t <= 15, `room: 15-second clock (${t})`);
+      const p1First = await cardTexts(p1);
+      check(JSON.stringify(p1First) === JSON.stringify(await cardTexts(p2)), 'room: both players get the same cards');
+
+      // Bob lets the clock run out (counts as wrong); Anna plays until a mistake.
+      const bob = (async () => {
+        await p2.waitForSelector('text=Time is up', { timeout: 20000 });
+        await p2.waitForSelector('.continue:not([hidden])', { timeout: 5000 });
+        await p2.click('.continue');
+        await p2.waitForSelector('.room-board');
+        const t2 = await p2.textContent('.screen-title');
+        check(/You are out!|wins!/.test(t2), `room: out after the clock runs out (${t2})`);
+      })();
+      const anna = (async () => {
+        let annaScore = 0;
+        for (let i = 0; i < 40; i++) {
+          await p1.waitForSelector('.card-pick:not([disabled])');
+          await p1.click('.card-a .card-pick');
+          if (!(await waitReveal(p1))) break;
+          annaScore++;
+          await p1.waitForSelector('.card-pick:not([disabled])', { timeout: 5000 });
+        }
+        await p1.click('.continue');
+        return annaScore;
+      })();
+      const [, annaScore] = await Promise.all([bob, anna]);
+      await p1.waitForSelector('.screen-title:has-text("🏆")', { timeout: 30000 });
+      await p2.waitForSelector('.screen-title:has-text("🏆")', { timeout: 8000 });
+      if (annaScore > 0) check((await p1.textContent('.screen-title')).includes('You win!'), 'room: the winner is told so');
+      check((await p2.textContent('.room-board')).includes('Anna_1'), 'room: final standings list every player');
+      const headline = await p2.textContent('.screen-title');
+      check(annaScore > 0 ? headline.includes('Anna_1 wins') : headline.includes('Anna_1 & Bob wins'), `room: winner announced (${headline}, Anna scored ${annaScore})`);
+      await audit(p1, 'room results');
+      await p1.screenshot({ path: join(SHOTS, 'room-results.png'), fullPage: true });
+
+      // Solo runs count on the world board once signed in.
+      await playEndless(p1, 'signed-in');
+      await p1.goto(`${BASE}#/leaderboard`);
+      await p1.waitForSelector('.board li.me');
+      check((await p1.textContent('main')).includes('World leaderboard'), 'leaderboard: world board shown');
+      check((await p1.textContent('.board li.me')).includes('Anna_1'), 'leaderboard: my run is on the world board');
+
+      // Sign out, wrong password, Google not enabled, then back in.
+      await p1.goto(`${BASE}#/account`);
+      await p1.click('text=Sign out');
+      await p1.waitForSelector('.card-pick');
+      await p1.waitForFunction(() => document.querySelector('[data-account-label]').textContent === 'Sign in', null, { timeout: 3000 })
+        .then(() => check(true, ''), () => check(false, 'account: signed out'));
+      await p1.goto(`${BASE}#/account`);
+      await p1.waitForSelector('input[name=email]');
+      await audit(p1, 'sign in');
+      await p1.click('text=Continue with Google');
+      await p1.waitForSelector('.form-message:has-text("Google")');
+      await p1.fill('input[name=email]', 'anna@example.com');
+      await p1.fill('input[name=password]', 'wrong-pass');
+      await p1.click('button[type=submit]');
+      await p1.waitForSelector('text=Wrong email or password');
+      await p1.fill('input[name=password]', 'secret123');
+      await p1.click('button[type=submit]');
+      await p1.waitForSelector('text=Hi, Anna_1!');
+      await p1.waitForSelector('.stat-row');
+      check(Number(await p1.textContent('.stat-row p:nth-child(2) b')) >= 1, 'account: endless games saved to the account');
+      await audit(p1, 'profile');
+      await context.close();
+    }
+
+    log('▶ server unreachable');
+    {
+      const context = await browser.newContext({ viewport: { width: 360, height: 760 } });
+      await context.route('**/vendor/supabase-*.js', (r) => r.abort());
+      const page = await context.newPage();
+      page.on('pageerror', (e) => errors.push(e.message));
+      await page.goto(`${BASE}#/account`);
+      await page.waitForSelector('text=Accounts are unavailable');
+      await page.goto(`${BASE}#/`);
+      await page.waitForSelector('.card-pick');
+      check(Boolean(await page.$('text=(this device)')), 'offline: leaderboard falls back to this device');
+      await context.close();
+    }
+
     log('▶ production build');
     {
       execFileSync(process.execPath, [join(ROOT, 'scripts', 'build.mjs'), '--mode=production', '--out=dist-prod']);
       const prodServer = await startServer(PORT + 1, join(ROOT, 'dist-prod'));
       const { BUILD } = await import(join(ROOT, 'dist-prod', 'src', 'data.js'));
-      const context = await browser.newContext({ viewport: { width: 360, height: 760 } });
+      const context = await newContext({ viewport: { width: 360, height: 760 } });
       const page = await context.newPage();
       watch(page);
       await page.goto(`http://127.0.0.1:${PORT + 1}/#/endless`);
@@ -278,6 +414,7 @@ async function main() {
 
     check(errors.length === 0, `console/page errors: ${errors.slice(0, 5).join(' | ')}`);
   } finally {
+    if (errors.length) console.log('page errors:', errors.slice(0, 5));
     await browser.close();
     server.close();
   }
