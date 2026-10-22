@@ -15,7 +15,8 @@
     "test:e2e": "node scripts/build.mjs --mode=dev && node e2e/run.mjs",
     "simulate": "node scripts/simulate.mjs",
     "verify-sources": "NODE_USE_ENV_PROXY=1 node scripts/verify-sources.mjs",
-    "review": "node scripts/review.mjs"
+    "review": "node scripts/review.mjs",
+    "i18n": "node scripts/i18n-keys.mjs"
   },
   "engines": {
     "node": ">=20"

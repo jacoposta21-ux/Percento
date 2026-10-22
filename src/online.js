@@ -3,6 +3,7 @@
 // or the network is down, the game keeps working as a guest on this device.
 import { SUPABASE_URL, SUPABASE_KEY, SUPABASE_SCRIPT } from './online-config.js';
 import { load, save } from './storage.js';
+import { t } from './i18n.js';
 
 let client = null;
 let ready = null;
@@ -77,13 +78,13 @@ export function onAuthChange(fn) {
 const fail = (error) => {
   if (!error) return null;
   const m = error.message || String(error);
-  if (/provider is not enabled|Unsupported provider/i.test(m)) return 'Google sign-in is not switched on yet. Use email and password for now.';
-  if (/anonymous sign-ins are disabled/i.test(m)) return 'Guest play is not switched on yet. Create an account for now.';
-  if (/Invalid login credentials/i.test(m)) return 'Wrong email or password.';
-  if (/Email not confirmed/i.test(m)) return 'Confirm your email first: check your inbox for our link.';
-  if (/already registered/i.test(m)) return 'This email already has an account. Sign in instead.';
-  if (/rate limit/i.test(m)) return 'Too many emails sent. Try again in a few minutes.';
-  if (/not authorized/i.test(m)) return 'We cannot send confirmation emails to this address yet. Try Google, or ask the PERCENTO team.';
+  if (/provider is not enabled|Unsupported provider/i.test(m)) return t('Google sign-in is not switched on yet. Use email and password for now.');
+  if (/anonymous sign-ins are disabled/i.test(m)) return t('Guest play is not switched on yet. Create an account for now.');
+  if (/Invalid login credentials/i.test(m)) return t('Wrong email or password.');
+  if (/Email not confirmed/i.test(m)) return t('Confirm your email first: check your inbox for our link.');
+  if (/already registered/i.test(m)) return t('This email already has an account. Sign in instead.');
+  if (/rate limit/i.test(m)) return t('Too many emails sent. Try again in a few minutes.');
+  if (/not authorized/i.test(m)) return t('We cannot send confirmation emails to this address yet. Try Google, or ask the PERCENTO team.');
   return m;
 };
 

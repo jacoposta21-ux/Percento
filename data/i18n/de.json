@@ -1,0 +1,1990 @@
+{
+ "au-born-overseas": [
+  "Australier, die im Ausland geboren wurden",
+  "Australien · Volkszählung 2021"
+ ],
+ "us-homes-tv-1960": [
+  "US-Haushalte mit Fernseher im Jahr 1960",
+  "USA · Haushalte · 1960"
+ ],
+ "us-homes-tv-1950": [
+  "US-Haushalte mit Fernseher im Jahr 1950",
+  "USA · Haushalte · 1950"
+ ],
+ "world-literacy-1900": [
+  "Menschen weltweit, die 1900 lesen konnten",
+  "Welt · Bevölkerung ab 15 Jahren · 1900"
+ ],
+ "women-parliaments-1995": [
+  "Parlamentssitze weltweit, die 1995 Frauen innehatten",
+  "Welt · nationale Parlamente · 1995"
+ ],
+ "asia-share-world-pop-1950": [
+  "Weltbevölkerung, die 1950 in Asien lebte",
+  "Welt · Bevölkerung · 1950"
+ ],
+ "uk-women-mps-1945": [
+  "Bei der britischen Wahl 1945 gewählte Abgeordnete, die Frauen waren",
+  "Vereinigtes Königreich · Unterhaus · 1945"
+ ],
+ "bundestag-women-1949": [
+  "Frauen unter den Abgeordneten des ersten Bundestags",
+  "Deutschland · Bundestag · 1949"
+ ],
+ "uk-homes-car-1951": [
+  "Britische Haushalte mit Auto im Jahr 1951",
+  "Großbritannien · Haushalte · 1951"
+ ],
+ "brazil-urban-1950": [
+  "Brasilianer, die 1950 in Städten lebten",
+  "Brasilien · Volkszählung · 1950"
+ ],
+ "us-high-school-1940": [
+  "US-Erwachsene mit Highschool-Abschluss im Jahr 1940",
+  "USA · Erwachsene ab 25 Jahren · 1940"
+ ],
+ "italians-speaking-italian-1861": [
+  "Italiener, die bei der Einigung wirklich Italienisch sprachen",
+  "Italien · Bevölkerung · 1861"
+ ],
+ "us-urban-1950": [
+  "US-Amerikaner, die 1950 in Städten lebten",
+  "USA · Volkszählung · 1950"
+ ],
+ "finland-women-mps-1907": [
+  "Frauen in Finnlands erstem Parlament, dem ersten mit Frauen weltweit",
+  "Finnland · Eduskunta · 1907"
+ ],
+ "aus-born-australia-1947": [
+  "Australier, die 1947 in Australien geboren waren",
+  "Australien · Volkszählung · 1947"
+ ],
+ "china-urban-1980": [
+  "Chinesen, die 1980 in Städten lebten",
+  "China · Bevölkerung · 1980"
+ ],
+ "world-under-15-1950": [
+  "Menschen weltweit, die 1950 Kinder unter 15 waren",
+  "Welt · Bevölkerung · 1950"
+ ],
+ "japan-farm-workers-1950": [
+  "Japanische Erwerbstätige in Land-, Forstwirtschaft und Fischerei 1950",
+  "Japan · Erwerbstätige · 1950"
+ ],
+ "us-share-world-gdp": [
+  "Weltwirtschaft (BIP), die die USA erwirtschaften",
+  "USA · nominales BIP · 2023"
+ ],
+ "china-share-world-gdp": [
+  "Weltwirtschaft (BIP), die China erwirtschaftet",
+  "China · nominales BIP · 2023"
+ ],
+ "africa-share-world-gdp": [
+  "Weltwirtschaft (BIP), die ganz Afrika erwirtschaftet",
+  "Afrika · nominales BIP · 2023"
+ ],
+ "world-gdp-agriculture": [
+  "Weltwirtschaft aus Land-, Forstwirtschaft und Fischerei",
+  "Welt · Wertschöpfung · 2023"
+ ],
+ "world-gdp-services": [
+  "Weltwirtschaft aus Dienstleistungen statt Waren",
+  "Welt · Wertschöpfung · 2023"
+ ],
+ "spain-tourism-gdp": [
+  "Spaniens Wirtschaft, die vom Tourismus kommt",
+  "Spanien · Tourismus-Satellitenkonto · 2019"
+ ],
+ "japan-engel-food-share": [
+  "Ausgaben japanischer Familien, die für Essen draufgehen",
+  "Japan · Haushalte ab 2 Personen · 2024"
+ ],
+ "world-women-labour-force": [
+  "Frauen weltweit, die einen Job haben oder suchen",
+  "Welt · Frauen ab 15 Jahren · 2023"
+ ],
+ "world-men-labour-force": [
+  "Männer weltweit, die einen Job haben oder suchen",
+  "Welt · Männer ab 15 Jahren · 2023"
+ ],
+ "japan-non-regular-workers": [
+  "Japanische Angestellte in Teilzeit oder mit befristetem Vertrag",
+  "Japan · Angestellte · 2023"
+ ],
+ "germany-share-eu-gdp": [
+  "EU-Wirtschaft, die Deutschland erwirtschaftet",
+  "Deutschland · nominales BIP · 2023"
+ ],
+ "italy-women-employment": [
+  "Italienerinnen im Erwerbsalter, die einen Job haben",
+  "Italien · Frauen von 15 bis 64 · 2023"
+ ],
+ "dutch-part-time-workers": [
+  "Niederländer, die in Teilzeit arbeiten – Europas Spitzenwert",
+  "Niederlande · Erwerbstätige · 2023"
+ ],
+ "eu-online-shoppers": [
+  "Internetnutzer in Europa, die online eingekauft haben",
+  "EU · Internetnutzer · 2023"
+ ],
+ "brazil-informal-jobs": [
+  "Brasilianische Erwerbstätige ohne festen Arbeitsvertrag",
+  "Brasilien · Erwerbstätige · 2023"
+ ],
+ "uk-services-economy": [
+  "Britische Wirtschaft, die aus Dienstleistungen kommt",
+  "Vereinigtes Königreich · Bruttowertschöpfung · 2023"
+ ],
+ "japan-bank-account": [
+  "Erwachsene in Japan mit Bankkonto",
+  "Japan · Erwachsene · 2021"
+ ],
+ "uk-public-sector-jobs": [
+  "Britische Erwerbstätige im öffentlichen Dienst",
+  "Vereinigtes Königreich · Erwerbstätige · 2024"
+ ],
+ "paris-2024-golds-china": [
+  "Goldmedaillen von Paris 2024, die China gewann",
+  "Paris 2024 · Olympische Sommerspiele"
+ ],
+ "paris-2024-golds-france": [
+  "Goldmedaillen von Paris 2024, die Gastgeber Frankreich gewann",
+  "Paris 2024 · Olympische Sommerspiele"
+ ],
+ "tokyo-2020-golds-japan": [
+  "Goldmedaillen von Tokio 2020, die Gastgeber Japan gewann",
+  "Tokio 2020 · Olympische Sommerspiele"
+ ],
+ "paris-2024-nocs-with-medal": [
+  "Teams in Paris 2024, die mindestens eine Medaille holten",
+  "Paris 2024 · Nationale Olympische Komitees"
+ ],
+ "beijing-2022-golds-norway": [
+  "Goldmedaillen der Winterspiele Peking 2022, die Norwegen gewann",
+  "Peking 2022 · Olympische Winterspiele"
+ ],
+ "portugal-never-exercise": [
+  "Portugiesen, die nie Sport treiben",
+  "Portugal · Erwachsene · 2022"
+ ],
+ "dutch-trips-by-bike": [
+  "Wege in den Niederlanden, die mit dem Rad gemacht werden",
+  "Niederlande · alle Wege · 2023"
+ ],
+ "england-adults-active": [
+  "Erwachsene in England, die sich pro Woche genug bewegen",
+  "England · ab 16 Jahren · 150+ Minuten pro Woche · 2023"
+ ],
+ "brazil-football-share": [
+  "Sportliche Brasilianer, deren Sport Fußball ist",
+  "Brasilien · Sporttreibende · 2015"
+ ],
+ "paris-2024-paralympic-china": [
+  "Paralympische Goldmedaillen von Paris 2024, die China gewann",
+  "Paris 2024 · Paralympische Spiele"
+ ],
+ "summer-games-in-europe": [
+  "Olympische Sommerspiele, die je in Europa stattfanden",
+  "Sommerspiele · Athen 1896 bis Paris 2024"
+ ],
+ "summer-games-south": [
+  "Olympische Sommerspiele auf der Südhalbkugel",
+  "Sommerspiele · Athen 1896 bis Paris 2024"
+ ],
+ "phelps-medals-gold": [
+  "Olympische Medaillen von Michael Phelps, die golden sind",
+  "USA · Schwimmen · Athen 2004 bis Rio 2016"
+ ],
+ "sochi-speed-skating-dutch": [
+  "Eisschnelllauf-Goldmedaillen in Sotschi 2014 für die Niederlande",
+  "Sotschi 2014 · Eisschnelllauf (Langbahn)"
+ ],
+ "canada-hockey-golds": [
+  "Olympische Eishockey-Titel der Männer, die Kanada gewann",
+  "Kanada · Eishockey der Männer · 1920 bis 2022"
+ ],
+ "gold-medal-real-gold": [
+  "Eine olympische Goldmedaille, die wirklich aus Gold ist",
+  "Paris 2024 · Gewicht der Goldmedaille · vor allem Silber"
+ ],
+ "finland-weekly-exercise": [
+  "Finnen, die jede Woche Sport treiben",
+  "Finnland · Erwachsene · 2022"
+ ],
+ "summer-games-in-asia": [
+  "Olympische Sommerspiele, die je in Asien stattfanden",
+  "Sommerspiele · Athen 1896 bis Paris 2024"
+ ],
+ "uk-donors-o-negative": [
+  "Blutspender mit 0 negativ, der „Universal“-Blutgruppe",
+  "Vereinigtes Königreich · Blutspender"
+ ],
+ "world-vision-impairment": [
+  "Menschen weltweit mit Seh-Problemen in Nähe oder Ferne",
+  "Welt · alle Altersgruppen · 2019"
+ ],
+ "world-hearing-loss": [
+  "Menschen weltweit mit einem gewissen Hörverlust",
+  "Welt · alle Altersgruppen · 2021"
+ ],
+ "young-loud-music": [
+  "Junge Leute, die Musik in gefährlicher Lautstärke hören",
+  "Welt · 12 bis 35 Jahre · 2022"
+ ],
+ "exclusive-breastfeeding": [
+  "Babys, die in den ersten sechs Monaten nur Muttermilch bekommen",
+  "Welt · Säuglinge · 2023"
+ ],
+ "seoul-myopia-young-men": [
+  "Junge Männer in Seoul, die kurzsichtig sind",
+  "Südkorea · Seoul · Männer mit 19 Jahren"
+ ],
+ "brazil-caesarean-births": [
+  "Babys in Brasilien, die per Kaiserschnitt zur Welt kommen",
+  "Brasilien · Geburten · 2022"
+ ],
+ "world-caesarean-births": [
+  "Babys weltweit, die per Kaiserschnitt zur Welt kommen",
+  "Welt · Geburten · 2021"
+ ],
+ "world-high-blood-pressure": [
+  "Erwachsene weltweit mit Bluthochdruck",
+  "Welt · Erwachsene von 30 bis 79 · 2019"
+ ],
+ "eu-antibiotics-year": [
+  "Europäer, die im letzten Jahr Antibiotika genommen haben",
+  "EU · Erwachsene · 2022"
+ ],
+ "world-alcohol-drinkers": [
+  "Erwachsene weltweit, die im letzten Jahr Alkohol tranken",
+  "Welt · ab 15 Jahren · 2016"
+ ],
+ "world-alcohol-wine-share": [
+  "Alkohol weltweit, der als Wein getrunken wird",
+  "Welt · reiner Alkoholkonsum · 2016"
+ ],
+ "polio-cases-drop": [
+  "Rückgang wilder Polio-Fälle, seit die Welt sie bekämpft",
+  "Welt · seit 1988"
+ ],
+ "world-nurses-women": [
+  "Pflegekräfte weltweit, die Frauen sind",
+  "Welt · Pflegepersonal · 2020"
+ ],
+ "world-health-workers-women": [
+  "Gesundheits- und Pflegekräfte weltweit, die Frauen sind",
+  "Welt · Gesundheitspersonal · 2019"
+ ],
+ "measles-second-dose": [
+  "Kinder, die ihre zweite Masernimpfung bekommen haben",
+  "Welt · Kinder · 2023"
+ ],
+ "sweden-measles-vaccine": [
+  "Kinder in Schweden, die gegen Masern geimpft sind",
+  "Schweden · Kinder · 2023"
+ ],
+ "oecd-health-spending": [
+  "Wirtschaftsleistung, die OECD-Länder für Gesundheit ausgeben",
+  "OECD · Durchschnitt · 2022"
+ ],
+ "brain-energy-share": [
+  "Energie deines Körpers, die dein Gehirn verbraucht",
+  "Menschlicher Körper · Erwachsene in Ruhe"
+ ],
+ "brain-weight-share": [
+  "Dein Körpergewicht, das dein Gehirn ausmacht",
+  "Menschlicher Körper · durchschnittlicher Erwachsener"
+ ],
+ "dna-shared-chimp": [
+  "Deine DNA, die mit der eines Schimpansen übereinstimmt",
+  "Genom Mensch vs. Schimpanse · 2005"
+ ],
+ "genes-shared-banana": [
+  "Menschliche Gene mit einem ähnlichen Gen in Bananen",
+  "Genomvergleich Mensch vs. Banane"
+ ],
+ "body-oxygen-share": [
+  "Dein Körpergewicht, das Sauerstoff ist",
+  "Menschlicher Körper · Elemente nach Masse"
+ ],
+ "body-carbon-share": [
+  "Dein Körpergewicht, das Kohlenstoff ist (wie Bleistiftmine)",
+  "Menschlicher Körper · Elemente nach Masse"
+ ],
+ "colour-blind-men": [
+  "Männer, die farbenblind sind",
+  "Rot-Grün-Sehschwäche · Männer"
+ ],
+ "colour-blind-women": [
+  "Frauen, die farbenblind sind",
+  "Rot-Grün-Sehschwäche · Frauen"
+ ],
+ "calcium-in-bones": [
+  "Kalzium deines Körpers, das in Knochen und Zähnen steckt",
+  "Menschlicher Körper · Erwachsene"
+ ],
+ "blood-plasma-share": [
+  "Dein Blut, das Plasma ist, die gelbliche Flüssigkeit",
+  "Menschliches Blut · nach Volumen"
+ ],
+ "haematocrit-share": [
+  "Dein Blut, das aus roten Blutkörperchen besteht",
+  "Menschliches Blut · erwachsene Männer · nach Volumen"
+ ],
+ "muscle-weight-share": [
+  "Körpergewicht eines Mannes, das Skelettmuskulatur ist",
+  "Erwachsene Männer · Ganzkörper-MRT-Studie"
+ ],
+ "iron-in-haemoglobin": [
+  "Eisen deines Körpers, das im Hämoglobin deines Blutes steckt",
+  "Menschlicher Körper · Erwachsene"
+ ],
+ "newborn-water-share": [
+  "Körper eines Neugeborenen, der aus Wasser besteht",
+  "Menschlicher Körper · Neugeborene"
+ ],
+ "brain-water-share": [
+  "Dein Gehirn, das aus Wasser besteht",
+  "Menschlicher Körper · Organe"
+ ],
+ "bone-water-share": [
+  "Deine Knochen, die aus Wasser bestehen",
+  "Menschlicher Körper · Organe"
+ ],
+ "red-cells-of-all-cells": [
+  "Zellen deines Körpers, die rote Blutkörperchen sind",
+  "Menschlicher Körper · Anzahl aller Körperzellen"
+ ],
+ "bones-in-hands-feet": [
+  "Deine Knochen, die in Händen und Füßen sitzen",
+  "Skelett eines Erwachsenen"
+ ],
+ "twin-births-usa": [
+  "Babys in den USA, die als Zwillinge geboren werden",
+  "USA · Geburten · 2023"
+ ],
+ "antarctica-world-ice": [
+  "Eis der Welt, das in der Antarktis liegt",
+  "Welt · Land- und Meereis"
+ ],
+ "ocean-oxygen-share": [
+  "Sauerstoff, den wir atmen, der im Meer entsteht",
+  "Welt · Meeresplankton und Algen"
+ ],
+ "renewable-electricity-world": [
+  "Strom weltweit aus erneuerbaren Energien",
+  "Welt · Stromerzeugung · 2024"
+ ],
+ "wind-solar-electricity-world": [
+  "Strom weltweit aus Wind und Sonne",
+  "Welt · Stromerzeugung · 2024"
+ ],
+ "ireland-forest-cover": [
+  "Irland, das bewaldet ist – die „Grüne Insel“",
+  "Irland · Landfläche · 2020"
+ ],
+ "earth-freshwater-share": [
+  "Wasser der Erde, das Süßwasser ist, nicht salzig",
+  "Welt · gesamtes Wasser"
+ ],
+ "freshwater-in-lakes-rivers": [
+  "Süßwasser der Erde in Seen, Flüssen und Sümpfen",
+  "Welt · Süßwasser"
+ ],
+ "glacier-land-cover": [
+  "Landfläche der Erde, die Gletscher und Eisschilde bedecken",
+  "Welt · Landfläche"
+ ],
+ "species-undiscovered": [
+  "Arten auf der Erde, die der Wissenschaft noch unbekannt sind",
+  "Welt · Landarten · Schätzung"
+ ],
+ "biomass-plants": [
+  "Alles Leben auf der Erde (nach Gewicht), das Pflanzen sind",
+  "Welt · alle Lebewesen · nach Gewicht"
+ ],
+ "biomass-bacteria": [
+  "Alles Leben auf der Erde (nach Gewicht), das Bakterien sind",
+  "Welt · alle Lebewesen · nach Gewicht"
+ ],
+ "biomass-animals": [
+  "Alles Leben auf der Erde (nach Gewicht), das Tiere sind",
+  "Welt · alle Lebewesen · nach Gewicht"
+ ],
+ "mammal-biomass-livestock": [
+  "Säugetiere der Erde (nach Gewicht), die Nutztiere sind",
+  "Welt · alle Säugetiere · nach Gewicht"
+ ],
+ "mammal-biomass-humans": [
+  "Säugetiere der Erde (nach Gewicht), die Menschen sind",
+  "Welt · alle Säugetiere · nach Gewicht"
+ ],
+ "mammal-biomass-wild": [
+  "Säugetiere der Erde (nach Gewicht), die Wildtiere sind",
+  "Welt · alle Säugetiere · nach Gewicht"
+ ],
+ "bird-biomass-poultry": [
+  "Vögel der Erde (nach Gewicht), die Hühner & Co. vom Hof sind",
+  "Welt · alle Vögel · nach Gewicht"
+ ],
+ "coral-reef-sea-life": [
+  "Meeresarten, die an Korallenriffen leben",
+  "Welt · Meeresarten"
+ ],
+ "agriculture-water-use": [
+  "Entnommenes Süßwasser, das in die Landwirtschaft fließt",
+  "Welt · Süßwasserentnahme"
+ ],
+ "brazil-coffee-share": [
+  "Kaffee weltweit, der in Brasilien wächst",
+  "Welt · Kaffeeproduktion · 2023"
+ ],
+ "vietnam-coffee-share": [
+  "Kaffee weltweit, der in Vietnam wächst",
+  "Welt · Kaffeeproduktion · 2023"
+ ],
+ "arabica-coffee-share": [
+  "Kaffee weltweit, der aus Arabica-Bohnen besteht",
+  "Welt · Kaffeeproduktion · 2023"
+ ],
+ "cote-divoire-cocoa": [
+  "Kakao weltweit (Schokoladenbohnen) aus der Elfenbeinküste",
+  "Welt · Kakaoproduktion · 2024"
+ ],
+ "rice-asia-share": [
+  "Reis weltweit, der in Asien angebaut und gegessen wird",
+  "Welt · Reis"
+ ],
+ "cucumber-water": [
+  "Eine Gurke, die aus Wasser besteht",
+  "Rohe Gurke mit Schale"
+ ],
+ "watermelon-water": [
+  "Eine Wassermelone, die aus Wasser besteht",
+  "Rohe Wassermelone"
+ ],
+ "apple-water": [
+  "Ein Apfel, der aus Wasser besteht",
+  "Roher Apfel mit Schale"
+ ],
+ "china-garlic-share": [
+  "Knoblauch weltweit, der in China wächst",
+  "Welt · Knoblauchproduktion · 2022"
+ ],
+ "china-potato-share": [
+  "Kartoffeln weltweit, die in China wachsen",
+  "Welt · Kartoffelproduktion · 2022"
+ ],
+ "mexico-avocado-share": [
+  "Avocados weltweit, die in Mexiko wachsen",
+  "Welt · Avocadoproduktion · 2022"
+ ],
+ "peanuts-to-peanut-butter": [
+  "US-Erdnüsse, die als Erdnussbutter enden",
+  "USA · Erdnussverwendung"
+ ],
+ "cow-milk-share": [
+  "Milch weltweit, die von Kühen stammt",
+  "Welt · Milchproduktion · 2022"
+ ],
+ "goat-milk-share": [
+  "Milch weltweit, die von Ziegen stammt",
+  "Welt · Milchproduktion · 2022"
+ ],
+ "us-adults-enough-veg": [
+  "US-Erwachsene, die genug Gemüse essen",
+  "USA · Erwachsene · 2019"
+ ],
+ "crops-need-pollinators": [
+  "Nahrungspflanzen weltweit, die Bienen & andere Bestäuber brauchen",
+  "Welt · wichtigste Nahrungspflanzen"
+ ],
+ "mobile-phone-ownership-world": [
+  "Menschen weltweit, die ein Handy besitzen",
+  "Welt · ab zehn Jahren · 2024"
+ ],
+ "4g-coverage-world": [
+  "Menschen weltweit mit 4G-Empfang",
+  "Welt · Bevölkerung · 2024"
+ ],
+ "korea-internet-use": [
+  "Südkoreaner, die das Internet nutzen",
+  "Südkorea · Bevölkerung · 2023"
+ ],
+ "africa-internet-use": [
+  "Menschen in Afrika, die das Internet nutzen",
+  "Afrika · Bevölkerung · 2024"
+ ],
+ "rural-internet-use": [
+  "Menschen auf dem Land, die das Internet nutzen",
+  "Welt · ländliche Gebiete · 2024"
+ ],
+ "women-internet-use": [
+  "Frauen weltweit, die das Internet nutzen",
+  "Welt · Frauen · 2024"
+ ],
+ "smartphone-only-internet": [
+  "US-Amerikaner, deren einziges Internet zu Hause das Handy ist",
+  "USA · Erwachsene · 2024"
+ ],
+ "teens-almost-constantly-online": [
+  "US-Teenager, die „fast ständig“ online sind",
+  "USA · Teenager · 2024"
+ ],
+ "facebook-use-usa": [
+  "US-Amerikaner, die Facebook nutzen",
+  "USA · Erwachsene · 2024"
+ ],
+ "eu-companies-using-ai": [
+  "EU-Unternehmen, die künstliche Intelligenz nutzen",
+  "EU · Unternehmen ab zehn Beschäftigten · 2024"
+ ],
+ "eu-basic-digital-skills": [
+  "Europäer mit zumindest digitalen Grundkenntnissen",
+  "EU · sechzehn bis vierundsiebzig Jahre · 2023"
+ ],
+ "data-centre-electricity": [
+  "Strom weltweit, den Rechenzentren verbrauchen",
+  "Welt · Strombedarf · 2024"
+ ],
+ "ev-sales-world": [
+  "Neuwagen weltweit, die elektrisch sind",
+  "Welt · Neuwagenverkäufe · 2023"
+ ],
+ "china-share-ev-sales": [
+  "Neue E-Autos weltweit, die in China verkauft werden",
+  "Welt · E-Auto-Verkäufe · 2023"
+ ],
+ "e-waste-recycled": [
+  "Alte Geräte und Elektroschrott, die richtig recycelt werden",
+  "Welt · Elektroschrott · 2022"
+ ],
+ "school-phone-bans": [
+  "Schulsysteme weltweit, die Smartphones verbieten",
+  "Welt · Bildungssysteme · 2023"
+ ],
+ "planets-mass-earth-share": [
+  "Gesamtmasse der Planeten, die auf die Erde entfällt",
+  "Sonnensystem · alle acht Planeten · heute"
+ ],
+ "moon-mass-vs-earth": [
+  "Wie schwer der Mond im Vergleich zur Erde ist",
+  "Erdmond · Masse · heute"
+ ],
+ "venus-mass-vs-earth": [
+  "Wie schwer die Venus im Vergleich zur Erde ist",
+  "Venus · Masse · heute"
+ ],
+ "saturn-air-hydrogen": [
+  "Saturns Atmosphäre, die aus Wasserstoff besteht",
+  "Saturn · obere Atmosphäre · heute"
+ ],
+ "moon-surface-area-vs-earth": [
+  "Oberfläche des Mondes im Vergleich zu der der Erde",
+  "Erdmond · Oberfläche · heute"
+ ],
+ "asteroid-belt-vs-moon-mass": [
+  "Alle Asteroiden des Hauptgürtels, gewogen gegen den Mond",
+  "Asteroiden-Hauptgürtel · Gesamtmasse · heute"
+ ],
+ "moon-albedo": [
+  "Sonnenlicht, das der Mond zurückwirft (dunkel wie alter Asphalt)",
+  "Erdmond · Bond-Albedo · heute"
+ ],
+ "earth-albedo": [
+  "Sonnenlicht, das die Erde direkt ins All zurückwirft",
+  "Erde · Wolken, Eis und Luft · heute"
+ ],
+ "sunlight-absorbed-surface": [
+  "Sonnenlicht, das Böden und Ozeane der Erde aufnehmen",
+  "Erde · Energiebilanz · heute"
+ ],
+ "mercury-year-vs-earth": [
+  "Wie lange ein Jahr auf dem Merkur dauert, verglichen mit unserem",
+  "Merkur · Umlauf um die Sonne · heute"
+ ],
+ "venus-year-vs-earth": [
+  "Wie lange ein Jahr auf der Venus dauert, verglichen mit unserem",
+  "Venus · Umlauf um die Sonne · heute"
+ ],
+ "weight-on-pluto": [
+  "Dein Gewicht auf Pluto im Vergleich zur Erde",
+  "Pluto · Schwerkraft an der Oberfläche · heute"
+ ],
+ "milky-way-red-dwarfs": [
+  "Sterne unserer Galaxie, die kleine Rote Zwerge sind",
+  "Milchstraße · alle Sterne · heute"
+ ],
+ "saturn-density-vs-water": [
+  "Wie dicht Saturn im Vergleich zu Wasser ist (er würde schwimmen!)",
+  "Saturn · mittlere Dichte · heute"
+ ],
+ "earth-age-vs-universe": [
+  "Alter der Erde im Vergleich zum Alter des Universums",
+  "Erde und Kosmos · Alter · heute"
+ ],
+ "jupiter-day-vs-earth": [
+  "Wie lange ein Tag auf Jupiter dauert, verglichen mit unserem",
+  "Jupiter · eine Umdrehung · heute"
+ ],
+ "insects-that-are-beetles": [
+  "Insektenarten, die Käfer sind",
+  "Welt · bekannte Insektenarten · heute"
+ ],
+ "mammals-that-are-bats": [
+  "Säugetierarten, die Fledermäuse sind",
+  "Welt · bekannte Säugetierarten · heute"
+ ],
+ "mammals-threatened": [
+  "Säugetierarten, die vom Aussterben bedroht sind",
+  "Welt · Rote Liste der IUCN · heute"
+ ],
+ "birds-threatened": [
+  "Vogelarten, die vom Aussterben bedroht sind",
+  "Welt · Rote Liste der IUCN · heute"
+ ],
+ "primates-threatened": [
+  "Affen- und Lemurenarten, die vom Aussterben bedroht sind",
+  "Welt · alle Primaten · 2017"
+ ],
+ "rhinos-threatened": [
+  "Nashornarten, die vom Aussterben bedroht sind",
+  "Welt · Rote Liste der IUCN · heute"
+ ],
+ "bears-threatened": [
+  "Bärenarten, die vom Aussterben bedroht sind (Pandas inklusive)",
+  "Welt · Rote Liste der IUCN · heute"
+ ],
+ "sea-turtles-threatened": [
+  "Meeresschildkrötenarten, die vom Aussterben bedroht sind",
+  "Welt · Rote Liste der IUCN · heute"
+ ],
+ "ocean-species-undiscovered": [
+  "Meereslebewesen-Arten, die der Wissenschaft noch unbekannt sind",
+  "Weltmeere · Schätzung · 2011"
+ ],
+ "brazil-homes-cat": [
+  "Brasilianische Haushalte mit Katze",
+  "Brasilien · alle Haushalte · 2013"
+ ],
+ "bites-thanks-to-pollinators": [
+  "Bissen Essen, die wir Bienen und anderen Bestäubern verdanken",
+  "Welt · unsere Ernährung · heute"
+ ],
+ "great-apes-threatened": [
+  "Menschenaffenarten, die vom Aussterben bedroht sind",
+  "Welt · Gorillas, Schimpansen, Orang-Utans · heute"
+ ],
+ "fish-freshwater-share": [
+  "Fischarten, die im Süßwasser leben, nicht im Meer",
+  "Welt · bekannte Fischarten · heute"
+ ],
+ "canada-one-person-households": [
+  "Kanadische Haushalte, in denen nur eine Person lebt",
+  "Kanada · alle Haushalte · 2021"
+ ],
+ "us-drive-alone-commute": [
+  "US-Beschäftigte, die allein mit dem Auto zur Arbeit fahren",
+  "USA · alle Beschäftigten · 2019"
+ ],
+ "gb-homes-no-garden": [
+  "Britische Haushalte ohne Garten",
+  "Großbritannien · alle Haushalte · 2020"
+ ],
+ "us-homes-air-conditioning": [
+  "US-Haushalte, die eine Klimaanlage nutzen",
+  "USA · alle Haushalte · 2020"
+ ],
+ "england-no-central-heating": [
+  "Haushalte in England ohne Zentralheizung",
+  "England · alle Haushalte · 2021"
+ ],
+ "us-homes-gas-stove": [
+  "US-Haushalte, die auf einem Gasherd kochen",
+  "USA · alle Haushalte · 2020"
+ ],
+ "japan-empty-homes": [
+  "Japanische Wohnungen, die leer stehen",
+  "Japan · alle Wohnungen · 2023"
+ ],
+ "england-owned-outright": [
+  "Haushalte in England mit abbezahltem Eigenheim",
+  "England · alle Haushalte · jüngstes Jahr"
+ ],
+ "germany-renters": [
+  "Deutsche Haushalte, die zur Miete wohnen",
+  "Deutschland · alle Haushalte · 2022"
+ ],
+ "world-clean-cooking": [
+  "Haushalte weltweit, die mit Gas oder Strom kochen statt mit Holz",
+  "Welt · alle Menschen · jüngstes Jahr"
+ ],
+ "england-private-renting": [
+  "Haushalte in England, die privat zur Miete wohnen",
+  "England · alle Haushalte · jüngstes Jahr"
+ ],
+ "brazil-homes-fridge": [
+  "Brasilianische Haushalte mit Kühlschrank",
+  "Brasilien · alle Haushalte · jüngstes Jahr"
+ ],
+ "spain-live-in-flat": [
+  "Spanier, die in einer Wohnung leben",
+  "Spanien · alle Einwohner · jüngstes Jahr"
+ ],
+ "world-pop-asia": [
+  "Menschen weltweit, die in Asien leben",
+  "Welt · Gesamtbevölkerung · 2023"
+ ],
+ "world-pop-india-china": [
+  "Menschen weltweit, die in Indien oder China leben",
+  "Welt · Gesamtbevölkerung · 2023"
+ ],
+ "world-pop-europe": [
+  "Menschen weltweit, die in Europa leben",
+  "Welt · Gesamtbevölkerung · 2023"
+ ],
+ "world-pop-australia": [
+  "Menschen weltweit, die in Australien leben",
+  "Welt · Gesamtbevölkerung · 2023"
+ ],
+ "world-land-russia": [
+  "Landfläche der Erde, die zu Russland gehört",
+  "Welt · Landfläche · heute"
+ ],
+ "world-land-canada": [
+  "Landfläche der Erde, die zu Kanada gehört",
+  "Welt · Landfläche · heute"
+ ],
+ "land-northern-hemisphere": [
+  "Landfläche der Erde auf der Nordhalbkugel",
+  "Welt · Landfläche · heute"
+ ],
+ "greenland-ice-cover": [
+  "Grönland, das von Eis bedeckt ist",
+  "Grönland · Landfläche · heute"
+ ],
+ "brazil-share-south-america": [
+  "Landfläche Südamerikas, die zu Brasilien gehört",
+  "Südamerika · Landfläche · heute"
+ ],
+ "uk-pop-england": [
+  "Einwohner des Vereinigten Königreichs, die in England leben",
+  "Vereinigtes Königreich · Bevölkerung · 2022"
+ ],
+ "us-area-alaska": [
+  "Fläche der USA, die auf Alaska entfällt",
+  "USA · Gesamtfläche · heute"
+ ],
+ "us-believe-witches": [
+  "US-Amerikaner, die an Hexen glauben",
+  "USA · Erwachsene · 2005"
+ ],
+ "us-online-constantly": [
+  "US-Amerikaner, die „fast ständig“ online sind",
+  "USA · Erwachsene · 2021"
+ ],
+ "eu-ever-gave-blood": [
+  "Europäer, die schon einmal Blut gespendet haben",
+  "EU · Erwachsene · 2014"
+ ],
+ "italy-dialect-family": [
+  "Italiener, die mit der Familie meist Dialekt sprechen",
+  "Italien · Erwachsene · 2015"
+ ],
+ "us-atus-tv": [
+  "US-Amerikaner, die an einem normalen Tag fernsehen",
+  "USA · ab 15 Jahren · 2025"
+ ],
+ "us-atus-sleep": [
+  "US-Amerikaner, die irgendwann am Tag schlafen",
+  "USA · ab 15 Jahren · 2024"
+ ],
+ "us-atus-food-prep": [
+  "US-Amerikaner, die an einem normalen Tag kochen oder die Küche putzen",
+  "USA · ab 15 Jahren · 2024"
+ ],
+ "us-atus-lawn": [
+  "US-Amerikaner, die an einem normalen Tag Rasen mähen oder gärtnern",
+  "USA · ab 15 Jahren · 2024"
+ ],
+ "us-atus-men-housework": [
+  "US-Männer, die an einem normalen Tag Hausarbeit machen",
+  "USA · ab 15 Jahren · 2025"
+ ],
+ "us-atus-socialising": [
+  "US-Amerikaner, die an einem normalen Tag Leute treffen",
+  "USA · ab 15 Jahren · 2025"
+ ],
+ "us-1901-food-budget": [
+  "Budget von US-Familien, das 1901 für Essen draufging",
+  "USA · 1901"
+ ],
+ "us-1901-apparel-budget": [
+  "Budget von US-Familien, das 1901 für Kleidung draufging",
+  "USA · 1901"
+ ],
+ "us-women-lfpr-1950": [
+  "US-Amerikanerinnen, die 1950 einen Job hatten (oder suchten)",
+  "USA · ab 16 Jahren · 1950"
+ ],
+ "us-ce-housing-share": [
+  "Budget von US-Familien, das fürs Wohnen draufgeht",
+  "USA · 2024"
+ ],
+ "us-farm-workers-1910": [
+  "US-Erwerbstätige, die 1910 Landwirte waren",
+  "USA · 1910"
+ ],
+ "bls-atus-eating": [
+  "US-Amerikaner, die an einem normalen Tag etwas essen oder trinken",
+  "USA · ab 15 Jahren · 2025"
+ ],
+ "nl-weekly-sport": [
+  "Niederländische Erwachsene, die jede Woche Sport treiben",
+  "Niederlande · 2022"
+ ],
+ "nl-below-sea-level": [
+  "Fläche der Niederlande, die unter dem Meeresspiegel liegt",
+  "Niederlande"
+ ],
+ "cdc-fast-food-day": [
+  "US-Erwachsene, die an einem bestimmten Tag Fast Food essen",
+  "USA · ab 20 Jahren · 2021–23"
+ ],
+ "cdc-short-sleep": [
+  "US-Erwachsene, die weniger als 7 Stunden pro Nacht schlafen",
+  "USA · 2020"
+ ],
+ "cdc-flu-shot-adults": [
+  "US-Erwachsene, die dieses Jahr gegen Grippe geimpft wurden",
+  "USA · 2025"
+ ],
+ "cdc-dental-65": [
+  "US-Amerikaner über 65, die letztes Jahr beim Zahnarzt waren",
+  "USA · ab 65 Jahren · 2022"
+ ],
+ "us-urban-1790": [
+  "US-Amerikaner, die 1790 in Städten lebten",
+  "USA · erste Volkszählung · 1790"
+ ],
+ "us-radio-1930": [
+  "US-Haushalte mit Radio im Jahr 1930",
+  "USA · Volkszählung 1930"
+ ],
+ "us-wfh-acs-2023": [
+  "US-Beschäftigte, die von zu Hause arbeiten",
+  "USA · 2023"
+ ],
+ "us-long-commute": [
+  "US-Pendler, die über eine Stunde zur Arbeit brauchen",
+  "USA · einfache Strecke · 2023"
+ ],
+ "us-urban-1910": [
+  "US-Amerikaner, die 1910 in Städten lebten",
+  "USA · Volkszählung 1910"
+ ],
+ "ie-1946-no-piped-water": [
+  "Irische Haushalte ohne fließendes Wasser im Jahr 1946",
+  "Irland · 1946"
+ ],
+ "ie-1926-irish-born": [
+  "Menschen in Irland, die 1926 in Irland geboren waren",
+  "Irland · Volkszählung 1926"
+ ],
+ "de-dishwasher": [
+  "Deutsche Haushalte mit Spülmaschine",
+  "Deutschland · 2024"
+ ],
+ "de-ebike": [
+  "Deutsche Haushalte mit E-Bike",
+  "Deutschland · 2024"
+ ],
+ "de-bicycle": [
+  "Deutsche Haushalte mit Fahrrad",
+  "Deutschland · 2024"
+ ],
+ "de-smart-tv": [
+  "Deutsche Haushalte mit Smart-TV",
+  "Deutschland"
+ ],
+ "de-one-person-households": [
+  "Deutsche Haushalte, in denen nur eine Person lebt",
+  "Deutschland · 2024"
+ ],
+ "ecb-cash-pos": [
+  "Zahlungen in Läden der Eurozone, die bar erfolgen",
+  "Euroraum · 2024"
+ ],
+ "ecb-prefer-cards": [
+  "Europäer, die im Laden lieber mit Karte zahlen",
+  "Euroraum · 2024"
+ ],
+ "eea-protected-land": [
+  "EU-Fläche, die Schutzgebiet ist",
+  "EU · 2023"
+ ],
+ "esa-dark-energy": [
+  "Das Universum, das aus rätselhafter „Dunkler Energie“ besteht",
+  "ESA Planck · 2013"
+ ],
+ "esa-dark-matter": [
+  "Das Universum, das aus unsichtbarer Dunkler Materie besteht",
+  "ESA Planck · 2013"
+ ],
+ "esa-ordinary-matter": [
+  "Das Universum, das normales Zeug ist: Sterne, Planeten, du",
+  "ESA Planck · 2013"
+ ],
+ "eb-never-exercise": [
+  "Europäer, die nie Sport treiben",
+  "EU · ab 15 Jahren · 2026"
+ ],
+ "eb-foreign-language": [
+  "Europäer, die sich in einer Fremdsprache unterhalten können",
+  "EU · ab 15 Jahren · 2023"
+ ],
+ "eb-english-foreign": [
+  "Europäer, die Englisch als Fremdsprache sprechen",
+  "EU · ab 15 Jahren · 2023"
+ ],
+ "eb-pet-owners": [
+  "Europäer, die ein Haustier haben",
+  "EU · 2023"
+ ],
+ "eb-farm-animal-welfare": [
+  "Europäer, die ein besseres Leben für Nutztiere wollen",
+  "EU · 2023"
+ ],
+ "ec-clock-change": [
+  "Menschen, die für ein Ende der Zeitumstellung stimmten",
+  "Öffentliche Konsultation der EU · 2018"
+ ],
+ "eb-climate-serious": [
+  "Europäer, die den Klimawandel für ein ernstes Problem halten",
+  "EU · 2025"
+ ],
+ "eb-climate-action": [
+  "Europäer, die in den letzten 6 Monaten etwas fürs Klima getan haben",
+  "EU · 2025"
+ ],
+ "eb-exercise-parks": [
+  "Europäer, die in Parks und im Freien Sport treiben",
+  "EU · Sporttreibende · 2026"
+ ],
+ "eb-active-commuting": [
+  "Europäer, die zu Fuß oder per Rad zur Arbeit, Schule oder zum Einkaufen gehen",
+  "EU · 2026"
+ ],
+ "eu-five-a-day": [
+  "Europäer, die täglich 5 Portionen Obst und Gemüse essen",
+  "EU · ab 15 Jahren · 2019"
+ ],
+ "eu-no-fruit-veg": [
+  "Europäer, die an einem normalen Tag weder Obst noch Gemüse essen",
+  "EU · ab 15 Jahren · 2019"
+ ],
+ "dk-cinema": [
+  "Dänen, die letztes Jahr im Kino waren",
+  "Dänemark · ab 16 Jahren · 2022"
+ ],
+ "eu-men-no-books": [
+  "Europäische Männer, die letztes Jahr kein einziges Buch lasen",
+  "EU · ab 16 Jahren · 2022"
+ ],
+ "eu-genai": [
+  "Europäer, die KI-Tools wie ChatGPT genutzt haben",
+  "EU · 16–74 Jahre · 2025"
+ ],
+ "eu-video-calls": [
+  "Internetnutzer in Europa, die Videoanrufe machen",
+  "EU · 2025"
+ ],
+ "eu-woodland": [
+  "EU-Fläche, die von Wald bedeckt ist",
+  "EU · 2022"
+ ],
+ "fi-forest-cover": [
+  "Finnland, das von Wald bedeckt ist",
+  "Finnland · 2020"
+ ],
+ "eu-good-health": [
+  "Europäer, die ihre Gesundheit als gut bezeichnen",
+  "EU · ab 16 Jahren · 2024"
+ ],
+ "ie-live-sport": [
+  "Iren, die letztes Jahr live bei einem Sportevent waren",
+  "Irland · ab 16 Jahren · 2022"
+ ],
+ "eu-organic-share": [
+  "EU-Agrarfläche, die ökologisch bewirtschaftet wird",
+  "EU · 2022"
+ ],
+ "eu-spend-restaurants": [
+  "Budget von EU-Familien für Restaurants und Hotels",
+  "EU · 2024"
+ ],
+ "eu-25-34-with-parents": [
+  "Europäer von 25–34, die noch bei den Eltern wohnen",
+  "EU · 2016"
+ ],
+ "eu-tourism-trip": [
+  "Europäer, die eine Reise mit mindestens einer Übernachtung machten",
+  "EU · ab 15 Jahren · 2024"
+ ],
+ "lu-trips-abroad": [
+  "Urlaubsreisen von Luxemburgern, die ins Ausland gehen",
+  "Luxemburg · 2024"
+ ],
+ "eu-daily-smokers": [
+  "Europäer, die täglich rauchen",
+  "EU · ab 15 Jahren · 2019"
+ ],
+ "eu-no-alcohol-year": [
+  "Erwachsene in Europa, die letztes Jahr keinen Alkohol tranken",
+  "EU · 2019"
+ ],
+ "eu-municipal-recycled": [
+  "Hausmüll in der EU, der recycelt wird",
+  "EU · 2024"
+ ],
+ "eu-over-65-2025": [
+  "Europäer ab 65 Jahren",
+  "EU · 1. Januar 2025"
+ ],
+ "eu-under-15-2025": [
+  "Europäer unter 15 Jahren",
+  "EU · 1. Januar 2025"
+ ],
+ "lu-over-65-2025": [
+  "Luxemburger ab 65 – im jüngsten Land der EU",
+  "Luxemburg · 1. Januar 2025"
+ ],
+ "eu-daily-internet": [
+  "Europäer, die jeden Tag online sind",
+  "EU · 16–74 Jahre · 2025"
+ ],
+ "eu-online-shopping": [
+  "Europäer, die letztes Jahr online eingekauft haben",
+  "EU · 2025"
+ ],
+ "eu-social-networks": [
+  "Europäer, die soziale Netzwerke nutzen",
+  "EU · 2025"
+ ],
+ "eu-part-time": [
+  "Erwerbstätige in Europa, die in Teilzeit arbeiten",
+  "EU · 2024"
+ ],
+ "eu-weekend-work": [
+  "Erwerbstätige in Europa, die normalerweise am Wochenende arbeiten",
+  "EU · 15–64 Jahre · 2025"
+ ],
+ "eu-home-owners": [
+  "Europäer, denen ihr Zuhause gehört",
+  "EU · 2024"
+ ],
+ "eu-live-in-house": [
+  "Europäer, die in einem Haus statt in einer Wohnung leben",
+  "EU · 2024"
+ ],
+ "eu-city-flats": [
+  "Städter in Europa, die in einer Wohnung leben",
+  "Städte der EU · 2024"
+ ],
+ "eu-water-cover": [
+  "EU-Fläche, die von Seen und Flüssen bedeckt ist",
+  "EU · 2022"
+ ],
+ "eu-sport-jobs": [
+  "Jobs in der EU, die im Sportsektor liegen",
+  "EU · 2022"
+ ],
+ "se-daily-smokers": [
+  "Schweden, die täglich rauchen – der niedrigste Wert der EU",
+  "Schweden · ab 15 Jahren · 2019"
+ ],
+ "eu-household-internet": [
+  "Europäische Haushalte mit Internet",
+  "EU · Haushalte · 2025"
+ ],
+ "dk-internet-banking": [
+  "Dänen, die Online-Banking nutzen",
+  "Dänemark · 2025 · höchster Wert der EU"
+ ],
+ "eu-italy-pop-share": [
+  "EU-Einwohner, die in Italien leben",
+  "EU · 2026"
+ ],
+ "fao-forest-world": [
+  "Landfläche der Erde, die von Wald bedeckt ist",
+  "Welt · 2025"
+ ],
+ "fao-fish-overfished": [
+  "Fischbestände der Welt, die überfischt sind",
+  "Welt · FAO · 2025"
+ ],
+ "fao-breeds-at-risk": [
+  "Nutztierrassen, die vom Verschwinden bedroht sind",
+  "Welt · FAO · 2020"
+ ],
+ "fao-aquaculture-share": [
+  "Fisch und Meeresfrüchte aus Zucht statt aus der Wildnis",
+  "Welt · 2024"
+ ],
+ "fao-top5-forest": [
+  "Wälder der Welt, die in nur 5 Ländern liegen",
+  "Russland, Brasilien, Kanada, USA, China · 2025"
+ ],
+ "fao-russia-forest": [
+  "Wälder der Welt, die in Russland liegen",
+  "Welt · 2025"
+ ],
+ "fao-tropical-forest": [
+  "Wälder der Welt, die tropisch sind",
+  "Welt · 2025"
+ ],
+ "fao-land-grazing": [
+  "Eisfreie Landfläche der Erde, die als Weide für Tiere dient",
+  "Welt · FAO"
+ ],
+ "fao-cropland-feed": [
+  "Ackerland weltweit, auf dem Tierfutter wächst",
+  "Welt · FAO"
+ ],
+ "fao-forest-natural": [
+  "Wälder der Welt, die von selbst gewachsen sind, nicht gepflanzt",
+  "Welt · 2025"
+ ],
+ "fao-boreal-forest": [
+  "Wälder der Welt im kalten hohen Norden",
+  "Welt · 2025"
+ ],
+ "fao-soils-degraded": [
+  "Landfläche der Erde mit geschädigten, ausgelaugten Böden",
+  "Welt · FAO · 2015"
+ ],
+ "fao-cereal-calories": [
+  "Kalorien weltweit aus Getreide wie Weizen und Reis",
+  "Welt · Nahrungsmittelbilanz 2021"
+ ],
+ "gallup-football-fav": [
+  "US-Amerikaner, deren Lieblingssport American Football ist",
+  "USA · 2026"
+ ],
+ "gallup-soccer-fav": [
+  "US-Amerikaner, deren Lieblingssport Fußball ist",
+  "USA · 2026"
+ ],
+ "gallup-no-fav-sport": [
+  "US-Amerikaner ganz ohne Lieblingssport",
+  "USA · 2026"
+ ],
+ "gallup-smiled-laughed": [
+  "Erwachsene, die gestern viel gelacht haben",
+  "Welt · 144 Länder · 2024"
+ ],
+ "gallup-well-rested": [
+  "Erwachsene, die gut ausgeruht aufgewacht sind",
+  "Welt · 144 Länder · 2024"
+ ],
+ "gallup-stress": [
+  "Erwachsene, die gestern viel Stress hatten",
+  "Welt · 144 Länder · 2024"
+ ],
+ "gallup-ghosts": [
+  "US-Amerikaner, die an Geister glauben",
+  "USA · 2025"
+ ],
+ "gallup-drinkers": [
+  "US-Amerikaner, die überhaupt Alkohol trinken",
+  "USA · Erwachsene · 2025 · Rekordtief"
+ ],
+ "gallup-coffee-daily": [
+  "US-Amerikaner, die jeden Tag Kaffee trinken",
+  "USA · Erwachsene · 2025"
+ ],
+ "gallup-vegetarian": [
+  "US-Amerikaner, die Vegetarier sind",
+  "USA · Erwachsene · 2025"
+ ],
+ "gallup-tea-daily": [
+  "US-Amerikaner, die jeden Tag Tee trinken",
+  "USA · Erwachsene · 2025"
+ ],
+ "gallup-energy-drinks": [
+  "US-Amerikaner, die jeden Tag einen Energydrink trinken",
+  "USA · Erwachsene · 2025"
+ ],
+ "gallup-very-satisfied-life": [
+  "US-Amerikaner, die „sehr zufrieden“ mit ihrem Privatleben sind",
+  "USA · Januar 2025 · Rekordtief"
+ ],
+ "gallup-ufo-aliens": [
+  "US-Amerikaner, die manche UFOs für Raumschiffe von Aliens halten",
+  "USA · Erwachsene · Gallup"
+ ],
+ "gallup-seen-ufo": [
+  "US-Amerikaner, die nach eigener Aussage ein UFO gesehen haben",
+  "USA · Erwachsene · Gallup"
+ ],
+ "gallup-dog-person": [
+  "US-Amerikaner, die sich als „Hundemensch“ bezeichnen",
+  "USA · Erwachsene · 2006"
+ ],
+ "gallup-morning-best": [
+  "US-Amerikaner, die morgens am fittesten sind",
+  "USA · Erwachsene · 2007"
+ ],
+ "gallup-no-astrology": [
+  "US-Amerikaner, die nicht an Astrologie glauben",
+  "USA · Erwachsene · Mai 2025"
+ ],
+ "gallup-own-dog": [
+  "US-Amerikaner, die einen Hund haben",
+  "USA · Erwachsene · 2006"
+ ],
+ "br-smart-devices": [
+  "Brasilianische Haushalte mit smarten Geräten",
+  "Brasilien · Haushalte mit Internet · 2023"
+ ],
+ "iea-norway-bev": [
+  "Neuwagen in Norwegen, die rein elektrisch sind",
+  "Norwegen · 2024"
+ ],
+ "ilo-informal-work": [
+  "Erwerbstätige weltweit ohne Vertrag (informelle Jobs)",
+  "Welt · 2025"
+ ],
+ "ilo-neet": [
+  "Junge Leute, die weder arbeiten noch lernen",
+  "Welt · 15–24 Jahre · 2025"
+ ],
+ "imf-usd-reserves": [
+  "Währungsreserven der Welt, die in US-Dollar gehalten werden",
+  "Zentralbanken weltweit · 2025"
+ ],
+ "es-home-ownership": [
+  "Spanische Familien, denen ihr Zuhause gehört",
+  "Spanien · Haushalte · 2024"
+ ],
+ "mx-computer-households": [
+  "Mexikanische Haushalte mit Computer",
+  "Mexiko · 2024"
+ ],
+ "mx-tv-households": [
+  "Mexikanische Haushalte mit Fernseher",
+  "Mexiko · 2024"
+ ],
+ "mx-social-networks": [
+  "Internetnutzer in Mexiko, die in sozialen Medien sind",
+  "Mexiko · 2024"
+ ],
+ "fr-bath-1954": [
+  "Französische Haushalte mit Bad oder Dusche im Jahr 1954",
+  "Frankreich · Volkszählung 1954"
+ ],
+ "fr-households-car": [
+  "Französische Haushalte mit mindestens einem Auto",
+  "Frankreich · Volkszählung 2023"
+ ],
+ "ioc-women-1900": [
+  "Olympia-Teilnehmende, die 1900 Frauen waren",
+  "Olympische Spiele Paris 1900"
+ ],
+ "ioc-women-2012": [
+  "Olympia-Teilnehmende in London 2012, die Frauen waren",
+  "London 2012"
+ ],
+ "ioc-women-1984": [
+  "Olympia-Teilnehmende, die 1984 Frauen waren",
+  "Los Angeles 1984"
+ ],
+ "ipcc-ocean-sink": [
+  "Unsere CO2-Emissionen, die die Ozeane aufnehmen",
+  "Welt · 2010–2019 · IPCC"
+ ],
+ "ipcc-land-sink": [
+  "Unsere CO2-Emissionen, die Wälder und Böden aufnehmen",
+  "Welt · 2010–2019 · IPCC"
+ ],
+ "it-library-visit": [
+  "Italiener, die letztes Jahr in einer Bibliothek waren",
+  "Italien · ab 3 Jahren"
+ ],
+ "it-read-a-book": [
+  "Italiener, die letztes Jahr mindestens ein Buch gelesen haben",
+  "Italien · ab 6 Jahren · 2024"
+ ],
+ "it-cinema": [
+  "Italiener, die letztes Jahr im Kino waren",
+  "Italien · ab 6 Jahren · 2024"
+ ],
+ "it-theatre": [
+  "Italiener, die letztes Jahr im Theater waren",
+  "Italien · ab 6 Jahren · 2024"
+ ],
+ "it-terrain-hills": [
+  "Italien, das hügelig ist",
+  "Italien"
+ ],
+ "it-terrain-mountains": [
+  "Italien, das gebirgig ist",
+  "Italien"
+ ],
+ "it-terrain-plains": [
+  "Italien, das flache Ebene ist",
+  "Italien"
+ ],
+ "it-sport-any": [
+  "Italiener, die Sport treiben",
+  "Italien · ab 3 Jahren · 2024"
+ ],
+ "it-sport-football-share": [
+  "Sporttreibende in Italien, deren Sport Fußball ist",
+  "Italien · 2024"
+ ],
+ "it-sedentary-2025": [
+  "Italiener, die sich gar nicht sportlich betätigen",
+  "Italien · ab 3 Jahren · 2025"
+ ],
+ "it-illiteracy-1861": [
+  "Italiener, die 1861 weder lesen noch schreiben konnten",
+  "Italien · im Schulalter · 1861"
+ ],
+ "it-proper-breakfast": [
+  "Italiener, die richtig frühstücken",
+  "Italien · ab 3 Jahren · 2023"
+ ],
+ "it-skip-breakfast": [
+  "Italiener, die das Frühstück auslassen",
+  "Italien · 2023"
+ ],
+ "it-five-a-day": [
+  "Italiener, die täglich 5 Portionen Obst und Gemüse essen",
+  "Italien · Erwachsene · 2022"
+ ],
+ "it-agri-1861": [
+  "Italienische Erwerbstätige, die 1861 Landwirte waren",
+  "Italien · 1861"
+ ],
+ "it-over-65-2026": [
+  "Italiener ab 65 Jahren",
+  "Italien · 1. Januar 2026"
+ ],
+ "it-under-15-2026": [
+  "Italiener bis 14 Jahre",
+  "Italien · 1. Januar 2026"
+ ],
+ "it-over-85-2026": [
+  "Italiener ab 85 Jahren",
+  "Italien · 1. Januar 2026"
+ ],
+ "it-centenarians-women": [
+  "Hundertjährige in Italien, die Frauen sind",
+  "Italien · Menschen ab 100 Jahren · 2025"
+ ],
+ "it-18-34-with-parents": [
+  "Italiener von 18–34, die noch bei Mama und Papa wohnen",
+  "Italien · 2024"
+ ],
+ "it-happy-free-time": [
+  "Italiener, die mit ihrer Freizeit zufrieden sind",
+  "Italien · ab 14 Jahren · 2024"
+ ],
+ "it-household-internet": [
+  "Italienische Haushalte mit Internet",
+  "Italien · Haushalte · 2024"
+ ],
+ "it-smartphone-internet": [
+  "Italiener, die mit dem Smartphone online gehen",
+  "Italien · ab 6 Jahren · 2025"
+ ],
+ "it-daily-drinkers-2023": [
+  "Italiener, die jeden Tag Alkohol trinken",
+  "Italien · 2023 · 1998 war es noch ein Drittel"
+ ],
+ "it-sportswomen-fitness": [
+  "Sportlerinnen in Italien, deren Sport Gym oder Fitness ist",
+  "Italien · 2024"
+ ],
+ "it-sporty-cycling": [
+  "Sporttreibende in Italien, die Rad fahren",
+  "Italien · 2024"
+ ],
+ "it-smokers-2025": [
+  "Italiener, die rauchen",
+  "Italien · ab 11 Jahren · 2025"
+ ],
+ "it-bad-health-2025": [
+  "Italiener, die ihre Gesundheit als schlecht bezeichnen",
+  "Italien · 2025"
+ ],
+ "it-play-cards": [
+  "Italiener, die im letzten Jahr Karten gespielt haben",
+  "Italien · ab 14 Jahren · 2024"
+ ],
+ "it-crosswords": [
+  "Italiener, die Kreuzworträtsel lösen",
+  "Italien · ab 14 Jahren · 2024"
+ ],
+ "it-board-games": [
+  "Italiener, die Brettspiele spielen",
+  "Italien · ab 14 Jahren · 2024"
+ ],
+ "it-videogames": [
+  "Italiener, die im letzten Jahr ein Videospiel gespielt haben",
+  "Italien · ab 3 Jahren · 2024"
+ ],
+ "it-videogames-kids": [
+  "Italienische Kinder von 11–14, die Videospiele spielen",
+  "Italien · 11–14 Jahre · 2024"
+ ],
+ "it-any-game": [
+  "Italiener, die letztes Jahr irgendein Spiel gespielt haben",
+  "Italien · ab 14 Jahren · 2024"
+ ],
+ "it-trips-stay-italy": [
+  "Reisen von Italienern, die im Inland bleiben",
+  "Italien · Einwohner · 2024"
+ ],
+ "it-1946-turnout": [
+  "Italiener, die 1946 beim Referendum Republik oder Monarchie wählten",
+  "Italien · Wahlberechtigte · 2. Juni 1946"
+ ],
+ "it-1946-republic": [
+  "Gültige Stimmen für die Republik beim Referendum 1946 in Italien",
+  "Italien · 2. Juni 1946"
+ ],
+ "it-1966-washing-machine": [
+  "Italienische Familien mit Waschmaschine im Jahr 1966",
+  "Italien · 1966"
+ ],
+ "itu-internet-world": [
+  "Menschen weltweit, die das Internet nutzen",
+  "Welt · 2025"
+ ],
+ "itu-5g-coverage": [
+  "Menschen weltweit mit 5G-Empfang",
+  "Welt · 2025"
+ ],
+ "iucn-reef-corals": [
+  "Riffkorallenarten, die vom Aussterben bedroht sind",
+  "Welt · IUCN"
+ ],
+ "iucn-amphibians": [
+  "Frosch-, Kröten- und Molcharten, die vom Aussterben bedroht sind",
+  "Welt · Rote Liste der IUCN"
+ ],
+ "iucn-sharks": [
+  "Hai- und Rochenarten, die vom Aussterben bedroht sind",
+  "Welt · Rote Liste der IUCN"
+ ],
+ "iucn-lemurs": [
+  "Lemurenarten, die vom Aussterben bedroht sind",
+  "Madagaskar · IUCN · 2025"
+ ],
+ "iucn-cycads": [
+  "Bedrohte Palmfarnarten (Pflanzen, älter als Dinosaurier)",
+  "Welt · IUCN"
+ ],
+ "iucn-trees": [
+  "Baumarten, die vom Aussterben bedroht sind",
+  "Welt · IUCN · 2024"
+ ],
+ "iucn-birds-declining": [
+  "Vogelarten, deren Bestände schrumpfen",
+  "Welt · IUCN · 2025"
+ ],
+ "iucn-freshwater-decapods": [
+  "Bedrohte Süßwasserkrabben- und Flusskrebsarten",
+  "Welt · IUCN · 2025"
+ ],
+ "iucn-dragonflies": [
+  "Libellenarten, die vom Aussterben bedroht sind",
+  "Welt · IUCN · 2025"
+ ],
+ "iucn-cacti": [
+  "Kakteenarten, die vom Aussterben bedroht sind",
+  "Welt · IUCN · 2015"
+ ],
+ "iucn-conifers": [
+  "Kiefern- und Tannenarten, die vom Aussterben bedroht sind",
+  "Welt · IUCN"
+ ],
+ "iucn-freshwater-fish": [
+  "Süßwasserfischarten, die vom Aussterben bedroht sind",
+  "Welt · IUCN · 2025"
+ ],
+ "jp-karaoke": [
+  "Japaner, die letztes Jahr Karaoke gesungen haben",
+  "Japan · ab 10 Jahren · 2021"
+ ],
+ "jp-one-person-households": [
+  "Japanische Haushalte, in denen nur eine Person lebt",
+  "Japan · Volkszählung 2020"
+ ],
+ "jp-aged-65": [
+  "Japaner ab 65 Jahren",
+  "Japan · Volkszählung 2020"
+ ],
+ "jp-weekly-sport": [
+  "Japanische Erwachsene, die jede Woche Sport treiben",
+  "Japan · ab 20 Jahren · 2024"
+ ],
+ "jp-aged-65-1950": [
+  "Japaner ab 65 Jahren im Jahr 1950",
+  "Japan · 1950"
+ ],
+ "jp-sports": [
+  "Japaner, die letztes Jahr irgendeinen Sport getrieben haben",
+  "Japan · ab 10 Jahren · 2021"
+ ],
+ "jp-tokyo-share": [
+  "Japaner, die in der Präfektur Tokio leben",
+  "Japan · Oktober 2024"
+ ],
+ "nasa-sun-mass": [
+  "Masse des Sonnensystems, die allein die Sonne ausmacht",
+  "NASA"
+ ],
+ "nasa-venus-co2": [
+  "Atmosphäre der Venus, die aus Kohlendioxid besteht",
+  "NASA"
+ ],
+ "nasa-earth-n2": [
+  "Luft, die du atmest, die aus Stickstoff besteht",
+  "Erde · trockene Luft · NASA"
+ ],
+ "nasa-earth-o2": [
+  "Luft, die du atmest, die aus Sauerstoff besteht",
+  "Erde · trockene Luft · NASA"
+ ],
+ "nasa-moon-visible": [
+  "Mondoberfläche, die wir von der Erde aus sehen können",
+  "NASA"
+ ],
+ "nasa-mars-gravity": [
+  "Dein Gewicht auf dem Mars im Vergleich zur Erde",
+  "Schwerkraft auf der Marsoberfläche · NASA"
+ ],
+ "nasa-moon-gravity": [
+  "Dein Gewicht auf dem Mond im Vergleich zur Erde",
+  "Schwerkraft auf der Mondoberfläche · NASA"
+ ],
+ "nasa-sun-hydrogen-mass": [
+  "Masse der Sonne, die Wasserstoff ist",
+  "NASA"
+ ],
+ "nasa-sun-helium-mass": [
+  "Masse der Sonne, die Helium ist (das Ballongas)",
+  "NASA"
+ ],
+ "nasa-amazon-land": [
+  "Landfläche der Erde, die der Amazonas-Regenwald bedeckt",
+  "Welt"
+ ],
+ "nasa-mars-size": [
+  "Wie breit der Mars im Vergleich zur Erde ist",
+  "Verhältnis der Durchmesser · NASA"
+ ],
+ "nasa-moon-size": [
+  "Wie breit der Mond im Vergleich zur Erde ist",
+  "Verhältnis der Durchmesser · NASA"
+ ],
+ "nasa-venus-size": [
+  "Wie breit die Venus im Vergleich zur Erde ist (fast ein Zwilling!)",
+  "Verhältnis der Durchmesser · NASA"
+ ],
+ "nasa-mars-mass": [
+  "Wie schwer der Mars im Vergleich zur Erde ist",
+  "Verhältnis der Massen · NASA"
+ ],
+ "nasa-jupiter-h2": [
+  "Atmosphäre des Jupiter, die aus Wasserstoff besteht",
+  "NASA"
+ ],
+ "nasa-uranus-methane": [
+  "Atmosphäre des Uranus aus Methan (darum wirkt er blau)",
+  "NASA"
+ ],
+ "nasa-neptune-he": [
+  "Atmosphäre des Neptun, die aus Helium besteht",
+  "NASA"
+ ],
+ "nasa-pluto-n2": [
+  "Plutos dünne Atmosphäre, die aus Stickstoff besteht",
+  "NASA"
+ ],
+ "nasa-titan-nitrogen": [
+  "Titans Atmosphäre aus Stickstoff (Saturns größter Mond)",
+  "Titan · NASA Cassini"
+ ],
+ "en-drank-alcohol-year": [
+  "Erwachsene in England, die letztes Jahr Alkohol tranken",
+  "England · 2022"
+ ],
+ "nhsbt-ab-negative": [
+  "Blutspender mit AB negativ, der seltensten Blutgruppe",
+  "Vereinigtes Königreich · Blutspender"
+ ],
+ "nhsbt-rhd-positive": [
+  "Blutspender mit „positivem“ Blut (RhD+)",
+  "Vereinigtes Königreich · Blutspender"
+ ],
+ "noaa-reef-heat-stress": [
+  "Korallenriffe, die 2023–2025 von Bleiche-Hitze getroffen wurden",
+  "Welt · NOAA"
+ ],
+ "noaa-seafloor-mapped": [
+  "Meeresboden, der detailliert kartiert ist",
+  "Welt · April 2026"
+ ],
+ "noaa-coastal-population": [
+  "US-Amerikaner, die in Küstenbezirken leben",
+  "USA"
+ ],
+ "noaa-underwater-volcanoes": [
+  "Vulkanische Aktivität der Erde, die unter Wasser stattfindet",
+  "Welt · NOAA"
+ ],
+ "noaa-ocean-unexplored": [
+  "Der Ozean, der noch unerforscht ist",
+  "Welt · NOAA Ocean Today"
+ ],
+ "oecd-plastic-recycled": [
+  "Plastikmüll, der tatsächlich recycelt wird",
+  "Welt · 2019"
+ ],
+ "oecd-plastic-mismanaged": [
+  "Plastikmüll weltweit, der abgeladen, verbrannt oder in der Natur verloren geht",
+  "Welt · 2019"
+ ],
+ "ew-no-car": [
+  "Haushalte in England und Wales ohne Auto",
+  "England & Wales · Volkszählung 2021"
+ ],
+ "ew-work-from-home": [
+  "Beschäftigte in England, die von zu Hause arbeiteten",
+  "England & Wales · Volkszählung 2021"
+ ],
+ "gb-crypto": [
+  "Briten, die schon einmal Kryptowährung besaßen",
+  "Großbritannien · 2025"
+ ],
+ "gb-green-lifestyle": [
+  "Briten, die für den Planeten ihre Gewohnheiten geändert haben",
+  "Großbritannien · 2025"
+ ],
+ "ew-1961-private-rent": [
+  "Haushalte in England und Wales, die 1961 privat zur Miete wohnten",
+  "England & Wales · Volkszählung 1961"
+ ],
+ "uk-1920-primary": [
+  "Britische Jobs in Landwirtschaft, Fischerei und Bergbau im Jahr 1920",
+  "Vereinigtes Königreich · 1920"
+ ],
+ "pew-smartphone": [
+  "US-Amerikaner, die ein Smartphone besitzen",
+  "USA · Erwachsene · 2025"
+ ],
+ "pew-youtube": [
+  "US-Amerikaner, die YouTube nutzen",
+  "USA · Erwachsene · 2025"
+ ],
+ "pew-tiktok": [
+  "US-Amerikaner, die TikTok nutzen",
+  "USA · Erwachsene · 2025"
+ ],
+ "pew-chatgpt-adults": [
+  "US-Amerikaner, die schon einmal ChatGPT genutzt haben",
+  "USA · Erwachsene · 2025"
+ ],
+ "pew-teens-chatbots": [
+  "US-Teenager, die KI-Chatbots nutzen",
+  "USA · 13–17 Jahre · 2025"
+ ],
+ "pew-tattoo": [
+  "US-Amerikaner mit Tattoo",
+  "USA · Erwachsene · 2023"
+ ],
+ "pew-pet-owners": [
+  "US-Amerikaner, die ein Haustier haben",
+  "USA · Erwachsene · 2023"
+ ],
+ "pew-pets-family": [
+  "US-Tierhalter, für die ihr Haustier zur Familie gehört",
+  "USA · Tierhalter · 2023"
+ ],
+ "pew-pets-like-human": [
+  "US-Tierhalter, denen ihr Tier so viel bedeutet wie ein Verwandter",
+  "USA · Tierhalter · 2023"
+ ],
+ "pew-travelled-abroad": [
+  "US-Amerikaner, die schon einmal im Ausland waren",
+  "USA · Erwachsene · 2021"
+ ],
+ "pew-astrology-tarot": [
+  "US-Amerikaner, die Astrologie, Tarot oder Wahrsager befragen",
+  "USA · Erwachsene · mindestens einmal im Jahr"
+ ],
+ "en-year7-swim": [
+  "11-Jährige in England, die 25 Meter schwimmen können",
+  "England · 2024"
+ ],
+ "en-inactive-adults": [
+  "Erwachsene in England, die sich kaum bewegen",
+  "England · unter 30 Min. pro Woche · 2024"
+ ],
+ "en-kids-active": [
+  "Kinder in England, die sich mindestens eine Stunde am Tag bewegen",
+  "England · 5–16 Jahre · 2024"
+ ],
+ "ca-cat-households": [
+  "Kanadische Haushalte mit Katze",
+  "Kanada · Haushalte · 2023"
+ ],
+ "ca-volunteering": [
+  "Kanadier, die sich ehrenamtlich in einer Organisation engagieren",
+  "Kanada · ab 15 Jahren · 2023"
+ ],
+ "ca-rural-1871": [
+  "Kanadier, die 1871 auf dem Land lebten",
+  "Kanada · Volkszählung 1871"
+ ],
+ "ca-sport-participation": [
+  "Kanadier, die letztes Jahr Sport getrieben haben",
+  "Kanada · ab 15 Jahren · 2023"
+ ],
+ "ca-quebec-maple": [
+  "Kanadischer Ahornsirup, der aus Québec stammt",
+  "Kanada · 2024"
+ ],
+ "ca-tent-camping": [
+  "Kanadier, die im Zelt campen waren",
+  "Kanada · 2021"
+ ],
+ "ca-walk-outdoors": [
+  "Kanadische Haushalte, die in der Nähe draußen spazieren gehen",
+  "Kanada · Haushalte · 2021"
+ ],
+ "ca-grow-own-food": [
+  "Kanadische Haushalte, die eigenes Obst, Kräuter oder Gemüse anbauen",
+  "Kanada · 2023"
+ ],
+ "fi-sauna-dwellings": [
+  "Finnische Wohnungen mit eigener Sauna",
+  "Finnland · 2018"
+ ],
+ "nz-home-ownership": [
+  "Familien in Neuseeland, denen ihr Zuhause gehört",
+  "Neuseeland · Volkszählung 2023"
+ ],
+ "study-left-handed": [
+  "Menschen, die Linkshänder sind",
+  "Welt · 2,4 Millionen Menschen untersucht"
+ ],
+ "study-no-wisdom-teeth": [
+  "Menschen, denen mindestens ein Weisheitszahn von Geburt an fehlt",
+  "Welt · 63.000 Menschen untersucht"
+ ],
+ "study-myopia-2000": [
+  "Menschen weltweit, die kurzsichtig waren",
+  "Welt · Jahr 2000"
+ ],
+ "study-left-footed": [
+  "Menschen, die Linksfüßer sind",
+  "Welt · 164 Studien"
+ ],
+ "study-lefties-left-footed": [
+  "Linkshänder, die auch Linksfüßer sind",
+  "Welt · 164 Studien"
+ ],
+ "study-righties-left-footed": [
+  "Rechtshänder, die Linksfüßer sind",
+  "Welt · 164 Studien"
+ ],
+ "study-photic-sneeze": [
+  "Menschen, die niesen, wenn sie in helles Licht schauen",
+  "China · 3.400 Erwachsene untersucht"
+ ],
+ "study-tongue-roll": [
+  "Menschen, die die Zunge rollen können",
+  "Niederlande · 387 Erwachsene untersucht"
+ ],
+ "study-cow-tongue-roll": [
+  "Milchkühe, die beim „Zungenrollen“ ertappt wurden",
+  "Ein großer US-Hof · Studie 2023"
+ ],
+ "study-aphantasia": [
+  "Menschen, die sich keine Bilder im Kopf vorstellen können",
+  "Vereinigtes Königreich · 1.004 Menschen untersucht"
+ ],
+ "study-dogs-paw-preference": [
+  "Hunde, die klar eine Pfote bevorzugen",
+  "Metaanalyse von Pfotentests · 2019"
+ ],
+ "study-cats-left-pawed": [
+  "Katzen, die Linkspfoter sind",
+  "56 Hauskatzen · Studie 2019"
+ ],
+ "study-asparagus-anosmia": [
+  "Menschen, die „Spargel-Pipi“ nicht riechen können",
+  "USA · 6.909 Erwachsene untersucht"
+ ],
+ "study-na-birds-lost": [
+  "Vögel Nordamerikas, die seit 1970 verloren gingen",
+  "USA & Kanada · Science 2019"
+ ],
+ "study-home-wins-fans": [
+  "Heimsiege im deutschen Fußball mit Fans im Stadion",
+  "Deutschland · vor Corona"
+ ],
+ "study-home-wins-empty": [
+  "Heimsiege im deutschen Fußball in leeren Stadien",
+  "Deutschland · Corona-Saisons"
+ ],
+ "study-reptiles-threatened": [
+  "Reptilienarten, die vom Aussterben bedroht sind",
+  "Welt · Nature 2022"
+ ],
+ "study-lucid-dream-ever": [
+  "Menschen, die schon einmal einen Klartraum hatten",
+  "Welt · 50 Jahre Studien"
+ ],
+ "study-first-memory-age1": [
+  "Menschen, deren „erste Erinnerung“ aus dem 1. Lebensjahr stammt (wohl falsch)",
+  "6.313 Befragte · 2018"
+ ],
+ "study-right-eye-dominant": [
+  "Menschen, deren rechtes Auge das dominante ist",
+  "524 Erwachsene untersucht · 2025"
+ ],
+ "study-palmaris-longus": [
+  "Menschen ohne eine bestimmte Handgelenksehne (Daumen + kleinen Finger zusammen!)",
+  "Welt · Übersicht von Studien"
+ ],
+ "study-grassland-birds-lost": [
+  "Wiesenvögel Nordamerikas, die seit 1970 verloren gingen",
+  "USA & Kanada · Science 2019"
+ ],
+ "study-body-water-men-61": [
+  "Körpergewicht, das bei Männern über 60 Wasser ist",
+  "Normalgewichtige Männer · ab 61 Jahren · Studie"
+ ],
+ "un-urban-1950": [
+  "Menschen weltweit, die 1950 in Städten lebten",
+  "Welt · 1950"
+ ],
+ "un-urban-2018": [
+  "Menschen weltweit, die in Städten leben",
+  "Welt · 2018"
+ ],
+ "unep-food-wasted": [
+  "Essen in Läden, Restaurants und Haushalten, das verschwendet wird",
+  "Welt · 2022"
+ ],
+ "unep-waste-households": [
+  "Lebensmittelverschwendung weltweit, die zu Hause passiert",
+  "Welt · 2022"
+ ],
+ "usda-food-away": [
+  "US-Ausgaben für Essen, die an Restaurants und Imbisse gehen",
+  "USA · 2023"
+ ],
+ "usda-income-on-food": [
+  "Einkommen der US-Amerikaner, das für Essen ausgegeben wird",
+  "USA · 2023"
+ ],
+ "usda-bees-lost-q2": [
+  "US-Bienenvölker, die im Frühling verloren gingen",
+  "USA · April–Juni 2025"
+ ],
+ "usda-pizza-day": [
+  "US-Amerikaner, die an einem beliebigen Tag Pizza essen",
+  "USA · 2007–2010"
+ ],
+ "usda-pizza-kids": [
+  "US-Kinder, die an einem beliebigen Tag Pizza essen",
+  "USA · 2007–2010"
+ ],
+ "usda-sandwich": [
+  "US-Erwachsene, die an einem beliebigen Tag ein Sandwich essen",
+  "USA · Umfragedaten"
+ ],
+ "usda-cage-free-hens": [
+  "US-Legehennen, die nicht im Käfig gehalten werden",
+  "USA · Juni 2023"
+ ],
+ "usda-corn-ethanol-2008": [
+  "US-Mais, der zu Autokraftstoff verarbeitet wurde",
+  "USA · 2008"
+ ],
+ "usgs-oceans-water": [
+  "Wasser der Erde, das in den Ozeanen ist",
+  "Welt"
+ ],
+ "usgs-freshwater-ice": [
+  "Süßwasser der Erde, das in Eis und Gletschern gefroren ist",
+  "Welt"
+ ],
+ "usgs-freshwater-ground": [
+  "Süßwasser der Erde, das unter der Erde verborgen ist",
+  "Welt"
+ ],
+ "usgs-surface-water": [
+  "Erdoberfläche, die von Wasser bedeckt ist",
+  "Welt"
+ ],
+ "usgs-great-lakes": [
+  "Oberflächen-Süßwasser der Welt in den Großen Seen",
+  "USA & Kanada · USGS 2005"
+ ],
+ "who-adults-inactive": [
+  "Erwachsene, die sich nicht genug bewegen",
+  "Welt · WHO · 2022"
+ ],
+ "who-teens-inactive": [
+  "Teenager, die sich nicht genug bewegen",
+  "Welt · 11–17 Jahre · WHO"
+ ],
+ "jmp-safe-water": [
+  "Menschen mit sauberem Trinkwasser zu Hause",
+  "Welt · 2024"
+ ],
+ "jmp-basic-hygiene": [
+  "Menschen mit Seife und Wasser zum Händewaschen zu Hause",
+  "Welt · 2024"
+ ],
+ "who-air-guidelines": [
+  "Menschen, die schmutzigere Luft atmen, als die WHO empfiehlt",
+  "Welt · 2019"
+ ],
+ "who-oral-disease": [
+  "Menschen mit Zahnproblemen, meist Karies",
+  "Welt · WHO · 2022"
+ ],
+ "who-measles-1": [
+  "Kinder, die ihre erste Masernimpfung bekommen haben",
+  "Welt · 2024"
+ ],
+ "unicef-skilled-birth": [
+  "Geburten im Beisein von Arzt, Pflegekraft oder Hebamme",
+  "Welt · 2024"
+ ],
+ "jmp-safe-sanitation": [
+  "Menschen weltweit mit sicherer Toilette zu Hause",
+  "Welt · 2024"
+ ],
+ "wb-electricity-world": [
+  "Menschen weltweit mit Strom zu Hause",
+  "Welt · 2022"
+ ],
+ "wb-findex-account": [
+  "Erwachsene weltweit mit Bankkonto",
+  "Welt · inkl. Mobile Money · 2024"
+ ],
+ "wb-ssa-mobile-money": [
+  "Erwachsene in Subsahara-Afrika, die Mobile Money nutzen",
+  "Subsahara-Afrika · 2024"
+ ]
+}

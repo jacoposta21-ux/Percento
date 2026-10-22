@@ -5,7 +5,7 @@
 //   - keyboard play, reduced motion, storage blocked, reload-resume, share/copy
 //   - accounts, world leaderboard and a 2-player friends room against an
 //     in-browser fake of Supabase (e2e/fake-supabase.js); offline fallback
-import { mkdirSync } from 'node:fs';
+import { mkdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { execFileSync } from 'node:child_process';
 import { chromium } from 'playwright-core';
@@ -343,6 +343,53 @@ async function main() {
       check(total === expected, `guess solo: total ${total} matches the rule (${expected})`);
       await audit(page, 'guess solo results');
       await page.screenshot({ path: join(SHOTS, 'guess-solo-results.png'), fullPage: true });
+      await context.close();
+    }
+
+    log('▶ languages');
+    for (const [lang, locale] of [['it', 'it-IT'], ['fr', 'fr-FR'], ['es', 'es-ES'], ['de', 'de-DE'], ['pt', 'pt-BR']]) {
+      const dict = (await import(join(ROOT, 'src', 'locales', `${lang}.js`))).default;
+      const cards = JSON.parse(readFileSync(join(ROOT, 'data', 'i18n', `${lang}.json`), 'utf8'));
+      const context = await newContext({ viewport: { width: 360, height: 760 }, locale });
+      const page = await context.newPage();
+      watch(page);
+      await page.goto(`${BASE}#/`);
+      await page.waitForSelector('.cat-tile');
+      check((await page.getAttribute('html', 'lang')) === lang, `${lang}: language picked from the browser`);
+      check((await page.textContent('.nav [data-route="play"] span')) === dict.Play, `${lang}: nav translated`);
+      check((await page.textContent('.hero .screen-title span')) === dict['One is higher.'], `${lang}: home translated`);
+      await audit(page, `${lang} home`);
+      await page.screenshot({ path: join(SHOTS, `${lang}-home.png`), fullPage: true });
+      await page.goto(`${BASE}#/endless`);
+      await page.waitForSelector('.card-pick');
+      const texts = await cardTexts(page);
+      const translated = new Set(Object.values(cards).map((c) => c[0]));
+      check(texts.every((t) => translated.has(t)), `${lang}: cards translated (${texts})`);
+      await audit(page, `${lang} round`);
+      await page.click('.card-a .card-pick');
+      await waitReveal(page);
+      const values = await page.$$eval('.card-value', (els) => els.map((e) => e.textContent));
+      check(values.every((v) => !/\d\.\d/.test(v)), `${lang}: decimal comma in percentages (${values})`);
+      await audit(page, `${lang} reveal`);
+      await page.screenshot({ path: join(SHOTS, `${lang}-reveal.png`), fullPage: true });
+      await page.goto(`${BASE}#/guess`);
+      await page.waitForSelector('.guess-slider');
+      await audit(page, `${lang} closest guess`);
+      await page.goto(`${BASE}#/online`);
+      await page.waitForSelector('main .screen-title');
+      await audit(page, `${lang} online`);
+      if (lang === 'it') {
+        // Switching language in Settings reloads the game in the new language.
+        await page.goto(`${BASE}#/settings`);
+        await page.waitForSelector('.lang-select');
+        await page.selectOption('.lang-select', 'fr');
+        await page.waitForLoadState('load');
+        await page.waitForFunction(() => document.documentElement.lang === 'fr');
+        check(true, '');
+        await page.goto(`${BASE}#/`);
+        await page.waitForSelector('.cat-tile');
+        check((await page.textContent('.nav [data-route="play"] span')) !== dict.Play, 'settings: language switch to French');
+      }
       await context.close();
     }
 

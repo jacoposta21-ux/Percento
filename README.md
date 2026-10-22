@@ -14,6 +14,15 @@
 
 Plain HTML, CSS and ES modules. The only runtime library is supabase-js (vendored in `vendor/`, loaded in the background); if it or the server is unreachable, the game keeps working as a guest. Node ≥ 20 for the tooling.
 
+## Languages
+
+English, Italian, French, Spanish, German and Portuguese. The game picks the browser's language (Settings → Language to change it).
+
+- Interface: `src/locales/<lang>.js`, keyed by the English text (`t('Play again')` in the code, `{name}` placeholders). `npm run i18n` lists strings missing in any language after the code changes; the unit tests fail on missing strings or mismatched placeholders.
+- Cards: `data/i18n/<lang>.json` maps each card id to `[text, detail]` (text ≤ 80, detail ≤ 70 characters, no percentages). The build writes `src/cards/<lang>.js` for the cards it ships. A new card without a translation shows in English and fails the unit tests until it is translated.
+- Percentages follow the language's number format (12.5% / 12,5 %). Daily challenges, rooms, leaderboards and "what everybody answered" are shared across languages: they work on card ids, not texts.
+- Translations were machine-made by a model and checked automatically (placeholders, lengths, no answers revealed); a native-speaker read-through is still recommended, especially for the jokes.
+
 ## Online backend (Supabase)
 
 Project `percento` (eu-central-1). Schema, row level security and the room functions are in `supabase/migrations/`. The browser uses the publishable key in `src/online-config.js`; the database rules decide what it may do (players write only their own rows; rooms are created, joined, started and scored only through `create_room`, `join_room`, `start_room`, `report_room_score`, which enforce 10 players, host-only start and no joining after the start).
