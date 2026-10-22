@@ -20,7 +20,8 @@ One-time settings in the Supabase dashboard (Authentication):
 
 1. **URL Configuration**: Site URL `https://percento-virid.vercel.app`, and add it to Redirect URLs. Without this, confirmation emails and Google sign-in send players to localhost.
 2. **Email**: the built-in mailer only delivers to members of the Supabase team and a few emails per hour. Either set up custom SMTP (Authentication → Emails → SMTP, e.g. Resend or Brevo), or switch off "Confirm email" (Sign In / Providers → Email) so players are signed in immediately.
-3. **Google**: create an OAuth client in Google Cloud Console (Web application, redirect URI `https://tsbdkvgfdnalxgahnvnp.supabase.co/auth/v1/callback`), then paste its client ID and secret in Sign In / Providers → Google. Until then the Google button explains it is not switched on.
+3. **Guests online**: switch on "Allow anonymous sign-ins" (Authentication → Sign In / Providers). Guests pick a nickname and play online without email; they can later add an email and password on the Account page and keep their name and records. Until it is on, the guest button says guest play is not switched on yet. Supabase suggests turning on CAPTCHA protection once the game is public.
+4. **Google**: create an OAuth client in Google Cloud Console (Web application, redirect URI `https://tsbdkvgfdnalxgahnvnp.supabase.co/auth/v1/callback`), then paste its client ID and secret in Sign In / Providers → Google. Until then the Google button explains it is not switched on.
 
 The e2e suite never touches the real backend: `e2e/fake-supabase.js` stands in for it in the browser (two tabs play a full room against each other).
 

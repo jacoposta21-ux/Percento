@@ -867,9 +867,12 @@ async function profileScreen(me) {
   const message = h('p', { class: 'form-message', role: 'alert' });
   const [nameField, name] = field('Player name', { name: 'username', value: me.username, required: true, minlength: 3, maxlength: 20, pattern: '[A-Za-z0-9_]+' });
   mount(
-    h('p', { class: 'kicker' }, 'Signed in'),
+    h('p', { class: 'kicker' }, me.guest ? 'Playing online as a guest' : 'Signed in'),
     h('h1', { class: 'screen-title' }, `Hi, ${me.username}!`),
-    h('p', { class: 'lede' }, 'Your Endless runs and Daily Challenges are saved to your account.'),
+    h('p', { class: 'lede' }, me.guest
+      ? 'Your games are saved on this browser only. Add an email and password to keep them on every device; your name and records stay.'
+      : 'Your Endless runs and Daily Challenges are saved to your account.'),
+    me.guest ? upgradeForm() : null,
     stats,
     h('form', { class: 'box form', style: 'margin-top:16px', onsubmit: async (ev) => {
       ev.preventDefault();
@@ -881,7 +884,12 @@ async function profileScreen(me) {
     } }, nameField, message, h('button', { class: 'btn', type: 'submit' }, 'Save name')),
     h('div', { class: 'actions' },
       h('a', { class: 'btn btn-primary', href: '#/online' }, 'Play with friends'),
-      h('button', { class: 'btn', type: 'button', onclick: async () => { await online.signOut(); toast('Signed out. Playing as guest.'); location.hash = '#/'; } }, 'Sign out')),
+      h('button', { class: 'btn', type: 'button', onclick: async () => {
+        if (me.guest && !window.confirm('Leave guest mode? Without an email you cannot come back to this name and its records.')) return;
+        await online.signOut();
+        toast('Signed out. Playing offline as a guest.');
+        location.hash = '#/';
+      } }, me.guest ? 'Leave guest mode' : 'Sign out')),
     settingsLink());
   const data = await online.myStats().catch(() => null);
   if (!stats.isConnected) return;
@@ -897,19 +905,60 @@ async function profileScreen(me) {
       h('span', { class: 'score' }, `${d.score}/${d.answers.length}`)))) : h('p', { class: 'board-empty' }, 'No Daily Challenge saved yet.'));
 }
 
+function upgradeForm() {
+  const message = h('p', { class: 'form-message', role: 'alert' });
+  const [mailField, mail] = field('Email', { type: 'email', name: 'email', autocomplete: 'email', required: true });
+  const [passField, pass] = field('Password', { type: 'password', name: 'password', autocomplete: 'new-password', required: true, minlength: 6 });
+  const form = h('form', { class: 'box form', novalidate: true, onsubmit: async (ev) => {
+    ev.preventDefault();
+    message.className = 'form-message';
+    if (!mail.validity.valid || !mail.value) { message.textContent = 'Enter a valid email.'; return; }
+    if (pass.value.length < 6) { message.textContent = 'Password: at least 6 characters.'; return; }
+    form.querySelectorAll('button, input').forEach((el) => { el.disabled = true; });
+    const res = await online.upgradeGuest({ email: mail.value.trim(), password: pass.value });
+    form.querySelectorAll('button, input').forEach((el) => { el.disabled = false; });
+    if (res.error) { message.textContent = res.error; return; }
+    if (res.confirm) {
+      message.className = 'form-message ok';
+      message.textContent = `Almost there! Open the link we sent to ${mail.value.trim()} to finish.`;
+      return;
+    }
+    toast('Account saved. Welcome!');
+    account();
+  } }, h('h2', {}, 'Keep your progress'), mailField, passField, message, h('button', { class: 'btn btn-primary', type: 'submit' }, 'Save my account'));
+  return form;
+}
+
 function updateAccountLink() {
   const me = online.currentUser();
   for (const el of document.querySelectorAll('[data-account-label]')) el.textContent = me ? me.username : 'Sign in';
 }
 
-/** Sends a guest to sign in, then back to `hash`. */
+/** Online without an account: pick a nickname and play as a guest, or sign in. Then back to `hash`. */
 function needAccount(hash, title, why) {
   session.set(RETURN_KEY, hash);
+  const message = h('p', { class: 'form-message', role: 'alert' });
+  const [nickField, nick] = field('Your nickname', { name: 'nickname', autocomplete: 'nickname', maxlength: 20, placeholder: 'e.g. Jacopo_21' });
+  const form = h('form', { class: 'box box-feature form guest-form', novalidate: true, onsubmit: async (ev) => {
+    ev.preventDefault();
+    message.className = 'form-message';
+    const name = nick.value.trim().replace(/\s+/g, '_');
+    if (!/^[A-Za-z0-9_]{3,20}$/.test(name)) { message.textContent = 'Nickname: 3 to 20 letters, numbers or _.'; return; }
+    form.querySelectorAll('button, input').forEach((el) => { el.disabled = true; });
+    const res = await online.signInAsGuest(name);
+    form.querySelectorAll('button, input').forEach((el) => { el.disabled = false; });
+    if (res.error) { message.textContent = res.error; return; }
+    session.remove(RETURN_KEY);
+    if (location.hash === hash) route(); else location.hash = hash;
+  } }, h('h2', {}, 'Play as a guest'), h('p', { class: 'muted' }, 'No email, no password. Just a name the others will see.'),
+  nickField, message, h('button', { class: 'btn btn-primary btn-big', type: 'submit' }, 'Play as guest'));
   mount(h('h1', { class: 'screen-title' }, title), h('p', { class: 'lede' }, why),
+    form,
+    h('p', { class: 'muted' }, 'Have an account, or want one to keep your records everywhere?'),
     h('div', { class: 'actions' },
-      h('a', { class: 'btn btn-primary', href: '#/account/new' }, 'Create account'),
       h('a', { class: 'btn', href: '#/account' }, 'Sign in'),
-      h('a', { class: 'btn', href: '#/' }, 'Play solo as guest')));
+      h('a', { class: 'btn', href: '#/account/new' }, 'Create account')));
+  nick.focus({ preventScroll: true });
 }
 
 // ---------- friends: rooms ----------
@@ -922,7 +971,7 @@ async function friends() {
   if (location.hash !== '#/online') return;
   if (!ok) return mount(h('h1', { class: 'screen-title' }, 'Play online'), offlineNotice());
   if (!online.currentUser()) {
-    return needAccount('#/online', 'Play online', 'Online games need an account so everyone sees who is who. It takes 20 seconds.');
+    return needAccount('#/online', 'Play online', 'Pick a nickname so the others know who is who.');
   }
   const message = h('p', { class: 'form-message', role: 'alert' });
   const [codeField, code] = field('Room code', { name: 'code', autocomplete: 'off', maxlength: 6, placeholder: 'ABC123', style: 'text-transform:uppercase' });
@@ -985,7 +1034,7 @@ async function room(code) {
   if (location.hash !== hash) return;
   if (!ok) return mount(h('h1', { class: 'screen-title' }, `Room ${code}`), offlineNotice());
   const me = online.currentUser();
-  if (!me) return needAccount(hash, `Join room ${code}`, 'Your friend invited you to a PERCENTO room. Sign in or create an account to join.');
+  if (!me) return needAccount(hash, `Join room ${code}`, 'Your friend invited you to a PERCENTO game. Pick a nickname to join.');
 
   let data = await online.fetchRoom(code);
   if (location.hash !== hash) return;

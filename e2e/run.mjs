@@ -334,7 +334,7 @@ async function main() {
       };
       // Guest asks for friends → account → back to friends, signed in.
       await p1.goto(`${BASE}#/online`);
-      await p1.waitForSelector('text=Online games need an account');
+      await p1.waitForSelector('text=Pick a nickname so the others know');
       await signUp(p1, 'Anna_1', 'anna@example.com');
       await p1.waitForSelector('main >> text=Room with friends');
       check(p1.url().endsWith('#/online'), `room flow: back to the online page after sign-up (${p1.url()})`);
@@ -422,10 +422,22 @@ async function main() {
       const guessRoom = p1.url().split('#/room/')[1];
       await p2.goto(`${BASE}#/room/${guessRoom}`);
       await p2.waitForSelector('text=Waiting for the host');
+      // A guest joins with just a nickname (same nickname as a player: it gets made unique).
+      const p3 = await context.newPage();
+      watch(p3);
+      await p3.goto(`${BASE}#/room/${guessRoom}`);
+      await p3.waitForSelector('text=Play as a guest');
+      await audit(p3, 'guest join');
+      await p3.fill('input[name=nickname]', 'Bob');
+      await p3.click('button:has-text("Play as guest")');
+      await p3.waitForSelector('text=Waiting for the host');
+      check(/^Bob\d{5}$/.test(await p3.textContent('[data-account-label]')), 'guest: nickname made unique and shown in the nav');
+      await p1.waitForSelector('.room-board li:nth-child(3)', { timeout: 8000 });
       await p1.waitForSelector('text=Start the game', { timeout: 8000 });
       await p1.click('text=Start the game');
       await p1.waitForSelector('.guess-slider:not([disabled])', { timeout: 10000 });
       await p2.waitForSelector('.guess-slider:not([disabled])', { timeout: 10000 });
+      await p3.waitForSelector('.guess-slider:not([disabled])', { timeout: 10000 });
       check((await p1.textContent('.card-text')) === (await p2.textContent('.card-text')), 'guess room: same card for both');
       await audit(p1, 'guess room round');
       await setGuess(p1, 30);
@@ -438,6 +450,18 @@ async function main() {
       await audit(p1, 'guess room reveal');
       await p1.waitForSelector('.screen-title:has-text("🏆")', { timeout: 40000 });
       await p2.waitForSelector('.screen-title:has-text("🏆")', { timeout: 8000 });
+      await p3.waitForSelector('text=Final standings', { timeout: 8000 });
+
+      // The guest keeps their name and records by adding an email.
+      await p3.goto(`${BASE}#/account`);
+      await p3.waitForSelector('text=Playing online as a guest');
+      await audit(p3, 'guest account');
+      await p3.fill('input[name=email]', 'carla@example.com');
+      await p3.fill('input[name=password]', 'secret123');
+      await p3.click('button:has-text("Save my account")');
+      await p3.waitForSelector('text=Signed in');
+      check((await p3.textContent('.screen-title')).includes('Bob'), 'guest: upgraded account keeps the nickname');
+      await p3.close();
       check((await p1.textContent('main')).includes('Final standings'), 'guess room: final standings');
       await p1.screenshot({ path: join(SHOTS, 'guess-room-results.png'), fullPage: true });
 

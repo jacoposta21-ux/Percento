@@ -68,7 +68,7 @@ export function init() {
 }
 
 export const isOnline = () => client !== null;
-export const currentUser = () => (user && profile ? { id: user.id, email: user.email, username: profile.username } : null);
+export const currentUser = () => (user && profile ? { id: user.id, email: user.email, username: profile.username, guest: Boolean(user.is_anonymous) } : null);
 export function onAuthChange(fn) {
   listeners.add(fn);
   return () => listeners.delete(fn);
@@ -78,6 +78,7 @@ const fail = (error) => {
   if (!error) return null;
   const m = error.message || String(error);
   if (/provider is not enabled|Unsupported provider/i.test(m)) return 'Google sign-in is not switched on yet. Use email and password for now.';
+  if (/anonymous sign-ins are disabled/i.test(m)) return 'Guest play is not switched on yet. Create an account for now.';
   if (/Invalid login credentials/i.test(m)) return 'Wrong email or password.';
   if (/Email not confirmed/i.test(m)) return 'Confirm your email first: check your inbox for our link.';
   if (/already registered/i.test(m)) return 'This email already has an account. Sign in instead.';
@@ -119,6 +120,23 @@ export async function signIn({ email, password }) {
 export async function signInWithGoogle() {
   const { error } = await client.auth.signInWithOAuth({ provider: 'google', options: { redirectTo: redirectTo() } });
   return { error: fail(error) };
+}
+
+/** Online play without an account: an anonymous player with just a nickname. */
+export async function signInAsGuest(nickname) {
+  const { data, error } = await client.auth.signInAnonymously({ options: { data: { username: nickname } } });
+  if (error) return { error: fail(error) };
+  await adopt(data.session);
+  return {};
+}
+
+/** Turns a guest into a full account, keeping their name and records. */
+export async function upgradeGuest({ email, password }) {
+  const { error } = await client.auth.updateUser({ email, password }, { emailRedirectTo: redirectTo() });
+  if (error) return { error: fail(error) };
+  const { data } = await client.auth.getUser();
+  if (data?.user) user = data.user;
+  return { confirm: !data?.user?.email_confirmed_at && Boolean(data?.user?.new_email || data?.user?.email) };
 }
 
 export async function signOut() {

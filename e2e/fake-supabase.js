@@ -206,6 +206,29 @@
           return { data: { session: session() }, error: null };
         },
         signInWithOAuth: async () => err('Unsupported provider: provider is not enabled'),
+        signInAnonymously: async ({ options }) => {
+          const db = read();
+          let name = options.data.username;
+          while (db.profiles.some((p) => p.username.toLowerCase() === name.toLowerCase())) name = `${options.data.username}${Math.floor(Math.random() * 90000) + 10000}`;
+          const user = { id: `user-${db.seq++}`, email: null, password: null };
+          db.users.push(user);
+          db.profiles.push({ id: user.id, username: name });
+          write(db);
+          sessionStorage.setItem(SESSION_KEY, JSON.stringify({ user: { id: user.id, email: null, is_anonymous: true } }));
+          notify('SIGNED_IN');
+          return { data: { session: session() }, error: null };
+        },
+        updateUser: async ({ email, password }) => {
+          const db = read();
+          const me = session()?.user;
+          if (!me) return err('not signed in');
+          if (db.users.some((u) => u.email === email)) return err('A user with this email address has already been registered');
+          Object.assign(db.users.find((u) => u.id === me.id), { email, password });
+          write(db);
+          sessionStorage.setItem(SESSION_KEY, JSON.stringify({ user: { id: me.id, email, is_anonymous: false } }));
+          return { data: { user: session().user }, error: null };
+        },
+        getUser: async () => ({ data: { user: session() ? { ...session().user, email_confirmed_at: new Date().toISOString() } : null }, error: null }),
         signOut: async () => { sessionStorage.removeItem(SESSION_KEY); notify('SIGNED_OUT'); return { error: null }; },
       },
       from: (table) => new Query(table),
