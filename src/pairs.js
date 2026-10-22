@@ -49,14 +49,15 @@ export function createPairGenerator(pool, rng = Math.random) {
     entries.filter((e) => isLegalPair(card, e) && !usedPairs.has(pairKey(card, e)));
 
   function chooseChallenger(champion, legal) {
-    const fresh = legal.filter((e) => !seenIds.has(e.id));
-    let candidates = fresh.length ? fresh : legal;
+    // Keep the answer a coin flip: half the time the newcomer is higher.
+    // Decided first, so the other preferences cannot skew it.
+    const higher = legal.filter((e) => e.value > champion.value);
+    const lower = legal.filter((e) => e.value < champion.value);
+    let candidates = higher.length && lower.length ? (rng() < 0.5 ? higher : lower) : legal;
+    const fresh = candidates.filter((e) => !seenIds.has(e.id));
+    if (fresh.length) candidates = fresh;
     const cross = candidates.filter((e) => isCrossFamily(champion, e));
     if (cross.length && rng() < RULES.crossFamilyBias) candidates = cross;
-    // Keep the answer a coin flip: half the time the newcomer is higher.
-    const higher = candidates.filter((e) => e.value > champion.value);
-    const lower = candidates.filter((e) => e.value < champion.value);
-    if (higher.length && lower.length) candidates = rng() < 0.5 ? higher : lower;
     return pick(candidates, rng);
   }
 

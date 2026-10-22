@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PERCENTO: compare the incomparable</title>
+  <meta name="description" content="A higher-or-lower game with real, verified percentages about things that have nothing to do with each other.">
+  <meta name="theme-color" content="#fff7ec">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%25%3C/text%3E%3C/svg%3E">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="modulepreload" href="src/app.js">
+  <link rel="modulepreload" href="src/data.js">
+</head>
+<body>
+  <a class="skip" href="#app">Skip to game</a>
+  <header class="topbar">
+    <a class="logo" href="#/" aria-label="PERCENTO home">PERCENT<span>O</span></a>
+    <nav aria-label="Main">
+      <a href="#/endless">Endless</a>
+      <a href="#/daily">Daily</a>
+      <a href="#/sources">Sources</a>
+    </nav>
+  </header>
+  <main id="app" tabindex="-1">
+    <noscript><p>PERCENTO needs JavaScript to run.</p></noscript>
+  </main>
+  <footer class="footer">
+    <p>Every number is real and sourced. The comparisons are absurd on purpose.</p>
+  </footer>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <script type="module" src="src/app.js"></script>
+</body>
+</html>
