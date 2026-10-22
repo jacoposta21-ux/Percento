@@ -7,6 +7,8 @@ const TODAY = '2026-10-22';
 const base = (over = {}) => ({
   id: 'x-1',
   text: 'People who own a teapot',
+  detail: 'UK · 2023',
+  emoji: '🫖',
   value: 42.5,
   source: 'ONS',
   sourceUrl: 'https://www.ons.gov.uk/x',
@@ -36,7 +38,7 @@ test('invalid values fail', () => {
   assert.ok(validateEntry(base({ value: 0.04 }), TODAY).length, 'shows as 0.0%');
   assert.ok(validateEntry(base({ value: 101 }), TODAY).length, '> 100');
   assert.ok(validateEntry(base({ value: '40' }), TODAY).length, 'string');
-  assert.ok(validateEntry(base({ text: 'x'.repeat(141) }), TODAY).length, 'too long');
+  assert.ok(validateEntry(base({ text: 'x'.repeat(71) }), TODAY).length, 'too long');
   assert.ok(validateEntry(base({ text: 'Teapots: 42%' }), TODAY).length, 'reveals value');
   assert.ok(validateEntry(base({ category: 'gossip' }), TODAY).length, 'category');
   assert.ok(validateEntry(base({ tone: 'mean' }), TODAY).length, 'tone');
@@ -100,6 +102,9 @@ test('caps are enforced', () => {
 
   const t = goodPool();
   t[1].text = t[0].text;
+  t[1].detail = t[0].detail;
+  t[1].value = t[0].value;
+  t[1].evidence = t[0].evidence;
   assert.match(validateDataset(t, { today: TODAY }).errors.join('\n'), /near-duplicate/);
 });
 

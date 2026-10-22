@@ -12,7 +12,7 @@ export const NON_COUNTRY = new Set(['WORLD', 'EU', 'OECD']);
 
 const ISO_DATE = /^\d{4}-\d{2}-\d{2}$/;
 const ID = /^[a-z0-9]+(-[a-z0-9]+)*$/;
-const REQUIRED = ['id', 'text', 'value', 'source', 'sourceUrl', 'year', 'category', 'tone',
+const REQUIRED = ['id', 'text', 'detail', 'emoji', 'value', 'source', 'sourceUrl', 'year', 'category', 'tone',
   'status', 'addedOn', 'country', 'indicator'];
 const KNOWN = new Set([...REQUIRED, 'evidence', 'verifiedOn', 'verifiedUrl', 'reviewReason',
   'sourceTitle', 'unit', 'notes', 'pdf']);
@@ -47,6 +47,8 @@ export function validateEntry(e, today) {
   for (const f of Object.keys(e)) if (!KNOWN.has(f)) errs.push(`${where} unknown field "${f}"`);
   if (typeof e.country === 'string' && !/^([A-Z]{3}|WORLD|EU|OECD)$/.test(e.country)) errs.push(`${where} country must be ISO 3166 alpha-3, WORLD, EU or OECD`);
   if (typeof e.id === 'string' && !ID.test(e.id)) errs.push(`${where} id must be kebab-case`);
+  if (typeof e.detail === 'string' && e.detail.length > RULES.maxDetailLength) errs.push(`${where} detail is ${e.detail.length} chars (max ${RULES.maxDetailLength})`);
+  if (typeof e.detail === 'string' && /\d+(\.\d+)?\s*%/.test(e.detail)) errs.push(`${where} detail must not reveal a percentage`);
   if (typeof e.text === 'string') {
     if (e.text.length > RULES.maxTextLength) errs.push(`${where} text is ${e.text.length} chars (max ${RULES.maxTextLength})`);
     if (/\d+(\.\d+)?\s*%/.test(e.text)) errs.push(`${where} text must not reveal a percentage`);
@@ -118,10 +120,10 @@ export function validateDataset(entries, { mode = 'production', today = new Date
   }
 
   // Near-duplicate texts.
-  const bags = pool.map((e) => [e, words(e.text || '')]);
+  const bags = pool.map((e) => [e, words(`${e.text || ''} ${e.detail || ''}`)]);
   for (let i = 0; i < bags.length; i++) {
     for (let j = i + 1; j < bags.length; j++) {
-      if (jaccard(bags[i][1], bags[j][1]) >= RULES.nearDuplicateThreshold) {
+      if (jaccard(bags[i][1], bags[j][1]) >= RULES.nearDuplicateThreshold && Math.abs(bags[i][0].value - bags[j][0].value) < 5) {
         errors.push(`near-duplicate texts: [${bags[i][0].id}] and [${bags[j][0].id}]`);
       }
     }

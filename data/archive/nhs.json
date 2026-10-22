@@ -1,0 +1,19 @@
+[
+  {
+    "id": "en-muscle-strength",
+    "text": "Adults in England aged 16+ meeting the muscle-strengthening exercise guideline (2021)",
+    "value": 32,
+    "year": 2021,
+    "category": "sport",
+    "tone": "curious",
+    "country": "GBR",
+    "indicator": "muscle-strengthening",
+    "source": "NHS England (Health Survey for England)",
+    "sourceTitle": "Health Survey for England, 2021 part 2: Physical activity",
+    "sourceUrl": "https://digital.nhs.uk/data-and-information/publications/statistical/health-survey-for-england/2021-part-2/physical-activity",
+    "status": "unverified",
+    "evidence": "32% of adults aged 16 and over met the muscle-strengthening guideline",
+    "reviewReason": "NOT_OPENED: the build environment could not open the source page (network policy); value and evidence are from an official-domain search excerpt. Run `npm run verify-sources`.",
+    "addedOn": "2026-10-22"
+  }
+]

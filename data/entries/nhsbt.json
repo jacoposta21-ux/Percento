@@ -1,7 +1,9 @@
 [
   {
     "id": "nhsbt-ab-negative",
-    "text": "UK blood donors with AB negative, the rarest of the eight main blood types",
+    "text": "Blood donors with AB-negative, the rarest type",
+    "detail": "UK · blood donors",
+    "emoji": "🩸",
     "value": 1,
     "year": 2024,
     "category": "body",
@@ -18,7 +20,9 @@
   },
   {
     "id": "nhsbt-rhd-positive",
-    "text": "UK blood donors whose blood is RhD positive",
+    "text": "Blood donors whose blood is 'positive' (RhD+)",
+    "detail": "UK · blood donors",
+    "emoji": "💉",
     "value": 77,
     "year": 2024,
     "category": "body",

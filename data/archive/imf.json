@@ -1,0 +1,20 @@
+[
+  {
+    "id": "imf-euro-reserves",
+    "text": "Central banks' foreign currency reserves kept in euros, worldwide, at the end of 2025",
+    "value": 20.3,
+    "year": 2025,
+    "category": "economy",
+    "tone": "serious",
+    "country": "WORLD",
+    "indicator": "reserve-currency-share",
+    "source": "International Monetary Fund",
+    "sourceTitle": "IMF Data Brief: Currency Composition of Official Foreign Exchange Reserves (COFER)",
+    "sourceUrl": "https://data.imf.org/en/news/imf%20data%20brief%20march%2027",
+    "status": "unverified",
+    "evidence": "20.25 in 2025Q4",
+    "reviewReason": "NOT_OPENED: the build environment could not open the source page (network policy); value and evidence are from an official-domain search excerpt. Run `npm run verify-sources`.",
+    "addedOn": "2026-10-22",
+    "notes": "20.25 rounded half-up to 20.3."
+  }
+]

@@ -1,0 +1,19 @@
+[
+  {
+    "id": "noaa-stocks-not-overfished",
+    "text": "US fish stocks with known status that were not overfished at the end of 2023",
+    "value": 82,
+    "year": 2023,
+    "category": "animals",
+    "tone": "serious",
+    "country": "USA",
+    "indicator": "us-fish-stocks-status",
+    "source": "NOAA",
+    "sourceTitle": "NOAA Fisheries Releases 2023 Status of Stocks",
+    "sourceUrl": "https://www.fisheries.noaa.gov/feature-story/noaa-fisheries-releases-2023-status-stocks",
+    "status": "unverified",
+    "evidence": "82 percent were not overfished",
+    "reviewReason": "NOT_OPENED: the build environment could not open the source page (network policy); value and evidence are from an official-domain search excerpt. Run `npm run verify-sources`.",
+    "addedOn": "2026-10-22"
+  }
+]

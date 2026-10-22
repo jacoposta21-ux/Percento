@@ -9,7 +9,7 @@ const today = new Date().toISOString().slice(0, 10);
 const incoming = JSON.parse(readFileSync(0, 'utf8'));
 const current = existsSync(file) ? JSON.parse(readFileSync(file, 'utf8')) : [];
 const ids = new Set(current.map((e) => e.id));
-const ORDER = ['id', 'text', 'value', 'year', 'category', 'tone', 'country', 'indicator', 'source',
+const ORDER = ['id', 'text', 'detail', 'emoji', 'value', 'year', 'category', 'tone', 'country', 'indicator', 'source',
   'sourceTitle', 'sourceUrl', 'verifiedUrl', 'pdf', 'status', 'evidence', 'verifiedOn', 'reviewReason', 'addedOn', 'notes'];
 
 for (const raw of incoming) {

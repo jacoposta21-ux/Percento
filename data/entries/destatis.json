@@ -1,7 +1,9 @@
 [
   {
     "id": "de-dishwasher",
-    "text": "German households that own a dishwasher (2024)",
+    "text": "German homes with a dishwasher",
+    "detail": "Germany · 2024",
+    "emoji": "🍽️",
     "value": 77.3,
     "year": 2024,
     "category": "everyday",
@@ -18,7 +20,9 @@
   },
   {
     "id": "de-ebike",
-    "text": "German households with at least one e-bike (pedelec) in 2024",
+    "text": "German homes with an e-bike",
+    "detail": "Germany · 2024",
+    "emoji": "🔋",
     "value": 21.7,
     "year": 2024,
     "category": "tech",
@@ -35,7 +39,9 @@
   },
   {
     "id": "de-bicycle",
-    "text": "German households with at least one ordinary bicycle (2024)",
+    "text": "German homes with a bicycle",
+    "detail": "Germany · 2024",
+    "emoji": "🚲",
     "value": 76.7,
     "year": 2024,
     "category": "habits",
@@ -52,7 +58,9 @@
   },
   {
     "id": "de-smart-tv",
-    "text": "German households with a smart TV",
+    "text": "German homes with a smart TV",
+    "detail": "Germany",
+    "emoji": "📺",
     "value": 67,
     "year": 2024,
     "category": "tech",

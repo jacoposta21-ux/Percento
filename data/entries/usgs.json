@@ -1,7 +1,9 @@
 [
   {
     "id": "usgs-oceans-water",
-    "text": "Share of all of Earth's water that sits in the oceans",
+    "text": "Earth's water that is in the oceans",
+    "detail": "World",
+    "emoji": "🌊",
     "value": 96.5,
     "year": 2019,
     "category": "geography",
@@ -19,7 +21,9 @@
   },
   {
     "id": "usgs-freshwater-ice",
-    "text": "Share of Earth's fresh water locked up in ice caps, glaciers and permanent snow",
+    "text": "Earth's fresh water frozen in ice and glaciers",
+    "detail": "World",
+    "emoji": "🧊",
     "value": 68.7,
     "year": 2019,
     "category": "nature",
@@ -36,7 +40,9 @@
   },
   {
     "id": "usgs-freshwater-ground",
-    "text": "Share of Earth's fresh water that is hiding underground as groundwater",
+    "text": "Earth's fresh water hidden underground",
+    "detail": "World",
+    "emoji": "💧",
     "value": 30.1,
     "year": 2019,
     "category": "geography",
@@ -53,7 +59,9 @@
   },
   {
     "id": "usgs-surface-water",
-    "text": "Share of Earth's surface covered by water",
+    "text": "Earth's surface covered by water",
+    "detail": "World",
+    "emoji": "🌐",
     "value": 71,
     "year": 2019,
     "category": "geography",

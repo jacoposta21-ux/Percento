@@ -25,7 +25,8 @@ export const RULES = {
   minGap: 3, // never pair values less than this many points apart
   crossFamilyBias: 0.92, // probability of forcing a cross-family pair when one exists
   dailyPairs: 10,
-  maxTextLength: 140,
+  maxTextLength: 70, // short, popular card titles
+  maxDetailLength: 60, // the small print: place, age group, year
   maxPerIndicator: 3,
   maxSourceShare: 0.15,
   maxCountryShare: 0.2,

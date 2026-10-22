@@ -1,0 +1,53 @@
+[
+  {
+    "id": "ie-1926-agri-workers",
+    "text": "Irish workers who worked in agriculture at the 1926 census",
+    "value": 51,
+    "year": 1926,
+    "category": "history",
+    "tone": "serious",
+    "country": "IRL",
+    "indicator": "agri-workforce-historic",
+    "source": "Central Statistics Office Ireland",
+    "sourceTitle": "Key Findings - Then and Now: Life in Ireland in 1926 and 2022",
+    "sourceUrl": "https://www.cso.ie/en/releasesandpublications/ep/p-tnli/thenandnowlifeinirelandin1926and2022/keyfindings/",
+    "status": "unverified",
+    "evidence": "51%",
+    "reviewReason": "NOT_OPENED: the build environment could not open the source page (network policy); value and evidence are from an official-domain search excerpt. Run `npm run verify-sources`.",
+    "addedOn": "2026-10-22"
+  },
+  {
+    "id": "ie-1926-irish-born",
+    "text": "People living in Ireland in 1926 who had been born in Ireland",
+    "value": 97,
+    "year": 1926,
+    "category": "history",
+    "tone": "curious",
+    "country": "IRL",
+    "indicator": "born-in-country-historic",
+    "source": "Central Statistics Office Ireland",
+    "sourceTitle": "Key Findings - Then and Now: Life in Ireland in 1926 and 2022",
+    "sourceUrl": "https://www.cso.ie/en/releasesandpublications/ep/p-tnli/thenandnowlifeinirelandin1926and2022/keyfindings/",
+    "status": "unverified",
+    "evidence": "97%",
+    "reviewReason": "NOT_OPENED: the build environment could not open the source page (network policy); value and evidence are from an official-domain search excerpt. Run `npm run verify-sources`.",
+    "addedOn": "2026-10-22"
+  },
+  {
+    "id": "ie-1926-pop-fall",
+    "text": "Drop in Ireland's population between the 1911 census and the 1926 census",
+    "value": 5.3,
+    "year": 1926,
+    "category": "history",
+    "tone": "serious",
+    "country": "IRL",
+    "indicator": "population-change-historic",
+    "source": "Central Statistics Office Ireland",
+    "sourceTitle": "Census 1926: a new era for Ireland",
+    "sourceUrl": "https://www.cso.ie/en/csolatestnews/featurearticles/featurearticles2026/census1926aneweraforireland/",
+    "status": "unverified",
+    "evidence": "5.3%",
+    "reviewReason": "NOT_OPENED: the build environment could not open the source page (network policy); value and evidence are from an official-domain search excerpt. Run `npm run verify-sources`.",
+    "addedOn": "2026-10-22"
+  }
+]

@@ -1,0 +1,19 @@
+[
+  {
+    "id": "un-asia-urban",
+    "text": "Share of the world's city dwellers who live in Asia (2018)",
+    "value": 54,
+    "year": 2018,
+    "category": "geography",
+    "tone": "curious",
+    "country": "WORLD",
+    "indicator": "urban-population-asia-share",
+    "source": "UN DESA Population Division",
+    "sourceTitle": "2018 Revision of World Urbanization Prospects",
+    "sourceUrl": "https://www.un.org/en/desa/2018-revision-world-urbanization-prospects",
+    "status": "unverified",
+    "evidence": "54 per cent",
+    "reviewReason": "NOT_OPENED: the build environment could not open the source page (network policy); value and evidence are from an official-domain search excerpt. Run `npm run verify-sources`.",
+    "addedOn": "2026-10-22"
+  }
+]

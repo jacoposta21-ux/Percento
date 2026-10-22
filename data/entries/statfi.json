@@ -1,7 +1,9 @@
 [
   {
     "id": "fi-sauna-dwellings",
-    "text": "Finnish homes with their own sauna inside the dwelling (2018)",
+    "text": "Finnish homes with their own sauna",
+    "detail": "Finland · 2018",
+    "emoji": "🧖",
     "value": 54.9,
     "year": 2018,
     "category": "habits",

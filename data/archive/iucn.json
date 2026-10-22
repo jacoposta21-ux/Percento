@@ -1,0 +1,36 @@
+[
+  {
+    "id": "iucn-conifers",
+    "text": "Conifer species (pines, firs and friends) threatened with extinction (IUCN best estimate)",
+    "value": 34,
+    "year": 2024,
+    "category": "nature",
+    "tone": "serious",
+    "country": "WORLD",
+    "indicator": "iucn-threatened-plants",
+    "source": "IUCN Red List",
+    "sourceTitle": "IUCN Red List summary statistics",
+    "sourceUrl": "https://www.iucnredlist.org/resources/summary-statistics",
+    "status": "unverified",
+    "evidence": "Conifers 34",
+    "reviewReason": "NOT_OPENED: the build environment could not open the source page (network policy); value and evidence are from an official-domain search excerpt. Run `npm run verify-sources`.",
+    "addedOn": "2026-10-22"
+  },
+  {
+    "id": "iucn-freshwater-fish",
+    "text": "Freshwater fish species at high risk of extinction (IUCN, 2025)",
+    "value": 26,
+    "year": 2025,
+    "category": "animals",
+    "tone": "serious",
+    "country": "WORLD",
+    "indicator": "iucn-threatened-freshwater",
+    "source": "IUCN Red List",
+    "sourceTitle": "One quarter of freshwater animals at risk of extinction (IUCN press release, Jan 2025)",
+    "sourceUrl": "https://iucn.org/press-release/202501/one-quarter-freshwater-animals-risk-extinction-iucn-red-list",
+    "status": "unverified",
+    "evidence": "26%",
+    "reviewReason": "NOT_OPENED: the build environment could not open the source page (network policy); value and evidence are from an official-domain search excerpt. Run `npm run verify-sources`.",
+    "addedOn": "2026-10-22"
+  }
+]

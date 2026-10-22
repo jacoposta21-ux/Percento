@@ -1,7 +1,9 @@
 [
   {
     "id": "ca-cat-households",
-    "text": "Canadian households that owned at least one cat in 2023",
+    "text": "Canadian homes with a cat",
+    "detail": "Canada · households · 2023",
+    "emoji": "🐱",
     "value": 21,
     "year": 2023,
     "category": "animals",
@@ -18,7 +20,9 @@
   },
   {
     "id": "ca-volunteering",
-    "text": "Canadians aged 15+ who formally volunteered for a group or organisation in 2023",
+    "text": "Canadians who volunteer for an organisation",
+    "detail": "Canada · age 15+ · 2023",
+    "emoji": "🤝",
     "value": 32,
     "year": 2023,
     "category": "everyday",
@@ -35,7 +39,9 @@
   },
   {
     "id": "ca-rural-1871",
-    "text": "Canadians living in rural areas at the census of 1871",
+    "text": "Canadians living in the countryside in 1871",
+    "detail": "Canada · 1871 census",
+    "emoji": "🛖",
     "value": 81,
     "year": 1871,
     "category": "history",
@@ -51,25 +57,10 @@
     "addedOn": "2026-10-22"
   },
   {
-    "id": "ca-rural-1901",
-    "text": "Canadians living in rural areas at the census of 1901",
-    "value": 63,
-    "year": 1901,
-    "category": "history",
-    "tone": "serious",
-    "country": "CAN",
-    "indicator": "canada-rural-share-historic",
-    "source": "Statistics Canada",
-    "sourceTitle": "Proportion of the population living in rural areas, Canada, 1851 to 2011 (Census 2011 figure)",
-    "sourceUrl": "https://www12.statcan.gc.ca/census-recensement/2011/as-sa/98-310-x/2011003/fig/fig3_2-1-eng.cfm",
-    "status": "unverified",
-    "evidence": "63% in 1901",
-    "reviewReason": "NOT_OPENED: the build environment could not open the source page (network policy); value and evidence are from an official-domain search excerpt. Run `npm run verify-sources`.",
-    "addedOn": "2026-10-22"
-  },
-  {
     "id": "ca-sport-participation",
-    "text": "Canadians aged 15+ who played any sport (soccer, hockey, swimming, running…) in the past 12 months (2023)",
+    "text": "Canadians who played a sport last year",
+    "detail": "Canada · age 15+ · 2023",
+    "emoji": "🏒",
     "value": 55,
     "year": 2023,
     "category": "sport",
@@ -86,7 +77,9 @@
   },
   {
     "id": "ca-quebec-maple",
-    "text": "Share of Canada's maple syrup that came from Quebec in 2024",
+    "text": "Canada's maple syrup that comes from Quebec",
+    "detail": "Canada · 2024",
+    "emoji": "🍁",
     "value": 90.7,
     "year": 2024,
     "category": "food",

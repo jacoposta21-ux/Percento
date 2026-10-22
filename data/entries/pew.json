@@ -1,7 +1,9 @@
 [
   {
     "id": "pew-smartphone",
-    "text": "US adults who own a smartphone (2025 survey)",
+    "text": "Americans who own a smartphone",
+    "detail": "USA · adults · 2025",
+    "emoji": "📱",
     "value": 91,
     "year": 2025,
     "category": "tech",
@@ -18,7 +20,9 @@
   },
   {
     "id": "pew-youtube",
-    "text": "US adults who say they use YouTube (2025 survey)",
+    "text": "Americans who use YouTube",
+    "detail": "USA · adults · 2025",
+    "emoji": "▶️",
     "value": 84,
     "year": 2025,
     "category": "tech",
@@ -37,7 +41,9 @@
   },
   {
     "id": "pew-tiktok",
-    "text": "US adults who say they use TikTok (2025 survey)",
+    "text": "Americans who use TikTok",
+    "detail": "USA · adults · 2025",
+    "emoji": "🎵",
     "value": 37,
     "year": 2025,
     "category": "tech",
@@ -55,7 +61,9 @@
   },
   {
     "id": "pew-chatgpt-adults",
-    "text": "US adults who said they had ever used ChatGPT (early 2025)",
+    "text": "Americans who have used ChatGPT",
+    "detail": "USA · adults · 2025",
+    "emoji": "💬",
     "value": 34,
     "year": 2025,
     "category": "tech",
@@ -72,7 +80,9 @@
   },
   {
     "id": "pew-teens-chatbots",
-    "text": "US teens aged 13–17 who say they ever use an AI chatbot (2025)",
+    "text": "US teens who use AI chatbots",
+    "detail": "USA · age 13–17 · 2025",
+    "emoji": "🧑‍💻",
     "value": 64,
     "year": 2025,
     "category": "tech",
@@ -89,7 +99,9 @@
   },
   {
     "id": "pew-tattoo",
-    "text": "US adults who have at least one tattoo (2023)",
+    "text": "Americans with a tattoo",
+    "detail": "USA · adults · 2023",
+    "emoji": "🖋️",
     "value": 32,
     "year": 2023,
     "category": "habits",

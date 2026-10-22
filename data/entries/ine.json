@@ -1,7 +1,9 @@
 [
   {
     "id": "es-home-ownership",
-    "text": "Spanish households that own their home (2024)",
+    "text": "Spanish families who own their home",
+    "detail": "Spain · households · 2024",
+    "emoji": "🏡",
     "value": 73.6,
     "year": 2024,
     "category": "economy",
@@ -13,42 +15,6 @@
     "sourceUrl": "https://www.ine.es/jaxiT3/Datos.htm?t=4566",
     "status": "unverified",
     "evidence": "73,6",
-    "reviewReason": "NOT_OPENED: the build environment could not open the source page (network policy); value and evidence are from an official-domain search excerpt. Run `npm run verify-sources`.",
-    "addedOn": "2026-10-22"
-  },
-  {
-    "id": "pt-household-internet",
-    "text": "Portuguese households with internet access at home (2024)",
-    "value": 90.6,
-    "year": 2024,
-    "category": "tech",
-    "tone": "serious",
-    "country": "PRT",
-    "indicator": "household-internet-access",
-    "source": "Statistics Portugal (INE)",
-    "sourceTitle": "Inquérito à Utilização de TIC pelas Famílias 2024 (Destaque)",
-    "sourceUrl": "https://www.ine.pt/xportal/xmain?xpid=INE&xpgid=ine_destaques&DESTAQUESdest_boui=646170695&DESTAQUESmodo=2&xlang=pt",
-    "status": "unverified",
-    "evidence": "90,6% dos agregados domésticos",
-    "reviewReason": "NOT_OPENED: the build environment could not open the source page (network policy); value and evidence are from an official-domain search excerpt. Run `npm run verify-sources`.",
-    "addedOn": "2026-10-22",
-    "notes": "The exact press-release URL was not distinguishable in the search results; confirm."
-  },
-  {
-    "id": "pt-residents-travelled",
-    "text": "Residents of Portugal who made at least one tourist trip in 2024",
-    "value": 48.7,
-    "year": 2024,
-    "category": "everyday",
-    "tone": "curious",
-    "country": "PRT",
-    "indicator": "tourism-participation",
-    "source": "Statistics Portugal (INE)",
-    "sourceTitle": "Procura turística dos residentes 2024",
-    "sourceUrl": "https://www.ine.pt/ngt_server/attachfileu.jsp?look_parentBoui=723659811&att_display=n&att_download=y",
-    "pdf": true,
-    "status": "unverified",
-    "evidence": "48,7% da população residente em Portugal efetuou pelo menos uma viagem turística",
     "reviewReason": "NOT_OPENED: the build environment could not open the source page (network policy); value and evidence are from an official-domain search excerpt. Run `npm run verify-sources`.",
     "addedOn": "2026-10-22"
   }

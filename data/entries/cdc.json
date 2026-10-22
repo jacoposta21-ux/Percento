@@ -1,7 +1,9 @@
 [
   {
     "id": "cdc-fast-food-day",
-    "text": "US adults aged 20+ who ate fast food on a given day (2021–2023)",
+    "text": "US adults who eat fast food on a given day",
+    "detail": "USA · age 20+ · 2021–23",
+    "emoji": "🍟",
     "value": 32,
     "year": 2023,
     "category": "food",
@@ -17,25 +19,10 @@
     "addedOn": "2026-10-22"
   },
   {
-    "id": "cdc-fast-food-calories",
-    "text": "Share of US adults' daily calories that come from fast food (2021–2023)",
-    "value": 11.7,
-    "year": 2023,
-    "category": "food",
-    "tone": "curious",
-    "country": "USA",
-    "indicator": "fast-food-calorie-share",
-    "source": "CDC National Center for Health Statistics",
-    "sourceTitle": "NCHS Data Brief No. 533: Fast Food Intake Among Adults in the United States",
-    "sourceUrl": "https://www.cdc.gov/nchs/products/databriefs/db533.htm",
-    "status": "unverified",
-    "evidence": "11.7%",
-    "reviewReason": "NOT_OPENED: the build environment could not open the source page (network policy); value and evidence are from an official-domain search excerpt. Run `npm run verify-sources`.",
-    "addedOn": "2026-10-22"
-  },
-  {
     "id": "cdc-short-sleep",
-    "text": "US adults who usually sleep less than seven hours a night (2020)",
+    "text": "US adults who sleep less than 7 hours a night",
+    "detail": "USA · 2020",
+    "emoji": "🥱",
     "value": 33.2,
     "year": 2020,
     "category": "health",
@@ -52,7 +39,9 @@
   },
   {
     "id": "cdc-flu-shot-adults",
-    "text": "US adults aged 18+ who had a flu shot in the past 12 months (2025 survey)",
+    "text": "US adults who got a flu shot this year",
+    "detail": "USA · 2025",
+    "emoji": "💉",
     "value": 41.8,
     "year": 2025,
     "category": "health",
@@ -64,24 +53,6 @@
     "sourceUrl": "https://www.cdc.gov/nchs/fastats/flu.htm",
     "status": "unverified",
     "evidence": "41.8%",
-    "reviewReason": "NOT_OPENED: the build environment could not open the source page (network policy); value and evidence are from an official-domain search excerpt. Run `npm run verify-sources`.",
-    "addedOn": "2026-10-22"
-  },
-  {
-    "id": "cdc-dental-65",
-    "text": "US adults aged 65+ who visited a dentist in the past 12 months (2022)",
-    "value": 63.7,
-    "year": 2022,
-    "category": "health",
-    "tone": "curious",
-    "country": "USA",
-    "indicator": "dental-visit",
-    "source": "CDC National Center for Health Statistics",
-    "sourceTitle": "NCHS Data Brief No. 500: Dental care among adults aged 65 and older",
-    "sourceUrl": "https://www.cdc.gov/nchs/data/databriefs/db500.pdf",
-    "pdf": true,
-    "status": "unverified",
-    "evidence": "63.7%",
     "reviewReason": "NOT_OPENED: the build environment could not open the source page (network policy); value and evidence are from an official-domain search excerpt. Run `npm run verify-sources`.",
     "addedOn": "2026-10-22"
   }

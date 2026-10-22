@@ -1,7 +1,9 @@
 [
   {
     "id": "wb-electricity-world",
-    "text": "People worldwide with access to electricity in 2022",
+    "text": "People in the world with electricity at home",
+    "detail": "World · 2022",
+    "emoji": "💡",
     "value": 91,
     "year": 2022,
     "category": "economy",
@@ -17,25 +19,10 @@
     "addedOn": "2026-10-22"
   },
   {
-    "id": "wb-ssa-no-electricity",
-    "text": "Share of the world's people without electricity who live in Sub-Saharan Africa (2023)",
-    "value": 85,
-    "year": 2023,
-    "category": "geography",
-    "tone": "serious",
-    "country": "WORLD",
-    "indicator": "no-electricity-ssa-share",
-    "source": "World Bank",
-    "sourceTitle": "Energy Access Has Improved, Yet International Financial Support Still Needed (2025 press release)",
-    "sourceUrl": "https://www.worldbank.org/en/news/press-release/2025/06/25/energy-access-has-improved-yet-international-financial-support-still-needed-to-boost-progress-and-address-disparities",
-    "status": "unverified",
-    "evidence": "85 percent",
-    "reviewReason": "NOT_OPENED: the build environment could not open the source page (network policy); value and evidence are from an official-domain search excerpt. Run `npm run verify-sources`.",
-    "addedOn": "2026-10-22"
-  },
-  {
     "id": "wb-findex-account",
-    "text": "Adults worldwide with a bank or mobile money account (2024)",
+    "text": "Adults in the world with a bank account",
+    "detail": "World · incl. mobile money · 2024",
+    "emoji": "🏦",
     "value": 79,
     "year": 2024,
     "category": "economy",
@@ -52,7 +39,9 @@
   },
   {
     "id": "wb-ssa-mobile-money",
-    "text": "Adults in Sub-Saharan Africa with a mobile money account, the world's highest rate (2024)",
+    "text": "Adults in sub-Saharan Africa using mobile money",
+    "detail": "Sub-Saharan Africa · 2024",
+    "emoji": "📲",
     "value": 40,
     "year": 2024,
     "category": "economy",
@@ -64,23 +53,6 @@
     "sourceUrl": "https://www.worldbank.org/en/publication/globalfindex/brief/financial-inclusion-in-sub-saharan-Africa-data-from-the-global-findex",
     "status": "unverified",
     "evidence": "40 percent of adults having a mobile money account in 2024",
-    "reviewReason": "NOT_OPENED: the build environment could not open the source page (network policy); value and evidence are from an official-domain search excerpt. Run `npm run verify-sources`.",
-    "addedOn": "2026-10-22"
-  },
-  {
-    "id": "wb-ssa-formal-savings",
-    "text": "Adults in Sub-Saharan Africa saving formally at a bank or mobile money account (2024)",
-    "value": 35,
-    "year": 2024,
-    "category": "economy",
-    "tone": "serious",
-    "country": "WORLD",
-    "indicator": "formal-savings",
-    "source": "World Bank",
-    "sourceTitle": "Mobile-Phone Technology Powers Saving Surge in Developing Economies (2025 press release)",
-    "sourceUrl": "https://www.worldbank.org/en/news/press-release/2025/07/16/mobile-phone-technology-powers-saving-surge-in-developing-economies",
-    "status": "unverified",
-    "evidence": "formal savings increased by 12-percentage points to 35% of adults",
     "reviewReason": "NOT_OPENED: the build environment could not open the source page (network policy); value and evidence are from an official-domain search excerpt. Run `npm run verify-sources`.",
     "addedOn": "2026-10-22"
   }

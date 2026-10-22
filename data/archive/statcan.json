@@ -1,0 +1,19 @@
+[
+  {
+    "id": "ca-rural-1901",
+    "text": "Canadians living in rural areas at the census of 1901",
+    "value": 63,
+    "year": 1901,
+    "category": "history",
+    "tone": "serious",
+    "country": "CAN",
+    "indicator": "canada-rural-share-historic",
+    "source": "Statistics Canada",
+    "sourceTitle": "Proportion of the population living in rural areas, Canada, 1851 to 2011 (Census 2011 figure)",
+    "sourceUrl": "https://www12.statcan.gc.ca/census-recensement/2011/as-sa/98-310-x/2011003/fig/fig3_2-1-eng.cfm",
+    "status": "unverified",
+    "evidence": "63% in 1901",
+    "reviewReason": "NOT_OPENED: the build environment could not open the source page (network policy); value and evidence are from an official-domain search excerpt. Run `npm run verify-sources`.",
+    "addedOn": "2026-10-22"
+  }
+]

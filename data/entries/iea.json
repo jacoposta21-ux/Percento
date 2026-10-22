@@ -1,7 +1,9 @@
 [
   {
     "id": "iea-norway-bev",
-    "text": "New cars sold in Norway in 2024 that were fully battery-electric",
+    "text": "New cars in Norway that are fully electric",
+    "detail": "Norway · 2024",
+    "emoji": "🚘",
     "value": 88,
     "year": 2024,
     "category": "tech",

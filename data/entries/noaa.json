@@ -1,7 +1,9 @@
 [
   {
     "id": "noaa-reef-heat-stress",
-    "text": "Share of the world's coral reef area hit by bleaching-level heat stress in the 2023–2025 global event",
+    "text": "Coral reefs hit by bleaching heat in 2023–2025",
+    "detail": "World · NOAA",
+    "emoji": "🌡️",
     "value": 84,
     "year": 2025,
     "category": "nature",
@@ -18,25 +20,10 @@
     "notes": "NOAA's status page gives '~84.4%'; use the news-release wording."
   },
   {
-    "id": "noaa-stocks-not-overfished",
-    "text": "US fish stocks with known status that were not overfished at the end of 2023",
-    "value": 82,
-    "year": 2023,
-    "category": "animals",
-    "tone": "serious",
-    "country": "USA",
-    "indicator": "us-fish-stocks-status",
-    "source": "NOAA",
-    "sourceTitle": "NOAA Fisheries Releases 2023 Status of Stocks",
-    "sourceUrl": "https://www.fisheries.noaa.gov/feature-story/noaa-fisheries-releases-2023-status-stocks",
-    "status": "unverified",
-    "evidence": "82 percent were not overfished",
-    "reviewReason": "NOT_OPENED: the build environment could not open the source page (network policy); value and evidence are from an official-domain search excerpt. Run `npm run verify-sources`.",
-    "addedOn": "2026-10-22"
-  },
-  {
     "id": "noaa-seafloor-mapped",
-    "text": "Share of the global seafloor mapped with modern high-resolution technology, as of April 2026",
+    "text": "Ocean floor mapped in detail",
+    "detail": "World · April 2026",
+    "emoji": "🗺️",
     "value": 28.7,
     "year": 2026,
     "category": "geography",
@@ -53,7 +40,9 @@
   },
   {
     "id": "noaa-coastal-population",
-    "text": "Share of the US population living in coastal counties, which cover under a tenth of the land",
+    "text": "Americans living in coastal counties",
+    "detail": "USA",
+    "emoji": "🏖️",
     "value": 39,
     "year": 2024,
     "category": "geography",

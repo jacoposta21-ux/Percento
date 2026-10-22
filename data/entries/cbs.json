@@ -1,7 +1,9 @@
 [
   {
     "id": "nl-weekly-sport",
-    "text": "Dutch adults who did some form of sport every week (2022)",
+    "text": "Dutch adults who do sport every week",
+    "detail": "Netherlands · 2022",
+    "emoji": "🚴",
     "value": 50.5,
     "year": 2022,
     "category": "sport",
@@ -18,7 +20,9 @@
   },
   {
     "id": "nl-below-sea-level",
-    "text": "Share of the Netherlands' land surface that lies below Amsterdam sea level (NAP)",
+    "text": "The Netherlands that lies below sea level",
+    "detail": "Netherlands",
+    "emoji": "🌊",
     "value": 26,
     "year": 2010,
     "category": "geography",
@@ -33,41 +37,5 @@
     "reviewReason": "NOT_OPENED: the build environment could not open the source page (network policy); value and evidence are from an official-domain search excerpt. Run `npm run verify-sources`.",
     "addedOn": "2026-10-22",
     "notes": "Year is the publication year of the PBL correction; confirm. Rijkswaterstaat uses a looser 'over 30%'."
-  },
-  {
-    "id": "nl-agri-land",
-    "text": "Share of the Netherlands' total area (land and water) used for agriculture (2022 release)",
-    "value": 52,
-    "year": 2022,
-    "category": "geography",
-    "tone": "serious",
-    "country": "NLD",
-    "indicator": "agricultural-land-share",
-    "source": "Statistics Netherlands (CBS)",
-    "sourceTitle": "Built-up area expanding at the cost of farmland",
-    "sourceUrl": "https://www.cbs.nl/en-gb/news/2022/20/built-up-area-expanding-at-the-cost-of-farmland",
-    "status": "unverified",
-    "evidence": "52 percent",
-    "reviewReason": "NOT_OPENED: the build environment could not open the source page (network policy); value and evidence are from an official-domain search excerpt. Run `npm run verify-sources`.",
-    "addedOn": "2026-10-22",
-    "notes": "Confirm whether the base is total area or land area."
-  },
-  {
-    "id": "nl-manufacturing-1923",
-    "text": "Dutch workers employed in manufacturing a century ago (early 1920s)",
-    "value": 28,
-    "year": 1923,
-    "category": "history",
-    "tone": "serious",
-    "country": "NLD",
-    "indicator": "manufacturing-employment-historic",
-    "source": "Statistics Netherlands (CBS)",
-    "sourceTitle": "Manufacturing output nearly 20 times higher than 100 years ago",
-    "sourceUrl": "https://www.cbs.nl/en-gb/news/2024/48/manufacturing-output-nearly-20-times-higher-than-100-years-ago",
-    "status": "unverified",
-    "evidence": "28 percent of the employed labour force worked in manufacturing",
-    "reviewReason": "NOT_OPENED: the build environment could not open the source page (network policy); value and evidence are from an official-domain search excerpt. Run `npm run verify-sources`.",
-    "addedOn": "2026-10-22",
-    "notes": "Article compares 2023 with 100 years earlier; confirm exact reference year (1923?)."
   }
 ]

@@ -1,0 +1,196 @@
+# Curation v2: simple, popular card texts. Format: id | emoji | category | text | detail
+# Entries not listed here are moved to data/archive/ (kept, not served).
+eb-pet-owners | 🐶 | animals | Europeans who own a pet | EU · 2023
+ca-cat-households | 🐱 | animals | Canadian homes with a cat | Canada · households · 2023
+study-cats-left-pawed | 🐾 | animals | Cats that are left-pawed | 56 pet cats · 2019 study
+study-dogs-paw-preference | 🐕 | animals | Dogs that clearly favour one paw | Meta-analysis of paw tests · 2019
+study-cow-tongue-roll | 🐄 | animals | Dairy cows caught doing 'tongue rolling' | One large US farm · 2023 study
+iucn-sharks | 🦈 | animals | Shark and ray species at risk of extinction | World · IUCN Red List
+iucn-amphibians | 🐸 | animals | Frog, toad and newt species at risk of extinction | World · IUCN Red List
+iucn-lemurs | 🐒 | animals | Lemur species at risk of extinction | Madagascar · IUCN · 2025
+iucn-birds-declining | 🐦 | animals | Bird species whose numbers are falling | World · IUCN · 2025
+study-na-birds-lost | 🦅 | animals | North American birds lost since 1970 | USA & Canada · Science 2019
+iucn-dragonflies | 🪰 | animals | Dragonfly species at risk of extinction | World · IUCN · 2025
+iucn-freshwater-decapods | 🦀 | animals | Freshwater crab and crayfish species at risk | World · IUCN · 2025
+usda-bees-lost-q2 | 🐝 | animals | US bee colonies lost in spring | USA · April–June 2025
+fao-fish-overfished | 🐟 | animals | The world's fish stocks that are overfished | World · FAO · 2025
+study-reptiles-threatened | 🦎 | animals | Reptile species at risk of extinction | World · Nature 2022
+usda-cage-free-hens | 🐔 | animals | US egg-laying hens that are cage-free | USA · June 2023
+eb-farm-animal-welfare | 🐖 | animals | Europeans who want better lives for farm animals | EU · 2023
+fao-breeds-at-risk | 🐑 | animals | Farm animal breeds at risk of disappearing | World · FAO · 2020
+gallup-well-rested | 😴 | body | Adults who woke up feeling well-rested | World · 144 countries · 2024
+nhsbt-ab-negative | 🩸 | body | Blood donors with AB-negative, the rarest type | UK · blood donors
+nhsbt-rhd-positive | 💉 | body | Blood donors whose blood is 'positive' (RhD+) | UK · blood donors
+study-left-handed | ✋ | body | People who are left-handed | World · 2.4 million people studied
+study-no-wisdom-teeth | 🦷 | body | People born without at least one wisdom tooth | World · 63,000 people studied
+study-myopia-2000 | 👓 | body | People in the world who were short-sighted | World · year 2000
+study-left-footed | 🦶 | body | People who are left-footed | World · 164 studies
+study-lefties-left-footed | 🤚 | body | Left-handers who are also left-footed | World · 164 studies
+study-righties-left-footed | 🙃 | body | Right-handers who are left-footed | World · 164 studies
+study-photic-sneeze | 🤧 | body | People who sneeze when they look at bright light | China · 3,400 adults studied
+study-tongue-roll | 👅 | body | People who can roll their tongue | Netherlands · 387 adults studied
+study-aphantasia | 🧠 | body | People who can't picture images in their mind | UK · 1,004 people studied
+study-asparagus-anosmia | 🌱 | body | People who can't smell 'asparagus pee' | USA · 6,909 adults studied
+study-lucid-dream-ever | 💭 | body | People who have had a lucid dream | World · 50 years of studies
+study-first-memory-age1 | 👶 | body | People whose 'first memory' is from age 1 (probably fake) | 6,313 people surveyed · 2018
+study-right-eye-dominant | 👁️ | body | People whose right eye is the dominant one | 524 adults studied · 2025
+study-palmaris-longus | 🖐️ | body | People missing a wrist tendon (try pinching thumb and pinkie) | World · review of studies
+ecb-cash-pos | 💶 | economy | Shop payments in the eurozone made in cash | Euro area · 2024
+ecb-prefer-cards | 💳 | economy | Europeans who prefer paying by card in shops | Euro area · 2024
+wb-findex-account | 🏦 | economy | Adults in the world with a bank account | World · incl. mobile money · 2024
+us-wfh-acs-2023 | 🏠 | economy | US workers who work from home | USA · 2023
+ew-work-from-home | 💻 | economy | Workers in England who worked from home | England & Wales · Census 2021
+es-home-ownership | 🏡 | economy | Spanish families who own their home | Spain · households · 2024
+usda-food-away | 🍔 | economy | US food money spent at restaurants and takeaways | USA · 2023
+usda-income-on-food | 🛒 | economy | Share of Americans' income spent on food | USA · 2023
+imf-usd-reserves | 💵 | economy | World's currency reserves held in US dollars | World central banks · 2025
+eu-spend-restaurants | 🍽️ | economy | EU family budget spent on restaurants and hotels | EU · 2024
+us-ce-housing-share | 🔑 | economy | US family budget spent on housing | USA · 2024
+wb-ssa-mobile-money | 📲 | economy | Adults in sub-Saharan Africa using mobile money | Sub-Saharan Africa · 2024
+wb-electricity-world | 💡 | economy | People in the world with electricity at home | World · 2022
+us-atus-food-prep | 🍳 | everyday | Americans who cook or clean the kitchen on a typical day | USA · age 15+ · 2024
+us-atus-men-housework | 🧹 | everyday | American men who do housework on a typical day | USA · age 15+ · 2025
+us-long-commute | 🚗 | everyday | US commuters who take over an hour to get to work | USA · one way · 2023
+de-dishwasher | 🍽️ | everyday | German homes with a dishwasher | Germany · 2024
+eb-foreign-language | 🗣️ | everyday | Europeans who can chat in a foreign language | EU · age 15+ · 2023
+eu-25-34-with-parents | 🛏️ | everyday | Europeans aged 25–34 still living with their parents | EU · 2016
+eu-tourism-trip | ✈️ | everyday | Europeans who took a trip with at least one night away | EU · age 15+ · 2024
+jp-one-person-households | 🧍 | everyday | Japanese homes where just one person lives | Japan · Census 2020
+ew-no-car | 🚶 | everyday | Homes in England and Wales with no car | England & Wales · Census 2021
+mx-tv-households | 📺 | everyday | Mexican homes with a TV | Mexico · 2024
+it-theatre | 🎭 | everyday | Italians who went to the theatre last year | Italy · age 6+ · 2024
+eu-municipal-recycled | ♻️ | everyday | EU household rubbish that gets recycled | EU · 2024
+gallup-stress | 😩 | everyday | Adults who felt a lot of stress yesterday | World · 144 countries · 2024
+ca-volunteering | 🤝 | everyday | Canadians who volunteer for an organisation | Canada · age 15+ · 2023
+us-atus-tv | 📺 | habits | Americans who watch TV on a typical day | USA · age 15+ · 2025
+us-atus-sleep | 🛌 | habits | Americans who sleep at some point in the day | USA · age 15+ · 2024
+us-atus-lawn | 🌿 | habits | Americans who mow or garden on a typical day | USA · age 15+ · 2024
+us-atus-socialising | 🗨️ | habits | Americans who socialise on a typical day | USA · age 15+ · 2025
+de-bicycle | 🚲 | habits | German homes with a bicycle | Germany · 2024
+eb-english-foreign | 🇬🇧 | habits | Europeans who can speak English as a foreign language | EU · age 15+ · 2023
+ec-clock-change | ⏰ | habits | People who voted to stop changing the clocks | EU public consultation · 2018
+dk-cinema | 🎬 | habits | Danes who went to the cinema last year | Denmark · age 16+ · 2022
+eu-men-no-books | 📚 | habits | European men who didn't read a single book last year | EU · age 16+ · 2022
+lu-trips-abroad | 🧳 | habits | Holidays by Luxembourgers that leave the country | Luxembourg · 2024
+gallup-smiled-laughed | 😂 | habits | Adults who laughed a lot yesterday | World · 144 countries · 2024
+gallup-ghosts | 👻 | habits | Americans who believe in ghosts | USA · 2025
+mx-social-networks | 📱 | habits | Mexican internet users on social media | Mexico · 2024
+it-library-visit | 📖 | habits | Italians who went to a library last year | Italy · age 3+
+it-read-a-book | 📕 | habits | Italians who read at least one book last year | Italy · age 6+ · 2024
+it-cinema | 🍿 | habits | Italians who went to the cinema last year | Italy · age 6+ · 2024
+jp-karaoke | 🎤 | habits | Japanese people who sang karaoke last year | Japan · age 10+ · 2021
+gb-green-lifestyle | 🌍 | habits | Brits who changed habits to help the planet | Great Britain · 2025
+pew-tattoo | 🖋️ | habits | Americans with a tattoo | USA · adults · 2023
+fi-sauna-dwellings | 🧖 | habits | Finnish homes with their own sauna | Finland · 2018
+eu-no-alcohol-year | 🍷 | habits | European adults who didn't drink alcohol last year | EU · 2019
+cdc-fast-food-day | 🍟 | food | US adults who eat fast food on a given day | USA · age 20+ · 2021–23
+eu-five-a-day | 🥦 | food | Europeans who eat 5 portions of fruit and veg a day | EU · age 15+ · 2019
+eu-no-fruit-veg | 🥕 | food | Europeans who eat no fruit or veg on a typical day | EU · age 15+ · 2019
+it-five-a-day | 🍎 | food | Italians who eat 5 portions of fruit and veg a day | Italy · adults · 2022
+eu-organic-share | 🌾 | food | EU farmland that is organic | EU · 2022
+unep-waste-households | 🗑️ | food | World food waste that happens at home | World · 2022
+unep-food-wasted | 🍞 | food | Food in shops, restaurants and homes that gets wasted | World · 2022
+fao-aquaculture-share | 🐠 | food | Fish and seafood that come from farms, not the wild | World · 2024
+it-proper-breakfast | ☕ | food | Italians who have a proper breakfast | Italy · age 3+ · 2023
+it-skip-breakfast | 🥐 | food | Italians who skip breakfast | Italy · 2023
+ca-quebec-maple | 🍁 | food | Canada's maple syrup that comes from Quebec | Canada · 2024
+usda-pizza-day | 🍕 | food | Americans who eat pizza on any given day | USA · 2007–2010
+usda-pizza-kids | 🧒 | food | American kids who eat pizza on any given day | USA · 2007–2010
+usda-sandwich | 🥪 | food | American adults who eat a sandwich on any given day | USA · survey data
+fao-cropland-feed | 🌽 | food | World farmland used to grow animal feed | World · FAO
+nl-below-sea-level | 🌊 | geography | The Netherlands that lies below sea level | Netherlands
+fi-forest-cover | 🌲 | geography | Finland covered by forest | Finland · 2020
+fao-forest-world | 🌳 | geography | Land on Earth covered by forest | World · 2025
+fao-top5-forest | 🌍 | geography | World forests found in just 5 countries | Russia, Brazil, Canada, USA, China · 2025
+fao-russia-forest | 🇷🇺 | geography | World forests that are in Russia | World · 2025
+fao-land-grazing | 🐄 | geography | Earth's ice-free land used for grazing animals | World · FAO
+it-terrain-hills | ⛰️ | geography | Italy that is hills | Italy
+it-terrain-mountains | 🏔️ | geography | Italy that is mountains | Italy
+it-terrain-plains | 🛣️ | geography | Italy that is flat plains | Italy
+jp-aged-65 | 👴 | geography | Japanese people aged 65 or over | Japan · Census 2020
+nasa-amazon-land | 🌴 | geography | Earth's land covered by the Amazon rainforest | World
+noaa-seafloor-mapped | 🗺️ | geography | Ocean floor mapped in detail | World · April 2026
+noaa-coastal-population | 🏖️ | geography | Americans living in coastal counties | USA
+un-urban-2018 | 🏙️ | geography | People in the world living in cities | World · 2018
+usgs-oceans-water | 🌊 | geography | Earth's water that is in the oceans | World
+usgs-freshwater-ground | 💧 | geography | Earth's fresh water hidden underground | World
+usgs-surface-water | 🌐 | geography | Earth's surface covered by water | World
+cdc-short-sleep | 🥱 | health | US adults who sleep less than 7 hours a night | USA · 2020
+cdc-flu-shot-adults | 💉 | health | US adults who got a flu shot this year | USA · 2025
+eu-good-health | 💪 | health | Europeans who say their health is good | EU · age 16+ · 2024
+eu-daily-smokers | 🚬 | health | Europeans who smoke every day | EU · age 15+ · 2019
+it-sedentary-2025 | 🛋️ | health | Italians who do no exercise at all | Italy · age 3+ · 2025
+en-drank-alcohol-year | 🍺 | health | English adults who drank alcohol last year | England · 2022
+who-adults-inactive | 🏃 | health | Adults who don't move enough | World · WHO · 2022
+who-teens-inactive | 🎮 | health | Teenagers who don't move enough | World · age 11–17 · WHO
+jmp-safe-water | 🚰 | health | People with safe drinking water at home | World · 2024
+jmp-basic-hygiene | 🧼 | health | People with soap and water to wash hands at home | World · 2024
+who-air-guidelines | 🌫️ | health | People breathing air dirtier than WHO advises | World · 2019
+who-oral-disease | 🦷 | health | People with a dental problem, mostly cavities | World · WHO · 2022
+who-measles-1 | 🩹 | health | Children who got their first measles vaccine | World · 2024
+unicef-skilled-birth | 👶 | health | Babies born with a doctor, nurse or midwife present | World · 2024
+us-1901-food-budget | 🥖 | history | US family budget spent on food in 1901 | USA · 1901
+us-1901-apparel-budget | 👗 | history | US family budget spent on clothes in 1901 | USA · 1901
+us-women-lfpr-1950 | 👩‍💼 | history | American women who had a job (or sought one) in 1950 | USA · age 16+ · 1950
+us-farm-workers-1910 | 🚜 | history | American workers who were farmers in 1910 | USA · 1910
+us-urban-1790 | 🏘️ | history | Americans living in towns in 1790 | USA · first census · 1790
+us-radio-1930 | 📻 | history | American homes with a radio in 1930 | USA · 1930 census
+ie-1946-no-piped-water | 🚰 | history | Irish homes with no running water in 1946 | Ireland · 1946
+fr-bath-1954 | 🛁 | history | French homes with a bath or shower in 1954 | France · 1954 census
+ioc-women-1900 | 🏅 | history | Olympic athletes who were women in 1900 | Paris 1900 Olympics
+it-illiteracy-1861 | 📜 | history | Italians who couldn't read or write in 1861 | Italy · school age · 1861
+it-agri-1861 | 🌾 | history | Italian workers who were farmers in 1861 | Italy · 1861
+jp-aged-65-1950 | 👵 | history | Japanese people aged 65 or over in 1950 | Japan · 1950
+ca-rural-1871 | 🛖 | history | Canadians living in the countryside in 1871 | Canada · 1871 census
+un-urban-1950 | 🏚️ | history | People in the world living in cities in 1950 | World · 1950
+eea-protected-land | 🏞️ | nature | EU land that is a protected area | EU · 2023
+eu-woodland | 🌲 | nature | EU land covered by woods | EU · 2022
+fao-tropical-forest | 🌴 | nature | World forests that are tropical | World · 2025
+iucn-reef-corals | 🪸 | nature | Reef coral species at risk of extinction | World · IUCN
+iucn-cycads | 🦕 | nature | Cycad species at risk (plants older than dinosaurs) | World · IUCN
+iucn-trees | 🌳 | nature | Tree species at risk of extinction | World · IUCN · 2024
+iucn-cacti | 🌵 | nature | Cactus species at risk of extinction | World · IUCN · 2015
+noaa-reef-heat-stress | 🌡️ | nature | Coral reefs hit by bleaching heat in 2023–2025 | World · NOAA
+oecd-plastic-recycled | ♻️ | nature | Plastic waste that actually gets recycled | World · 2019
+usgs-freshwater-ice | 🧊 | nature | Earth's fresh water frozen in ice and glaciers | World
+esa-dark-energy | 🌌 | space | The Universe that is mysterious 'dark energy' | ESA Planck · 2013
+esa-dark-matter | 🕳️ | space | The Universe that is invisible dark matter | ESA Planck · 2013
+esa-ordinary-matter | ⭐ | space | The Universe that is normal stuff: stars, planets, you | ESA Planck · 2013
+nasa-sun-mass | ☀️ | space | The solar system's mass that is just the Sun | NASA
+nasa-venus-co2 | 🪐 | space | Venus's air that is carbon dioxide | NASA
+nasa-earth-n2 | 🌬️ | space | The air you breathe that is nitrogen | Earth · dry air · NASA
+nasa-earth-o2 | 🫁 | space | The air you breathe that is oxygen | Earth · dry air · NASA
+nasa-moon-visible | 🌕 | space | The Moon's surface we can see from Earth | NASA
+nasa-mars-gravity | 🔴 | space | Your weight on Mars compared to Earth | Mars surface gravity · NASA
+nasa-moon-gravity | 🌙 | space | Your weight on the Moon compared to Earth | Moon surface gravity · NASA
+nasa-sun-hydrogen-mass | 🔥 | space | The Sun's mass that is hydrogen | NASA
+nasa-sun-helium-mass | 🎈 | space | The Sun's mass that is helium (the balloon gas) | NASA
+eb-never-exercise | 🛋️ | sport | Europeans who never exercise or play sport | EU · age 15+ · 2026
+ie-live-sport | 🏟️ | sport | Irish people who went to a live sports event last year | Ireland · age 16+ · 2022
+gallup-football-fav | 🏈 | sport | Americans whose favourite sport is American football | USA · 2026
+gallup-soccer-fav | ⚽ | sport | Americans whose favourite sport is soccer | USA · 2026
+gallup-no-fav-sport | 🤷 | sport | Americans with no favourite sport at all | USA · 2026
+ioc-women-2012 | 🥇 | sport | Olympic athletes who were women in London 2012 | London 2012
+it-sport-any | 🏃 | sport | Italians who play a sport | Italy · age 3+ · 2024
+it-sport-football-share | ⚽ | sport | Italian sportspeople whose sport is football | Italy · 2024
+jp-weekly-sport | 🏸 | sport | Japanese adults who exercise every week | Japan · age 20+ · 2024
+en-year7-swim | 🏊 | sport | 11-year-olds in England who can swim 25 metres | England · 2024
+ca-sport-participation | 🏒 | sport | Canadians who played a sport last year | Canada · age 15+ · 2023
+study-home-wins-fans | 📣 | sport | Home wins in German football with fans in the stadium | Germany · before Covid
+study-home-wins-empty | 🏟️ | sport | Home wins in German football in empty stadiums | Germany · Covid seasons
+nl-weekly-sport | 🚴 | sport | Dutch adults who do sport every week | Netherlands · 2022
+de-ebike | 🔋 | tech | German homes with an e-bike | Germany · 2024
+de-smart-tv | 📺 | tech | German homes with a smart TV | Germany
+eu-genai | 🤖 | tech | Europeans who used AI tools like ChatGPT | EU · age 16–74 · 2025
+eu-video-calls | 📹 | tech | European internet users who make video calls | EU · 2025
+br-smart-devices | 🏠 | tech | Brazilian homes with smart gadgets | Brazil · homes online · 2023
+iea-norway-bev | 🚘 | tech | New cars in Norway that are fully electric | Norway · 2024
+mx-computer-households | 🖥️ | tech | Mexican homes with a computer | Mexico · 2024
+itu-internet-world | 🌐 | tech | People in the world who use the internet | World · 2025
+itu-5g-coverage | 📶 | tech | People in the world covered by 5G | World · 2025
+gb-crypto | 🪙 | tech | Brits who have owned cryptocurrency | Great Britain · 2025
+pew-smartphone | 📱 | tech | Americans who own a smartphone | USA · adults · 2025
+pew-youtube | ▶️ | tech | Americans who use YouTube | USA · adults · 2025
+pew-tiktok | 🎵 | tech | Americans who use TikTok | USA · adults · 2025
+pew-chatgpt-adults | 💬 | tech | Americans who have used ChatGPT | USA · adults · 2025
+pew-teens-chatbots | 🧑‍💻 | tech | US teens who use AI chatbots | USA · age 13–17 · 2025

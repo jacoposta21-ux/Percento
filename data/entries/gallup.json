@@ -1,7 +1,9 @@
 [
   {
     "id": "gallup-football-fav",
-    "text": "Americans whose favourite sport to watch is (American) football, 2026",
+    "text": "Americans whose favourite sport is American football",
+    "detail": "USA · 2026",
+    "emoji": "🏈",
     "value": 31,
     "year": 2026,
     "category": "sport",
@@ -18,7 +20,9 @@
   },
   {
     "id": "gallup-soccer-fav",
-    "text": "Americans whose favourite sport to watch is soccer, a record high (2026)",
+    "text": "Americans whose favourite sport is soccer",
+    "detail": "USA · 2026",
+    "emoji": "⚽",
     "value": 9,
     "year": 2026,
     "category": "sport",
@@ -35,7 +39,9 @@
   },
   {
     "id": "gallup-no-fav-sport",
-    "text": "Americans who say they have no favourite sport to watch at all (2026)",
+    "text": "Americans with no favourite sport at all",
+    "detail": "USA · 2026",
+    "emoji": "🤷",
     "value": 20,
     "year": 2026,
     "category": "sport",
@@ -52,7 +58,9 @@
   },
   {
     "id": "gallup-smiled-laughed",
-    "text": "Adults worldwide who smiled or laughed a lot 'yesterday' (Gallup, 144 countries, 2024)",
+    "text": "Adults who laughed a lot yesterday",
+    "detail": "World · 144 countries · 2024",
+    "emoji": "😂",
     "value": 73,
     "year": 2024,
     "category": "habits",
@@ -70,7 +78,9 @@
   },
   {
     "id": "gallup-well-rested",
-    "text": "Adults worldwide who felt well-rested 'yesterday' (Gallup, 144 countries, 2024)",
+    "text": "Adults who woke up feeling well-rested",
+    "detail": "World · 144 countries · 2024",
+    "emoji": "😴",
     "value": 72,
     "year": 2024,
     "category": "body",
@@ -88,7 +98,9 @@
   },
   {
     "id": "gallup-stress",
-    "text": "Adults worldwide who felt a lot of stress 'yesterday' (Gallup, 144 countries, 2024)",
+    "text": "Adults who felt a lot of stress yesterday",
+    "detail": "World · 144 countries · 2024",
+    "emoji": "😩",
     "value": 37,
     "year": 2024,
     "category": "everyday",
@@ -106,7 +118,9 @@
   },
   {
     "id": "gallup-ghosts",
-    "text": "Americans who say they believe in ghosts (2025)",
+    "text": "Americans who believe in ghosts",
+    "detail": "USA · 2025",
+    "emoji": "👻",
     "value": 39,
     "year": 2025,
     "category": "habits",

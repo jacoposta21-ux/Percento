@@ -1,7 +1,9 @@
 [
   {
     "id": "esa-dark-energy",
-    "text": "Share of the Universe's mass-energy that is 'dark energy', per ESA's Planck mission (2013)",
+    "text": "The Universe that is mysterious 'dark energy'",
+    "detail": "ESA Planck · 2013",
+    "emoji": "🌌",
     "value": 68.3,
     "year": 2013,
     "category": "space",
@@ -18,7 +20,9 @@
   },
   {
     "id": "esa-dark-matter",
-    "text": "Dark matter's slice of the cosmic pie, as measured by ESA's Planck satellite (2013)",
+    "text": "The Universe that is invisible dark matter",
+    "detail": "ESA Planck · 2013",
+    "emoji": "🕳️",
     "value": 26.8,
     "year": 2013,
     "category": "space",
@@ -35,7 +39,9 @@
   },
   {
     "id": "esa-ordinary-matter",
-    "text": "Share of the Universe that is ordinary matter: stars, planets, you, your sofa (Planck, 2013)",
+    "text": "The Universe that is normal stuff: stars, planets, you",
+    "detail": "ESA Planck · 2013",
+    "emoji": "⭐",
     "value": 4.9,
     "year": 2013,
     "category": "space",

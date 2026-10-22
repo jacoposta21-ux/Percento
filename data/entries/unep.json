@@ -1,7 +1,9 @@
 [
   {
     "id": "unep-food-wasted",
-    "text": "Share of food available to consumers worldwide that ended up wasted in 2022",
+    "text": "Food in shops, restaurants and homes that gets wasted",
+    "detail": "World · 2022",
+    "emoji": "🍞",
     "value": 19,
     "year": 2022,
     "category": "food",
@@ -18,7 +20,9 @@
   },
   {
     "id": "unep-waste-households",
-    "text": "Share of the world's food waste that happens in households, not shops or restaurants (2022)",
+    "text": "World food waste that happens at home",
+    "detail": "World · 2022",
+    "emoji": "🗑️",
     "value": 60,
     "year": 2022,
     "category": "food",
