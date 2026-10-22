@@ -17,23 +17,6 @@
     "addedOn": "2026-10-22"
   },
   {
-    "id": "uk-1920-primary",
-    "text": "UK jobs in the 'primary' sector (farming, fishing, mining) in 1920",
-    "value": 14.3,
-    "year": 1920,
-    "category": "history",
-    "tone": "serious",
-    "country": "GBR",
-    "indicator": "uk-employment-sectors-1920",
-    "source": "Office for National Statistics",
-    "sourceTitle": "Long-term trends in UK employment: 1861 to 2018",
-    "sourceUrl": "https://www.ons.gov.uk/economy/nationalaccounts/uksectoraccounts/compendium/economicreview/april2019/longtermtrendsinukemployment1861to2018",
-    "status": "unverified",
-    "evidence": "from 14.3% in 1920 to 1.3% in 2016",
-    "reviewReason": "NOT_OPENED: the build environment could not open the source page (network policy); value and evidence are from an official-domain search excerpt. Run `npm run verify-sources`.",
-    "addedOn": "2026-10-22"
-  },
-  {
     "id": "uk-1920-secondary",
     "text": "UK jobs in industry and manufacturing (the 'secondary' sector) in 1920",
     "value": 34.2,

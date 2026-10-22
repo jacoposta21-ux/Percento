@@ -75,5 +75,24 @@
     "reviewReason": "NOT_OPENED: the build environment could not open the source page (network policy); value and evidence are from an official-domain search excerpt. Run `npm run verify-sources`.",
     "addedOn": "2026-10-22",
     "notes": "Confirm the reference year on the page."
+  },
+  {
+    "id": "de-one-person-households",
+    "text": "German households where just one person lives",
+    "detail": "Germany · 2024",
+    "emoji": "🛋️",
+    "value": 42.3,
+    "year": 2024,
+    "category": "everyday",
+    "tone": "curious",
+    "country": "DEU",
+    "indicator": "one-person-households",
+    "source": "Destatis",
+    "sourceTitle": "Households, by type of household",
+    "sourceUrl": "https://www.destatis.de/EN/Themes/Society-Environment/Population/Households-Families/Tables/households.html",
+    "status": "unverified",
+    "evidence": "42.3",
+    "reviewReason": "NOT_OPENED: the build environment could not open the source page (network policy); value and evidence are from an official-domain search excerpt. Run `npm run verify-sources`.",
+    "addedOn": "2026-10-22"
   }
 ]

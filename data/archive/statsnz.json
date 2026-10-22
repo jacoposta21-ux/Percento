@@ -33,23 +33,5 @@
     "reviewReason": "NOT_OPENED: the build environment could not open the source page (network policy); value and evidence are from an official-domain search excerpt. Run `npm run verify-sources`.",
     "addedOn": "2026-10-22",
     "notes": "Search excerpt reads 'About 4.3 percent'; if the page hedges, keep unverified."
-  },
-  {
-    "id": "nz-home-ownership",
-    "text": "New Zealand households that owned their home or held it in a family trust (2023 Census)",
-    "value": 66,
-    "year": 2023,
-    "category": "economy",
-    "tone": "serious",
-    "country": "NZL",
-    "indicator": "home-ownership",
-    "source": "Stats NZ",
-    "sourceTitle": "Families, households, and housing: 2023 Census",
-    "sourceUrl": "https://www.stats.govt.nz/information-releases/families-households-and-housing-2023-census/",
-    "status": "unverified",
-    "evidence": "66.0 percent",
-    "reviewReason": "NOT_OPENED: the build environment could not open the source page (network policy); value and evidence are from an official-domain search excerpt. Run `npm run verify-sources`.",
-    "addedOn": "2026-10-22",
-    "notes": "Excerpt reads 'nearly two-thirds (66.0 percent…)' — exact figure stated alongside the descriptive phrase."
   }
 ]

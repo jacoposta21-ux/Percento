@@ -18,5 +18,24 @@
     "evidence": "61.3%",
     "reviewReason": "NOT_OPENED: the build environment could not open the source page (network policy); value and evidence are from an official-domain search excerpt. Run `npm run verify-sources`.",
     "addedOn": "2026-10-22"
+  },
+  {
+    "id": "ie-1926-irish-born",
+    "text": "People in Ireland who were born in Ireland, 1926",
+    "detail": "Ireland · 1926 census",
+    "emoji": "☘️",
+    "value": 97,
+    "year": 1926,
+    "category": "history",
+    "tone": "curious",
+    "country": "IRL",
+    "indicator": "born-in-country-historic",
+    "source": "Central Statistics Office Ireland",
+    "sourceTitle": "Key Findings - Then and Now: Life in Ireland in 1926 and 2022",
+    "sourceUrl": "https://www.cso.ie/en/releasesandpublications/ep/p-tnli/thenandnowlifeinirelandin1926and2022/keyfindings/",
+    "status": "unverified",
+    "evidence": "97%",
+    "reviewReason": "NOT_OPENED: the build environment could not open the source page (network policy); value and evidence are from an official-domain search excerpt. Run `npm run verify-sources`.",
+    "addedOn": "2026-10-22"
   }
 ]

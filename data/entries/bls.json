@@ -207,5 +207,25 @@
     "evidence": "31 percent",
     "reviewReason": "NOT_OPENED: the build environment could not open the source page (network policy); value and evidence are from an official-domain search excerpt. Run `npm run verify-sources`.",
     "addedOn": "2026-10-22"
+  },
+  {
+    "id": "bls-atus-eating",
+    "text": "Americans who eat or drink something on a typical day",
+    "detail": "USA · ages 15+ · 2025",
+    "emoji": "🥪",
+    "value": 96.9,
+    "year": 2025,
+    "category": "food",
+    "tone": "silly",
+    "country": "USA",
+    "indicator": "atus-eating",
+    "source": "US Bureau of Labor Statistics",
+    "sourceTitle": "American Time Use Survey, Table 1, 2025 annual averages",
+    "sourceUrl": "https://www.bls.gov/news.release/atus.t01.htm",
+    "status": "unverified",
+    "evidence": "Eating and drinking … 96.9",
+    "reviewReason": "NOT_OPENED: the build environment could not open the source page (network policy); value and evidence are from an official-domain search excerpt. Run `npm run verify-sources`.",
+    "addedOn": "2026-10-22",
+    "notes": "Who are the other 3.1%? Confirm row value on the table."
   }
 ]

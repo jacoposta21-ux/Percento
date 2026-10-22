@@ -15,39 +15,5 @@
     "evidence": "30 million (63.7%) active",
     "reviewReason": "NOT_OPENED: the build environment could not open the source page (network policy); value and evidence are from an official-domain search excerpt. Run `npm run verify-sources`.",
     "addedOn": "2026-10-22"
-  },
-  {
-    "id": "en-inactive-adults",
-    "text": "Adults in England averaging under 30 minutes of moderate activity a week (Nov 2023–Nov 2024)",
-    "value": 25.1,
-    "year": 2024,
-    "category": "health",
-    "tone": "serious",
-    "country": "GBR",
-    "indicator": "inactive-under-30-minutes",
-    "source": "Sport England",
-    "sourceTitle": "Active Lives Adult Survey, November 2023-24 report",
-    "sourceUrl": "https://www.sportengland.org/research-and-data/data/active-lives",
-    "status": "unverified",
-    "evidence": "11.8 million people (25.1%) classed as less active",
-    "reviewReason": "NOT_OPENED: the build environment could not open the source page (network policy); value and evidence are from an official-domain search excerpt. Run `npm run verify-sources`.",
-    "addedOn": "2026-10-22"
-  },
-  {
-    "id": "en-kids-active",
-    "text": "Children aged 5–16 in England averaging 60+ minutes of activity a day (2023–24 school year)",
-    "value": 47.8,
-    "year": 2024,
-    "category": "sport",
-    "tone": "serious",
-    "country": "GBR",
-    "indicator": "children-active-60-minutes",
-    "source": "Sport England",
-    "sourceTitle": "Children's activity levels remain stable but significant and sustained action required",
-    "sourceUrl": "https://www.sportengland.org/news-and-inspiration/childrens-activity-levels-remain-stable-significant-and-sustained-action",
-    "status": "unverified",
-    "evidence": "47.8% (3.3m) are active",
-    "reviewReason": "NOT_OPENED: the build environment could not open the source page (network policy); value and evidence are from an official-domain search excerpt. Run `npm run verify-sources`.",
-    "addedOn": "2026-10-22"
   }
 ]

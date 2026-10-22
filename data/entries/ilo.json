@@ -1,7 +1,9 @@
 [
   {
     "id": "ilo-informal-work",
-    "text": "Workers worldwide aged 15+ in informal employment: no contract, no social protection (2025)",
+    "text": "World workers with no contract (informal jobs)",
+    "detail": "World · 2025",
+    "emoji": "👷",
     "value": 57.9,
     "year": 2025,
     "category": "economy",
@@ -19,7 +21,9 @@
   },
   {
     "id": "ilo-neet",
-    "text": "Young people aged 15–24 worldwide not in employment, education or training (2025)",
+    "text": "Young people neither working nor studying",
+    "detail": "World · age 15–24 · 2025",
+    "emoji": "🎓",
     "value": 20,
     "year": 2025,
     "category": "economy",

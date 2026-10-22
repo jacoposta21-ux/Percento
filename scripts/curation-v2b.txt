@@ -1,0 +1,36 @@
+# Restored from data/archive with simpler texts. Format: id | emoji | category | text | detail
+eu-water-cover | 🏞️ | nature | EU land covered by lakes and rivers | EU · 2022
+fao-forest-natural | 🌱 | nature | World forests that grew on their own, not planted | World · 2025
+iucn-conifers | 🌲 | nature | Pine and fir species at risk of extinction | World · IUCN
+oecd-plastic-mismanaged | 🚯 | nature | World plastic waste dumped, burned or lost in nature | World · 2019
+fao-boreal-forest | ❄️ | nature | World forests in the cold far north | World · 2025
+fao-soils-degraded | 🏜️ | nature | Earth's land with damaged, worn-out soil | World · FAO · 2015
+ipcc-ocean-sink | 🌊 | nature | Our CO2 emissions absorbed by the oceans | World · 2010–2019 · IPCC
+ipcc-land-sink | 🍃 | nature | Our CO2 emissions absorbed by forests and soils | World · 2010–2019 · IPCC
+eb-exercise-parks | 🌳 | sport | Europeans who exercise in parks and outdoors | EU · people who exercise · 2026
+eb-active-commuting | 🚶 | sport | Europeans who walk or cycle to work, school or shops | EU · 2026
+it-sportswomen-fitness | 🏋️ | sport | Italian sportswomen whose sport is gym or fitness | Italy · 2024
+it-sporty-cycling | 🚴 | sport | Italian sportspeople who cycle | Italy · 2024
+en-kids-active | 🧒 | sport | Kids in England who move at least an hour a day | England · age 5–16 · 2024
+jp-sports | 🏓 | sport | Japanese people who did any sport last year | Japan · age 10+ · 2021
+jmp-safe-sanitation | 🚽 | health | People in the world with a safe toilet at home | World · 2024
+it-bad-health-2025 | 🤒 | health | Italians who say their health is bad | Italy · 2025
+se-daily-smokers | 🚭 | health | Swedes who smoke every day, the EU's lowest | Sweden · age 15+ · 2019
+en-inactive-adults | 🛋️ | health | Adults in England who barely exercise | England · under 30 min a week · 2024
+cdc-dental-65 | 🦷 | health | Americans over 65 who saw a dentist last year | USA · age 65+ · 2022
+it-smokers-2025 | 🚬 | health | Italians who smoke | Italy · age 11+ · 2025
+ilo-informal-work | 👷 | economy | World workers with no contract (informal jobs) | World · 2025
+ilo-neet | 🎓 | economy | Young people neither working nor studying | World · age 15–24 · 2025
+eu-sport-jobs | ⚽ | economy | EU jobs that are in the sports sector | EU · 2022
+nz-home-ownership | 🥝 | economy | New Zealand families who own their home | New Zealand · Census 2023
+usda-corn-ethanol-2008 | 🌽 | economy | US corn that was turned into car fuel | USA · 2008
+nasa-jupiter-h2 | 🟠 | space | Jupiter's air that is hydrogen | NASA
+nasa-uranus-methane | 🔵 | space | Uranus's air that is methane (why it looks blue) | NASA
+nasa-pluto-n2 | 🤍 | space | Pluto's thin air that is nitrogen | NASA
+nasa-neptune-he | 🎈 | space | Neptune's air that is helium | NASA
+ioc-women-1984 | 🏃‍♀️ | history | Olympic athletes who were women in 1984 | Los Angeles 1984
+us-urban-1910 | 🏙️ | history | Americans living in towns and cities in 1910 | USA · 1910 census
+uk-1920-primary | ⛏️ | history | UK jobs in farming, fishing and mining in 1920 | UK · 1920
+ie-1926-irish-born | ☘️ | history | People in Ireland who were born in Ireland, 1926 | Ireland · 1926 census
+study-grassland-birds-lost | 🐦 | animals | North American meadow birds lost since 1970 | USA & Canada · Science 2019
+iucn-freshwater-fish | 🐠 | animals | Freshwater fish species at risk of extinction | World · IUCN · 2025

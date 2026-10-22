@@ -10,7 +10,7 @@ export const AUTHORITATIVE_DOMAINS = [
   // Space and earth science
   'nasa.gov', 'usgs.gov', 'noaa.gov', 'esa.int', 'jpl.nasa.gov', 'copernicus.eu',
   // National statistics offices and government statistics
-  'istat.it', 'isprambiente.gov.it', 'ons.gov.uk', 'gov.uk', 'census.gov', 'bls.gov', 'ine.es', 'insee.fr',
+  'istat.it', 'isprambiente.gov.it', 'camera.it', 'interno.gov.it', 'quirinale.it', 'ons.gov.uk', 'gov.uk', 'census.gov', 'bls.gov', 'ine.es', 'insee.fr',
   'destatis.de', 'stat.go.jp', 'e-stat.go.jp', 'abs.gov.au', 'statcan.gc.ca', 'cbs.nl', 'pbl.nl',
   'scb.se', 'ssb.no', 'stats.govt.nz', 'ibge.gov.br', 'inegi.org.mx', 'cso.ie', 'dst.dk',
   'stat.fi', 'statistik.at', 'bfs.admin.ch', 'admin.ch', 'ine.pt', 'statbel.fgov.be',

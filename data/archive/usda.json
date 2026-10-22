@@ -35,23 +35,5 @@
     "evidence": "85 percent of adults consume breakfast",
     "reviewReason": "NOT_OPENED: the build environment could not open the source page (network policy); value and evidence are from an official-domain search excerpt. Run `npm run verify-sources`.",
     "addedOn": "2026-10-22"
-  },
-  {
-    "id": "usda-corn-ethanol-2008",
-    "text": "Share of US corn production that went into ethanol fuel in 2008",
-    "value": 23.2,
-    "year": 2008,
-    "category": "economy",
-    "tone": "curious",
-    "country": "USA",
-    "indicator": "corn-for-ethanol",
-    "source": "USDA Economic Research Service",
-    "sourceTitle": "ERS Economic Research Report 86 (ethanol and corn markets)",
-    "sourceUrl": "https://ers.usda.gov/sites/default/files/_laserfiche/publications/46301/9205_err86.pdf?v=17712",
-    "pdf": true,
-    "status": "unverified",
-    "evidence": "23.2 percent in 2008",
-    "reviewReason": "NOT_OPENED: the build environment could not open the source page (network policy); value and evidence are from an official-domain search excerpt. Run `npm run verify-sources`.",
-    "addedOn": "2026-10-22"
   }
 ]

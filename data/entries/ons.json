@@ -77,5 +77,43 @@
     "evidence": "around four in five (84%)",
     "reviewReason": "NOT_OPENED: the build environment could not open the source page (network policy); value and evidence are from an official-domain search excerpt. Run `npm run verify-sources`.",
     "addedOn": "2026-10-22"
+  },
+  {
+    "id": "ew-1961-private-rent",
+    "text": "Households in England and Wales renting privately in 1961",
+    "detail": "England & Wales · 1961 census",
+    "emoji": "🏚️",
+    "value": 28,
+    "year": 1961,
+    "category": "history",
+    "tone": "curious",
+    "country": "GBR",
+    "indicator": "private-renting-historic",
+    "source": "Office for National Statistics",
+    "sourceTitle": "Census unearthed: explore 50 years of change from 1961",
+    "sourceUrl": "https://www.ons.gov.uk/peoplepopulationandcommunity/housing/articles/censusunearthedexplore50yearsofchangefrom1961/2021-08-09",
+    "status": "unverified",
+    "evidence": "28% of households were private rented accommodation",
+    "reviewReason": "NOT_OPENED: the build environment could not open the source page (network policy); value and evidence are from an official-domain search excerpt. Run `npm run verify-sources`.",
+    "addedOn": "2026-10-22"
+  },
+  {
+    "id": "uk-1920-primary",
+    "text": "UK jobs in farming, fishing and mining in 1920",
+    "detail": "UK · 1920",
+    "emoji": "⛏️",
+    "value": 14.3,
+    "year": 1920,
+    "category": "history",
+    "tone": "serious",
+    "country": "GBR",
+    "indicator": "uk-employment-sectors-1920",
+    "source": "Office for National Statistics",
+    "sourceTitle": "Long-term trends in UK employment: 1861 to 2018",
+    "sourceUrl": "https://www.ons.gov.uk/economy/nationalaccounts/uksectoraccounts/compendium/economicreview/april2019/longtermtrendsinukemployment1861to2018",
+    "status": "unverified",
+    "evidence": "from 14.3% in 1920 to 1.3% in 2016",
+    "reviewReason": "NOT_OPENED: the build environment could not open the source page (network policy); value and evidence are from an official-domain search excerpt. Run `npm run verify-sources`.",
+    "addedOn": "2026-10-22"
   }
 ]

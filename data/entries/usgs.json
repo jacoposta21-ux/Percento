@@ -75,5 +75,24 @@
     "evidence": "About 71 percent of the Earth's surface is water-covered",
     "reviewReason": "HEDGED: the page says 'About 71 percent'.",
     "addedOn": "2026-10-22"
+  },
+  {
+    "id": "usgs-great-lakes",
+    "text": "World's fresh surface water held in the Great Lakes",
+    "detail": "USA & Canada · USGS 2005",
+    "emoji": "🏞️",
+    "value": 18,
+    "year": 2005,
+    "category": "geography",
+    "tone": "curious",
+    "country": "WORLD",
+    "indicator": "great-lakes-freshwater",
+    "source": "US Geological Survey",
+    "sourceTitle": "Great Lakes Basin Water Availability and Use (Fact Sheet 2005–3113)",
+    "sourceUrl": "https://pubs.usgs.gov/fs/2005/3113/",
+    "status": "unverified",
+    "evidence": "18 percent of the fresh surface water in the world",
+    "reviewReason": "NOT_OPENED: the build environment could not open the source page (network policy); value and evidence are from an official-domain search excerpt. Run `npm run verify-sources`.",
+    "addedOn": "2026-10-22"
   }
 ]

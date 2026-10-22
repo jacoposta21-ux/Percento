@@ -96,7 +96,9 @@ async function playEndless(page, label, { keyboard = false } = {}) {
   let lastHigher = null;
   while (rounds < 60) {
     const texts = await cardTexts(page);
-    if (lastHigher) check(texts[0] === lastHigher, `${label}: higher card should stay on top (round ${rounds})`);
+    // A champion with nothing higher left is retired: the round starts fresh with both values hidden.
+    const fresh = (await page.textContent('.card-a .card-value')).trim() === '?';
+    if (lastHigher && !fresh) check(texts[0] === lastHigher, `${label}: higher card should stay on top (round ${rounds})`);
     // Alternate inputs; after a few rounds answer wrong on purpose to end.
     const pickA = rounds % 2 === 0;
     if (keyboard) await page.keyboard.press(pickA ? '1' : 'ArrowDown');

@@ -74,5 +74,25 @@
     "evidence": "8.9 percent",
     "reviewReason": "NOT_OPENED: the build environment could not open the source page (network policy); value and evidence are from an official-domain search excerpt. Run `npm run verify-sources`.",
     "addedOn": "2026-10-22"
+  },
+  {
+    "id": "us-urban-1910",
+    "text": "Americans living in towns and cities in 1910",
+    "detail": "USA · 1910 census",
+    "emoji": "🏙️",
+    "value": 46.3,
+    "year": 1910,
+    "category": "history",
+    "tone": "serious",
+    "country": "USA",
+    "indicator": "us-urban-share-historic",
+    "source": "US Census Bureau",
+    "sourceTitle": "1910 Census bulletin: Population of cities",
+    "sourceUrl": "https://www2.census.gov/library/publications/decennial/1910/bulletins/demographics/362-population-us-cities.pdf",
+    "pdf": true,
+    "status": "unverified",
+    "evidence": "46.3 per cent",
+    "reviewReason": "NOT_OPENED: the build environment could not open the source page (network policy); value and evidence are from an official-domain search excerpt. Run `npm run verify-sources`.",
+    "addedOn": "2026-10-22"
   }
 ]

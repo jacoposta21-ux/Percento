@@ -18,5 +18,24 @@
     "evidence": "Baignoire ou douche 10,4",
     "reviewReason": "NOT_OPENED: the build environment could not open the source page (network policy); value and evidence are from an official-domain search excerpt. Run `npm run verify-sources`.",
     "addedOn": "2026-10-22"
+  },
+  {
+    "id": "fr-households-car",
+    "text": "French households with at least one car",
+    "detail": "France · census 2023",
+    "emoji": "🚗",
+    "value": 81.2,
+    "year": 2023,
+    "category": "everyday",
+    "tone": "curious",
+    "country": "FRA",
+    "indicator": "households-car",
+    "source": "INSEE",
+    "sourceTitle": "Équipement des ménages en voiture selon différentes caractéristiques",
+    "sourceUrl": "https://www.insee.fr/fr/statistiques/8670751",
+    "status": "unverified",
+    "evidence": "81,2 %",
+    "reviewReason": "NOT_OPENED: the build environment could not open the source page (network policy); value and evidence are from an official-domain search excerpt. Run `npm run verify-sources`.",
+    "addedOn": "2026-10-22"
   }
 ]

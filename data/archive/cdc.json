@@ -15,23 +15,5 @@
     "evidence": "11.7%",
     "reviewReason": "NOT_OPENED: the build environment could not open the source page (network policy); value and evidence are from an official-domain search excerpt. Run `npm run verify-sources`.",
     "addedOn": "2026-10-22"
-  },
-  {
-    "id": "cdc-dental-65",
-    "text": "US adults aged 65+ who visited a dentist in the past 12 months (2022)",
-    "value": 63.7,
-    "year": 2022,
-    "category": "health",
-    "tone": "curious",
-    "country": "USA",
-    "indicator": "dental-visit",
-    "source": "CDC National Center for Health Statistics",
-    "sourceTitle": "NCHS Data Brief No. 500: Dental care among adults aged 65 and older",
-    "sourceUrl": "https://www.cdc.gov/nchs/data/databriefs/db500.pdf",
-    "pdf": true,
-    "status": "unverified",
-    "evidence": "63.7%",
-    "reviewReason": "NOT_OPENED: the build environment could not open the source page (network policy); value and evidence are from an official-domain search excerpt. Run `npm run verify-sources`.",
-    "addedOn": "2026-10-22"
   }
 ]
