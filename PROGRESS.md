@@ -13,3 +13,4 @@ One line per task: task — result — issues.
 - M6 Share: Wordle grid + link, native share on touch devices, clipboard + execCommand fallback, toast — e2e clipboard check pass.
 - M7 Sources page grouped by category with link + year; dev-only review mode — pass.
 - M8 Polish: copy (28 headlines, 28 quips, end lines), 360px layout, AA contrast light+dark, 44px targets incl. inline links (fixed "FAO" 41px), keyboard 1/2/↑/↓/Enter, reduced motion — e2e 212 checks pass.
+- M9 Final QA: unit 27/27, e2e 212/212, dev validation 0 errors, 1,000-pair sim 0 violations / 97.7% cross-family; production validation FAILS (0 verified) — true blocker: no network access to sources from the build environment; README + DATA_REVIEW.md delivered.
