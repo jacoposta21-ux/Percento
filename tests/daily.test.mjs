@@ -1,7 +1,9 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { loadEntries } from '../scripts/lib/data.mjs';
-import { addDays, dailyPairs, dailyPool, formatCountdown, msUntilNextDaily, romeDate, romeMidnight } from '../src/daily.js';
+import {
+  addDays, currentStreak, dailyGuessCards, dailyPairs, dailyPool, formatCountdown, longestStreak, msUntilNextDaily, romeDate, romeMidnight,
+} from '../src/daily.js';
 import { isCrossFamily, isLegalPair, pairKey } from '../src/pairs.js';
 import { shareText } from '../src/share.js';
 
@@ -80,4 +82,23 @@ test('countdown is exact on short and long days', () => {
 test('share text is Wordle-style', () => {
   const text = shareText({ date: '2026-11-05', answers: [true, true, false, true, true, true, false, true, true, true], url: 'https://example.org/#/daily' });
   assert.equal(text, 'PERCENTO Daily 2026-11-05: 8/10\n🟩🟩🟥🟩🟩🟩🟥🟩🟩🟩\nhttps://example.org/#/daily');
+});
+
+test('streaks: alive until a day is missed, longest run remembered', () => {
+  assert.equal(currentStreak([], '2026-10-22'), 0);
+  assert.equal(currentStreak(['2026-10-20', '2026-10-21', '2026-10-22'], '2026-10-22'), 3);
+  assert.equal(currentStreak(['2026-10-20', '2026-10-21'], '2026-10-22'), 2, 'today not played yet: still alive');
+  assert.equal(currentStreak(['2026-10-19', '2026-10-20'], '2026-10-22'), 0, 'missed yesterday');
+  assert.equal(currentStreak(['2026-02-28', '2026-03-01'], '2026-03-01'), 2, 'across month ends');
+  assert.equal(longestStreak(['2026-10-01', '2026-10-02', '2026-10-03', '2026-10-10', '2026-10-11']), 3);
+});
+
+test('daily closest guess: 5 cards, identical for a date, different the next day', () => {
+  const pool = Array.from({ length: 60 }, (_, i) => ({ id: `c${String(i).padStart(2, '0')}`, value: i + 1, category: 'food', addedOn: '2026-01-01' }));
+  const a = dailyGuessCards(pool, '2026-10-22').map((e) => e.id);
+  const b = dailyGuessCards([...pool].reverse(), '2026-10-22').map((e) => e.id);
+  assert.equal(a.length, 5);
+  assert.equal(new Set(a).size, 5);
+  assert.deepEqual(a, b, 'independent of file order');
+  assert.notDeepEqual(a, dailyGuessCards(pool, '2026-10-23').map((e) => e.id));
 });

@@ -86,4 +86,14 @@ export function createPairGenerator(pool, rng = Math.random, { sameCategory = fa
   };
 }
 
+/** `n` different cards drawn with `rng` from the pool (sorted by id, so seeds agree everywhere). */
+export function pickCards(pool, rng, n) {
+  const list = [...pool].sort((x, y) => (x.id < y.id ? -1 : x.id > y.id ? 1 : 0));
+  for (let i = 0; i < Math.min(n, list.length); i++) {
+    const j = i + Math.floor(rng() * (list.length - i));
+    [list[i], list[j]] = [list[j], list[i]];
+  }
+  return list.slice(0, n);
+}
+
 export const higherOf = ({ a, b }) => (a.value > b.value ? a : b);

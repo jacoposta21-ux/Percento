@@ -10,6 +10,8 @@ import { join } from 'node:path';
 import { execFileSync } from 'node:child_process';
 import { chromium } from 'playwright-core';
 import { startServer } from '../scripts/serve.mjs';
+import { dailyPairs, romeDate } from '../src/daily.js';
+import { pairKey } from '../src/pairs.js';
 import { ROOT } from '../scripts/lib/data.mjs';
 
 const PORT = 8097;
@@ -22,6 +24,14 @@ mkdirSync(SHOTS, { recursive: true });
 const { ENTRIES } = await import(join(ROOT, 'dist', 'src', 'data.js'));
 const newest = ENTRIES.map((e) => (e.verifiedOn && e.verifiedOn > e.addedOn ? e.verifiedOn : e.addedOn)).sort().pop();
 const DAILY_TIME = new Date(Date.parse(`${newest}T12:00:00Z`) + 2 * 86400000);
+const DAILY_DATE = romeDate(DAILY_TIME);
+// Answers "from other players", seeded into the fake backend for one device:
+// every daily pair was answered 10 times, 3 of them right; 4 players already
+// finished the daily with scores 2, 5, 9 and 10.
+const CROWD_SEED = {
+  answer_stats: dailyPairs(ENTRIES, DAILY_DATE).map((p) => ({ key: pairKey(p.a, p.b), kind: 'pair', plays: 10, hits: 3, guess_sum: 0, miss_sum: 0 })),
+  daily_counts: [2, 5, 9, 10].map((score) => ({ day: DAILY_DATE, game: 'pairs', score, players: 1 })),
+};
 
 const failures = [];
 let passes = 0;
@@ -172,6 +182,11 @@ async function playDaily(page, context, label, { reloadAt = 4 } = {}) {
       continue;
     }
     const correct = await waitReveal(page);
+    if (i === 0) {
+      // What everybody answered appears under the verdict.
+      const crowd = await page.waitForSelector('.crowd', { timeout: 1500 }).then((el) => el.textContent()).catch(() => '');
+      check(label === 'mobile-light' ? crowd.includes('30% of players got this one right') : crowd.includes('one of the first'), `${label}: crowd line after the reveal (${crowd})`);
+    }
     if (!correct && !audited) { await audit(page, `${label} daily reveal`); audited = true; }
     await afterVerdict(page, label, correct, { last: i === 9 });
   }
@@ -195,6 +210,34 @@ async function playDaily(page, context, label, { reloadAt = 4 } = {}) {
   await page.waitForSelector('.share-text');
   check(!(await page.$('.card-pick')), `${label}: daily must not be replayable`);
   return firstPair;
+}
+
+async function playDailyGuess(page, label) {
+  await page.goto(`${BASE}#/daily/guess`);
+  for (let i = 0; i < 5; i++) {
+    await page.waitForSelector('.guess-slider:not([disabled])');
+    check((await page.textContent('.status')).includes(`Card ${i + 1} of 5`), `${label}: daily guess card ${i + 1}`);
+    if (i === 2) {
+      // Reload mid-challenge: the same card comes back (answers are saved one by one).
+      const before = await page.textContent('.card-text');
+      await page.reload();
+      await page.waitForSelector('.guess-slider:not([disabled])');
+      check((await page.textContent('.card-text')) === before, `${label}: daily guess resumes on reload`);
+    }
+    await setGuess(page, 20 + i * 15);
+    await page.click('.lock');
+    await page.waitForSelector('.continue');
+    await page.waitForSelector('.crowd');
+    await page.click('.continue');
+  }
+  await page.waitForSelector('.share-text');
+  const text = await page.textContent('.share-text');
+  check(/^PERCENTO Guess \d{4}-\d{2}-\d{2}: \d+\/500\n[🎯🟩🟨🟥]{5}\nhttp/u.test(text), `${label}: daily guess share text: ${JSON.stringify(text)}`);
+  await page.waitForSelector('.dist-bars');
+  await audit(page, `${label} daily guess results`);
+  await page.reload();
+  await page.waitForSelector('.share-text');
+  check(!(await page.$('.guess-slider')), `${label}: daily guess is not replayable`);
 }
 
 async function main() {
@@ -243,7 +286,24 @@ async function main() {
         // Entries only join the daily set the day after they are added, so
         // the daily runs two days after the newest addedOn.
         await page.clock.setFixedTime(DAILY_TIME);
+        if (label === 'mobile-light') {
+          await page.evaluate((seed) => {
+            const db = JSON.parse(localStorage.getItem('fake-supabase-db') || 'null') || { users: [], profiles: [], runs: [], daily_results: [], rooms: [], room_players: [], room_guesses: [], seq: 1 };
+            localStorage.setItem('fake-supabase-db', JSON.stringify({ ...db, ...seed }));
+          }, CROWD_SEED);
+        }
         dailyFirstPairs.push(await playDaily(page, context, label));
+        await page.waitForSelector('.dist-headline');
+        const dist = await page.textContent('.dist-headline');
+        if (label === 'mobile-light') {
+          check(/Better than \d+% of today's 5 players/.test(dist), `${label}: today's distribution counts everybody (${dist})`);
+        } else {
+          check(dist.includes('first to finish'), `${label}: first player of the day (${dist})`);
+        }
+        check((await page.textContent('.streak b')) === '1', `${label}: streak starts at 1`);
+        await playDailyGuess(page, label);
+        check((await page.textContent('.streak b')) === '1', `${label}: two dailies on one day are still a 1-day streak`);
+        check((await page.$$('.daily-tabs .seg')).length === 2, `${label}: tabs between the two dailies`);
         await page.goto(`${BASE}#/sources`);
         await page.waitForSelector('.source-list');
         await audit(page, `${label} sources`);

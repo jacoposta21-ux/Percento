@@ -1,6 +1,6 @@
 // Daily Challenge: date maths in Europe/Rome and the deterministic daily set.
 import { DAILY_TIMEZONE, RULES } from './config.js';
-import { createPairGenerator, hashString, mulberry32 } from './pairs.js';
+import { createPairGenerator, hashString, mulberry32, pickCards } from './pairs.js';
 
 const partsFormatter = new Intl.DateTimeFormat('en-GB', {
   timeZone: DAILY_TIMEZONE,
@@ -77,6 +77,37 @@ export function dailyPairs(pool, dateStr, count = RULES.dailyPairs) {
     pairs.push(pair);
   }
   return pairs;
+}
+
+export const DAILY_GUESS_CARDS = 5;
+
+/** The cards of the Daily "Closest guess": same date, same cards, everywhere. */
+export function dailyGuessCards(pool, dateStr, count = DAILY_GUESS_CARDS) {
+  return pickCards(dailyPool(pool, dateStr), mulberry32(hashString(`percento-daily-guess:${dateStr}`)), count);
+}
+
+/**
+ * Days in a row with a finished daily, counting back from today, or from
+ * yesterday when today's has not been played yet (the streak is still alive).
+ */
+export function currentStreak(days, today) {
+  const set = new Set(days);
+  let d = set.has(today) ? today : addDays(today, -1);
+  let n = 0;
+  while (set.has(d)) { n++; d = addDays(d, -1); }
+  return n;
+}
+
+/** Longest run of consecutive days ever. */
+export function longestStreak(days) {
+  const sorted = [...new Set(days)].sort();
+  let best = 0;
+  let run = 0;
+  for (let i = 0; i < sorted.length; i++) {
+    run = i > 0 && addDays(sorted[i - 1], 1) === sorted[i] ? run + 1 : 1;
+    best = Math.max(best, run);
+  }
+  return best;
 }
 
 export function formatCountdown(ms) {

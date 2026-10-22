@@ -482,3 +482,31 @@ select.input { appearance: none; background-image: linear-gradient(45deg, transp
   .guess-stage { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: start; }
   .guess-card .card-pick { min-height: 340px; }
 }
+
+/* ---------- what everybody answered ---------- */
+.crowd { margin: 6px 0 0; font-family: var(--mono); font-size: 0.82rem; color: var(--muted); }
+.crowd b { color: var(--text); font-weight: 600; }
+
+/* ---------- daily habit ---------- */
+.daily-tabs { display: flex; flex-wrap: wrap; margin: 0 0 16px; }
+.daily-tabs .seg { display: inline-flex; align-items: center; text-decoration: none; }
+.streak {
+  display: grid; grid-template-columns: auto 1fr 1fr; align-items: center; gap: 4px 14px; max-width: 420px;
+  margin: 14px 0; padding: 12px 16px; background: var(--paper); color: var(--ink); border-radius: 2px; box-shadow: 4px 4px 0 #000;
+}
+.streak-flame { font-size: 2rem; grid-row: span 2; }
+.streak p { margin: 0; }
+.streak b { display: block; font-family: var(--display); font-stretch: 75%; font-size: 2rem; line-height: 1; }
+.streak small { font-family: var(--mono); font-size: 0.7rem; color: var(--ink-muted); }
+.streak .streak-note { grid-column: 2 / -1; font-size: 0.8rem; color: var(--ink-muted); }
+.streak-chip { display: inline-flex; align-items: center; min-height: 44px; color: var(--gold); font-weight: 600; text-decoration: none; }
+.hero-meta .streak-chip::before { content: none; }
+.dist { margin-top: 16px; max-width: 520px; }
+.dist-headline { margin: 0 0 12px; font-size: 1.05rem; }
+.dist-headline b { color: var(--accent); }
+.dist-bars { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; }
+.dist-bars li { display: grid; grid-template-columns: 3.2em 1fr; align-items: center; gap: 8px; font-family: var(--mono); font-size: 0.78rem; }
+.dist-label { text-align: right; color: var(--muted); }
+.dist-bar { display: flex; justify-content: flex-end; width: var(--w); min-width: 2.2em; padding: 2px 6px; background: var(--surface-2); color: var(--text); }
+.dist-bars li.me .dist-bar { background: var(--accent); color: var(--ink); font-weight: 600; }
+.dist-bars li.me .dist-label { color: var(--text); font-weight: 600; }

@@ -264,3 +264,35 @@ export function watchRoom(roomId, onChange) {
 }
 
 export const ROOM_SIZE = 10;
+
+// ---------- what everybody answered ----------
+// These work without signing in: they only add to (or read) shared counters.
+const ready_ = () => client !== null;
+
+/** { plays, hits, guess_sum, miss_sum } for one pair key or card id (zeros when nobody answered yet); null when offline. */
+export async function answerStats(key) {
+  if (!ready_()) return null;
+  const { data, error } = await client.from('answer_stats').select('plays, hits, guess_sum, miss_sum').eq('key', key).maybeSingle();
+  if (error) return null;
+  return data ?? { plays: 0, hits: 0, guess_sum: 0, miss_sum: 0 };
+}
+
+export async function recordPair(key, correct) {
+  if (ready_()) await client.rpc('record_pair', { pair_key: key, correct });
+}
+
+export async function recordGuess(cardId, guess, miss) {
+  if (ready_()) await client.rpc('record_guess', { card_id: cardId, guess, miss });
+}
+
+/** game: 'pairs' or 'guess'. */
+export async function recordDaily(day, game, score) {
+  if (ready_()) await client.rpc('record_daily', { day, game, score });
+}
+
+/** [{ score, players }] for a day's challenge, or null when offline. */
+export async function dailyCounts(day, game) {
+  if (!ready_()) return null;
+  const { data, error } = await client.from('daily_counts').select('score, players').eq('day', day).eq('game', game);
+  return error ? null : data;
+}

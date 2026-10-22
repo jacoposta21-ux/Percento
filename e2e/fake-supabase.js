@@ -7,7 +7,7 @@
   const DB_KEY = 'fake-supabase-db';
   const SESSION_KEY = 'fake-supabase-session';
   const read = () => JSON.parse(localStorage.getItem(DB_KEY) || 'null') || {
-    users: [], profiles: [], runs: [], daily_results: [], rooms: [], room_players: [], room_guesses: [], seq: 1,
+    users: [], profiles: [], runs: [], daily_results: [], rooms: [], room_players: [], room_guesses: [], answer_stats: [], daily_counts: [], seq: 1,
   };
   const write = (db) => localStorage.setItem(DB_KEY, JSON.stringify(db));
   const session = () => JSON.parse(sessionStorage.getItem(SESSION_KEY) || 'null');
@@ -97,6 +97,17 @@
   function rpc(name, args) {
     const db = read();
     const me = uid();
+    // Shared counters: open to guests without an account, like on the server.
+    const bump = (table, match, init, add) => {
+      let row = db[table].find(match);
+      if (!row) { row = init; db[table].push(row); }
+      add(row);
+      write(db);
+      return { data: null, error: null };
+    };
+    if (name === 'record_pair') return bump('answer_stats', (r) => r.key === args.pair_key, { key: args.pair_key, kind: 'pair', plays: 0, hits: 0, guess_sum: 0, miss_sum: 0 }, (r) => { r.plays++; r.hits += args.correct ? 1 : 0; });
+    if (name === 'record_guess') return bump('answer_stats', (r) => r.key === args.card_id, { key: args.card_id, kind: 'guess', plays: 0, hits: 0, guess_sum: 0, miss_sum: 0 }, (r) => { r.plays++; r.guess_sum += args.guess; r.miss_sum += args.miss; });
+    if (name === 'record_daily') return bump('daily_counts', (r) => r.day === args.day && r.game === args.game && r.score === args.score, { day: args.day, game: args.game, score: args.score, players: 0 }, (r) => { r.players++; });
     if (!me) return err('Sign in first');
     const profile = db.profiles.find((p) => p.id === me);
     const room = args?.room_code && db.rooms.find((r) => r.code === args.room_code.toUpperCase());

@@ -1,8 +1,10 @@
 // PERCENTO app: routing, screens, side panel and the round engine shared by both modes.
 import { ENTRIES, BUILD } from './data.js';
 import { CATEGORIES, CATEGORY_IDS, RULES } from './config.js';
-import { createPairGenerator, higherOf, mulberry32, hashString } from './pairs.js';
-import { dailyPairs, romeDate, msUntilNextDaily, formatCountdown } from './daily.js';
+import { createPairGenerator, higherOf, mulberry32, hashString, pairKey, pickCards } from './pairs.js';
+import {
+  DAILY_GUESS_CARDS, dailyPairs, dailyGuessCards, romeDate, msUntilNextDaily, formatCountdown, currentStreak, longestStreak,
+} from './daily.js';
 import { createDial } from './dial.js';
 import { icon } from './icons.js';
 import * as audio from './audio.js';
@@ -17,6 +19,8 @@ const BEST_KEY = 'percento:best';
 const catBestKey = (cat) => `percento:best:${cat}`;
 const RUNS_KEY = 'percento:runs';
 const DAILY_HISTORY_KEY = 'percento:dailyHistory';
+const DAILY_GUESS_HISTORY_KEY = 'percento:dailyGuessHistory';
+const dailyGuessKey = (date) => `percento:dailyGuess:${date}`;
 const MOTION_KEY = 'percento:reduceMotion';
 const TITLE = 'Which percentage is higher?';
 const dailyKey = (date) => `percento:daily3:${date}`;
@@ -134,6 +138,26 @@ function renderPanel() {
   online.init().then(() => worldBoard(board, 5));
 }
 
+// ---------- what everybody answered ----------
+const CROWD_MIN_PLAYS = 3;
+/** Resolves to the value of `promise`, or null after `ms`. */
+const within = (promise, ms) => Promise.race([promise.catch(() => null), new Promise((res) => setTimeout(() => res(null), ms))]);
+
+function pairCrowdLine(stats) {
+  if (!stats) return null;
+  if (stats.plays < CROWD_MIN_PLAYS) return h('p', { class: 'crowd' }, 'You are one of the first players to see this pair.');
+  const pct = Math.round((100 * stats.hits) / stats.plays);
+  return h('p', { class: 'crowd' }, h('b', {}, `${pct}%`), ` of players got this one right${pct < 40 ? ' (a tricky one!)' : ''}.`);
+}
+
+function guessCrowdLine(stats) {
+  if (!stats) return null;
+  if (stats.plays < CROWD_MIN_PLAYS) return h('p', { class: 'crowd' }, 'You are one of the first players to guess this card.');
+  const avg = stats.guess_sum / stats.plays;
+  const miss = stats.miss_sum / stats.plays;
+  return h('p', { class: 'crowd' }, 'Players guess ', h('b', {}, `${Math.round(avg)}%`), ' on average, usually ', h('b', {}, `${Math.round(miss)} points`), ' off.');
+}
+
 // ---------- the round ----------
 /**
  * Renders one pair. Options: pair, headline, pill {value, label}, progress (node),
@@ -226,6 +250,9 @@ function renderRound({ pair, headline, pill, progress, onAnswer, onContinue, con
     correct = id !== null && cards[id].value > cards[id === 'a' ? 'b' : 'a'].value;
     audio.sfx(id ? 'tap' : 'timeout');
     onAnswer?.(correct);
+    // Ask what everybody else answered while the Percentometer swings.
+    const key = pairKey(pair.a, pair.b);
+    const crowd = online.answerStats(key).catch(() => null);
     for (const k of ['a', 'b']) { dom[k].pick.disabled = true; dom[k].answer.disabled = true; }
     if (id) dom[id].wrap.classList.add('chosen');
     feedback.textContent = id ? 'Measuring…' : '⏱ Time is up! Measuring…';
@@ -254,6 +281,11 @@ function renderRound({ pair, headline, pill, progress, onAnswer, onContinue, con
     dial.describe(`Percentometer: left card ${formatValue(pair.a.value)}, right card ${formatValue(pair.b.value)}`);
     feedback.className = `feedback ${correct ? 'ok' : 'ko'}`;
     audio.sfx(correct ? 'right' : 'wrong');
+    within(crowd, 900).then((stats) => {
+      const line = pairCrowdLine(stats);
+      if (line && feedback.isConnected) feedback.after(line);
+      if (id) online.recordPair(key, correct).catch(() => {});
+    });
     feedback.textContent = id ? `${correct ? '✓' : '✗'} ${pickFrom(correct ? RIGHT_QUIPS : WRONG_QUIPS)}` : '⏱ Time is up! 15 seconds per card.';
     phase = 'done';
     if (correct) {
@@ -297,7 +329,9 @@ function home() {
         h('a', { class: 'btn', href: '#/guess' }, 'Closest guess'),
         h('a', { class: 'btn', href: '#/online' }, icon('globe'), 'Play online'),
         h('a', { class: 'btn', href: '#/daily' }, 'Daily challenge')),
-      h('p', { class: 'hero-meta' }, h('span', {}, `Best streak ${best}`), h('span', {}, `${ENTRIES.length} statistics`), h('span', {}, `${cats.length} categories`))),
+      h('p', { class: 'hero-meta' },
+        streak().current ? h('a', { class: 'streak-chip', href: '#/daily' }, `🔥 ${streak().current}-day streak`) : null,
+        h('span', {}, `Best streak ${best}`), h('span', {}, `${ENTRIES.length} statistics`), h('span', {}, `${cats.length} categories`))),
     cats.length ? categorySection(cats) : null);
 }
 
@@ -388,16 +422,6 @@ const GUESS_TIME_MS = 15000;
 const guessPoints = (guess, value) => Math.max(0, Math.round(100 - 3 * Math.abs(guess - value)));
 const guessBestKey = (cat) => (cat ? `percento:guessBest:${cat}` : 'percento:guessBest');
 
-/** `n` different cards drawn with `rng` from the pool (sorted by id, so seeds agree everywhere). */
-function guessCards(pool, rng, n) {
-  const list = [...pool].sort((x, y) => (x.id < y.id ? -1 : 1));
-  for (let i = 0; i < Math.min(n, list.length); i++) {
-    const j = i + Math.floor(rng() * (list.length - i));
-    [list[i], list[j]] = [list[j], list[i]];
-  }
-  return list.slice(0, n);
-}
-
 // Labels near the ends of the ruler lean inwards so they stay on screen.
 const edge = (v) => (v < 8 ? ' edge-l' : v > 92 ? ' edge-r' : '');
 const FILL_ORDER = Array.from({ length: 100 }, (_, i) => (9 - Math.floor(i / 10)) * 10 + (i % 10));
@@ -477,8 +501,10 @@ function renderGuess({ entry, headline, pill, progress, deadline, onLock }) {
     for (const b of controls.querySelectorAll('button')) b.disabled = true;
     audio.sfx(auto ? 'timeout' : 'tap');
     status.textContent = touched ? `Locked in at ${guess}%. Waiting for the reveal…` : 'Time is up: no guess this round.';
+    crowd = online.answerStats(entry.id).catch(() => null);
     onLock?.(guess, touched);
   }
+  let crowd = Promise.resolve(null);
 
   setKeys((ev) => {
     if (locked) return;
@@ -510,6 +536,9 @@ function renderGuess({ entry, headline, pill, progress, deadline, onLock }) {
           h('b', {}, p.name), h('small', {}, `${p.guess}%`))));
       status.textContent = message;
       status.classList.add('done');
+      const line = guessCrowdLine(await within(crowd, 900));
+      if (line && status.isConnected) status.after(line);
+      if (touched) online.recordGuess(entry.id, guess, Math.round(Math.abs(guess - truth) * 10) / 10).catch(() => {});
     },
   };
 }
@@ -517,7 +546,7 @@ function renderGuess({ entry, headline, pill, progress, deadline, onLock }) {
 function startGuess(cat = null) {
   const pool = cat ? categoryPool(cat) : ENTRIES;
   if (pool.length < 2) return calibrating();
-  const cards = guessCards(pool, Math.random, GUESS_ROUNDS);
+  const cards = pickCards(pool, Math.random, GUESS_ROUNDS);
   const label = cat ? CATEGORIES[cat].label : 'Mixed';
   const results = [];
   let total = 0;
@@ -586,11 +615,69 @@ function guessOver({ cat, total, results }) {
 }
 
 // ---------- daily ----------
+// ---------- daily habit: streaks, tabs, everybody's scores ----------
+function playedDays() {
+  return [...Object.keys(load(DAILY_HISTORY_KEY, {}) || {}), ...Object.keys(load(DAILY_GUESS_HISTORY_KEY, {}) || {})];
+}
+const streak = () => ({ current: currentStreak(playedDays(), romeDate()), best: longestStreak(playedDays()) });
+
+function streakBox() {
+  const { current, best } = streak();
+  return h('div', { class: 'streak' },
+    h('span', { class: 'streak-flame', 'aria-hidden': 'true' }, '🔥'),
+    h('p', {}, h('b', {}, String(current)), h('small', {}, current === 1 ? 'day in a row' : 'days in a row')),
+    h('p', {}, h('b', {}, String(best)), h('small', {}, 'best streak')),
+    h('p', { class: 'streak-note' }, 'Play either daily challenge every day to keep the flame alive.'));
+}
+
+/** Tabs between the two daily challenges, with a tick on the ones done today. */
+function dailyTabs(active) {
+  const date = romeDate();
+  const done = {
+    pairs: (load(dailyKey(date), null)?.answers?.length ?? 0) >= RULES.dailyPairs,
+    guess: (load(dailyGuessKey(date), null)?.answers?.length ?? 0) >= DAILY_GUESS_CARDS,
+  };
+  return h('nav', { class: 'segmented daily-tabs', 'aria-label': 'Daily challenges' },
+    [['pairs', '#/daily', 'Higher or lower'], ['guess', '#/daily/guess', 'Closest guess']].map(([id, href, label]) =>
+      h('a', { class: 'seg', href, 'aria-current': id === active ? 'page' : null, 'aria-pressed': String(id === active) }, label, done[id] ? ' ✓' : '')));
+}
+
+/**
+ * Today's score distribution, Wordle-style. Records this player's score once
+ * (state.recorded), then shows where it sits among everybody's.
+ */
+function distributionBox({ date, game, score, state, stateKey }) {
+  const box = h('section', { class: 'box dist' }, h('h2', {}, "Everybody today"), h('p', { class: 'muted' }, 'Loading…'));
+  const buckets = game === 'pairs'
+    ? Array.from({ length: 11 }, (_, k) => ({ label: String(k), lo: k, hi: k }))
+    : Array.from({ length: 10 }, (_, k) => ({ label: `${k * 50}+`, lo: k * 50, hi: k === 9 ? 500 : k * 50 + 49 }));
+  (async () => {
+    const ok = await online.init();
+    if (ok && !state.recorded) {
+      await online.recordDaily(date, game, score).then(() => { state.recorded = true; save(stateKey, state); }).catch(() => {});
+    }
+    const rows = ok ? await online.dailyCounts(date, game).catch(() => null) : null;
+    if (!box.isConnected) return;
+    if (!rows) { box.replaceChildren(box.firstChild, h('p', { class: 'board-empty' }, 'Everybody\'s scores are offline right now.')); return; }
+    const total = rows.reduce((n, r) => n + r.players, 0);
+    const below = rows.filter((r) => r.score < score).reduce((n, r) => n + r.players, 0);
+    const counts = buckets.map((b) => rows.filter((r) => r.score >= b.lo && r.score <= b.hi).reduce((n, r) => n + r.players, 0));
+    const max = Math.max(1, ...counts);
+    box.replaceChildren(box.firstChild,
+      h('p', { class: 'dist-headline' }, total <= 1 ? 'You are the first to finish today. Set the bar!'
+        : h('span', {}, 'Better than ', h('b', {}, `${Math.round((100 * below) / total)}%`), ` of today's ${total} players.`)),
+      h('ol', { class: 'dist-bars', 'aria-label': 'Players per score today' }, buckets.map((b, k) => h('li', { class: score >= b.lo && score <= b.hi ? 'me' : '' },
+        h('span', { class: 'dist-label' }, b.label),
+        h('span', { class: 'dist-bar', style: `--w:${Math.max(2, (100 * counts[k]) / max)}%` }, h('span', {}, String(counts[k])))))));
+  })();
+  return box;
+}
+
 function startDaily() {
   const date = romeDate();
   const pairs = dailyPairs(ENTRIES, date);
   if (pairs.length < RULES.dailyPairs) {
-    mount(h('h1', { class: 'screen-title' }, "Today's challenge is warming up"),
+    mount(dailyTabs('pairs'), h('h1', { class: 'screen-title' }, "Today's challenge is warming up"),
       h('p', { class: 'lede' }, 'New statistics join the Daily Challenge the day after they are added, so everyone gets the same set. Come back after midnight (Rome time).'),
       h('div', { class: 'actions' }, h('a', { class: 'btn btn-primary', href: '#/' }, 'Play Endless meanwhile')));
     return;
@@ -638,16 +725,7 @@ function startDaily() {
   round(state.answers.length);
 }
 
-function dailyResults(date, pairs, answers) {
-  const score = answers.filter(Boolean).length;
-  const text = shareText({ date, answers, url: `${shareUrl()}#/daily` });
-  const countdown = h('span', { class: 'countdown' }, formatCountdown(msUntilNextDaily()));
-  const timer = setInterval(() => {
-    countdown.textContent = formatCountdown(msUntilNextDaily());
-    if (romeDate() !== date) { clearInterval(timer); startDaily(); }
-  }, 1000);
-  cleanup.push(() => clearInterval(timer));
-
+function shareFlow(text) {
   const doShare = async () => {
     const result = await shareResult(text);
     if (result === 'copied') toast('Result copied to clipboard. Go brag (politely).');
@@ -655,21 +733,124 @@ function dailyResults(date, pairs, answers) {
     else if (result === 'failed') toast('Could not copy automatically. Select the text above and copy it.');
   };
   setKeys((ev) => { if (ev.key === 'Enter' && document.activeElement?.tagName !== 'A') { ev.preventDefault(); doShare(); } });
+  return doShare;
+}
 
+function nextDailyCountdown(date, onNewDay) {
+  const countdown = h('span', { class: 'countdown' }, formatCountdown(msUntilNextDaily()));
+  const timer = setInterval(() => {
+    countdown.textContent = formatCountdown(msUntilNextDaily());
+    if (romeDate() !== date) { clearInterval(timer); onNewDay(); }
+  }, 1000);
+  cleanup.push(() => clearInterval(timer));
+  return h('p', { class: 'muted' }, 'Next challenges in ', countdown, ' (midnight, Rome time)');
+}
+
+function dailyResults(date, pairs, answers) {
+  const score = answers.filter(Boolean).length;
+  const state = load(dailyKey(date), null) || { answers };
+  const text = shareText({ date, answers, url: `${shareUrl()}#/daily` });
+  const doShare = shareFlow(text);
+  const otherDone = (load(dailyGuessKey(date), null)?.answers?.length ?? 0) >= DAILY_GUESS_CARDS;
   mount(
-    h('p', { class: 'kicker' }, 'Daily Challenge'),
+    dailyTabs('pairs'),
+    h('p', { class: 'kicker' }, 'Daily · Higher or lower'),
     h('h1', { class: 'screen-title' }, `Daily ${date}`),
     h('p', { class: 'big-score' }, h('span', {}, `${score}/${answers.length}`), h('small', {}, 'pairs right')),
     h('p', { class: 'grid', 'aria-label': answers.map((a, i) => `Pair ${i + 1} ${a ? 'right' : 'wrong'}`).join(', ') }, answers.map((a) => (a ? '🟩' : '🟥')).join('')),
     h('p', { class: 'lede' }, pickByScore(DAILY_END_LINES, score)),
+    streakBox(),
     h('pre', { class: 'share-text', 'aria-label': 'Share text' }, text),
     h('div', { class: 'actions' },
       h('button', { class: 'btn btn-primary', type: 'button', onclick: doShare }, 'Share result'),
-      h('a', { class: 'btn', href: '#/' }, 'Play Endless')),
-    h('p', { class: 'muted' }, 'Next challenge in ', countdown, ' (midnight, Rome time)'),
-    h('section', { class: 'box' }, h('h2', {}, "Today's pairs"),
+      otherDone ? h('a', { class: 'btn', href: '#/' }, 'Play Endless') : h('a', { class: 'btn', href: '#/daily/guess' }, "Today's Closest guess")),
+    nextDailyCountdown(date, startDaily),
+    distributionBox({ date, game: 'pairs', score, state, stateKey: dailyKey(date) }),
+    h('section', { class: 'box', style: 'margin-top:16px' }, h('h2', {}, "Today's pairs"),
       h('ol', { class: 'recap' }, pairs.map((p, i) => h('li', {},
         `${answers[i] ? '🟩' : '🟥'} ${p.a.emoji} ${p.a.text} (${formatValue(p.a.value)}) vs ${p.b.emoji} ${p.b.text} (${formatValue(p.b.value)})`)))));
+}
+
+// ---------- daily closest guess ----------
+const guessSquare = (points) => (points >= 90 ? '🎯' : points >= 60 ? '🟩' : points >= 30 ? '🟨' : '🟥');
+
+function startDailyGuess() {
+  const date = romeDate();
+  const cards = dailyGuessCards(ENTRIES, date);
+  if (cards.length < DAILY_GUESS_CARDS) {
+    mount(dailyTabs('guess'), h('h1', { class: 'screen-title' }, "Today's challenge is warming up"),
+      h('p', { class: 'lede' }, 'New statistics join the daily challenges the day after they are added, so everyone gets the same cards. Come back after midnight (Rome time).'),
+      h('div', { class: 'actions' }, h('a', { class: 'btn btn-primary', href: '#/guess' }, 'Practise Closest guess')));
+    return;
+  }
+  // Answers are saved one by one: a reload resumes, it never replays a card.
+  const state = load(dailyGuessKey(date), null) || { answers: [] };
+  const total = () => state.answers.reduce((n, a) => n + a.points, 0);
+  const dots = (i) => h('span', { class: 'dots', 'aria-hidden': 'true' },
+    cards.map((_, k) => h('span', { class: k < state.answers.length ? (state.answers[k].points >= 60 ? 'ok' : state.answers[k].points > 0 ? 'mid' : 'ko') : (k === i ? 'now' : '') })));
+
+  const round = (i) => {
+    if (i >= cards.length) return dailyGuessResults(date, cards, state);
+    const entry = cards[i];
+    const ctl = renderGuess({
+      entry,
+      headline: `Daily closest guess · card ${i + 1} of ${cards.length}`,
+      pill: { value: total(), label: 'Points today' },
+      progress: h('div', { class: 'progress' }, h('span', { class: 'status' }, `Daily ${date} · Card ${i + 1} of ${cards.length}`), dots(i)),
+      deadline: Date.now() + GUESS_TIME_MS,
+      onLock: (guess, touched) => {
+        const points = touched ? guessPoints(guess, entry.value) : 0;
+        state.answers[i] = { guess: touched ? guess : null, points };
+        save(dailyGuessKey(date), state);
+        if (state.answers.length === cards.length) {
+          const history = load(DAILY_GUESS_HISTORY_KEY, {}) || {};
+          history[date] = total();
+          save(DAILY_GUESS_HISTORY_KEY, history);
+        }
+        setTimeout(async () => {
+          const off = touched ? Math.abs(guess - entry.value) : null;
+          await ctl.reveal({
+            pins: touched ? [{ name: 'You', guess, me: true }] : [],
+            message: off === null ? 'No guess, no points.' : off < 0.5 ? `Bull's-eye! +${points}` : `${Number.isInteger(off) ? off : off.toFixed(1)} points off · +${points}`,
+          });
+          audio.sfx(points >= 60 ? 'right' : points > 0 ? 'tick' : 'wrong');
+          const next = h('button', { class: 'btn btn-primary continue', type: 'button', onclick: () => go() }, i === cards.length - 1 ? 'See results' : 'Next card');
+          app.querySelector('.guess-side')?.append(next);
+          next.focus({ preventScroll: true });
+          let gone = false;
+          const go = () => { if (!gone) { gone = true; round(i + 1); } };
+          setKeys((ev) => { if (ev.key === 'Enter') { ev.preventDefault(); go(); } });
+        }, 250);
+      },
+    });
+  };
+  round(state.answers.length);
+}
+
+function dailyGuessResults(date, cards, state) {
+  const score = state.answers.reduce((n, a) => n + a.points, 0);
+  const grid = state.answers.map((a) => guessSquare(a.points)).join('');
+  const text = `PERCENTO Guess ${date}: ${score}/${cards.length * 100}\n${grid}\n${shareUrl()}#/daily/guess`;
+  const doShare = shareFlow(text);
+  const otherDone = (load(dailyKey(date), null)?.answers?.length ?? 0) >= RULES.dailyPairs;
+  mount(
+    dailyTabs('guess'),
+    h('p', { class: 'kicker' }, 'Daily · Closest guess'),
+    h('h1', { class: 'screen-title' }, `Daily ${date}`),
+    h('p', { class: 'big-score' }, h('span', {}, String(score)), h('small', {}, `of ${cards.length * 100} points`)),
+    h('p', { class: 'grid', 'aria-label': state.answers.map((a, i) => `Card ${i + 1}: ${a.points} points`).join(', ') }, grid),
+    streakBox(),
+    h('pre', { class: 'share-text', 'aria-label': 'Share text' }, text),
+    h('div', { class: 'actions' },
+      h('button', { class: 'btn btn-primary', type: 'button', onclick: doShare }, 'Share result'),
+      otherDone ? h('a', { class: 'btn', href: '#/guess' }, 'Practise more') : h('a', { class: 'btn', href: '#/daily' }, "Today's Higher or lower")),
+    nextDailyCountdown(date, startDailyGuess),
+    distributionBox({ date, game: 'guess', score, state, stateKey: dailyGuessKey(date) }),
+    h('section', { class: 'box', style: 'margin-top:16px' }, h('h2', {}, "Today's cards"),
+      h('ol', { class: 'board guess-recap' }, cards.map((e, k) => h('li', {},
+        h('span', { class: 'rank' }, guessSquare(state.answers[k].points)), h('span', {}, ''),
+        h('span', { class: 'who' }, e.text, h('small', {}, state.answers[k].guess === null ? `no guess · real ${formatValue(e.value)}` : `you ${state.answers[k].guess}% · real ${formatValue(e.value)}`)),
+        h('span', { class: 'score' }, `+${state.answers[k].points}`))))));
 }
 
 // ---------- other screens ----------
@@ -1172,7 +1353,7 @@ async function room(code) {
     const period = (r.round_seconds + r.reveal_seconds) * 1000;
     const start = Date.parse(r.started_at);
     const cat = r.category && categoryPool(r.category).length >= MIN_CATEGORY_CARDS ? r.category : null;
-    const cards = guessCards(cat ? categoryPool(cat) : ENTRIES, mulberry32(Number(r.seed)), r.rounds);
+    const cards = pickCards(cat ? categoryPool(cat) : ENTRIES, mulberry32(Number(r.seed)), r.rounds);
     const now = () => Date.now() + offset;
     let shown = -1;
     let phase = null;
@@ -1307,7 +1488,7 @@ async function room(code) {
 // ---------- router ----------
 const ROUTES = {
   '': ['play', home], '#/': ['play', home], '#/endless': ['play', () => startEndless()], '#/guess': ['play', () => startGuess()], '#/friends': ['online', () => { location.hash = '#/online'; }],
-  '#/daily': ['daily', startDaily], '#/leaderboard': ['leaderboard', leaderboard],
+  '#/daily': ['daily', startDaily], '#/daily/guess': ['daily', startDailyGuess], '#/leaderboard': ['leaderboard', leaderboard],
   '#/sources': ['sources', () => sources()], '#/settings': ['account', settings], '#/review': ['sources', review],
   '#/account': ['account', () => account()], '#/account/new': ['account', () => account('signup')], '#/online': ['online', friends],
 };
