@@ -1,0 +1,21 @@
+{
+  "name": "percento",
+  "version": "1.0.0",
+  "description": "PERCENTO: compare the incomparable. A mobile-first higher/lower game with real, verified percentages.",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "validate": "node scripts/validate.mjs --mode=production",
+    "validate:dev": "node scripts/validate.mjs --mode=dev",
+    "build": "node scripts/validate.mjs --mode=production && node scripts/build.mjs --mode=production",
+    "build:dev": "node scripts/validate.mjs --mode=dev && node scripts/build.mjs --mode=dev",
+    "serve": "node scripts/serve.mjs",
+    "dev": "npm run build:dev && node scripts/serve.mjs",
+    "test": "node --test tests/*.test.mjs",
+    "test:e2e": "node scripts/build.mjs --mode=dev && node e2e/run.mjs",
+    "simulate": "node scripts/simulate.mjs",
+    "verify-sources": "node scripts/verify-sources.mjs",
+    "review": "node scripts/review.mjs"
+  },
+  "engines": { "node": ">=20" }
+}
