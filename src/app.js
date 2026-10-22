@@ -183,20 +183,12 @@ function renderRound({ pair, headline, pill, progress, onAnswer, onContinue, con
   let correct = false;
   const dom = {};
 
-  // Cells of the 10×10 grid, filled from the bottom row up like a tank.
-  const fillOrder = Array.from({ length: 100 }, (_, i) => (9 - Math.floor(i / 10)) * 10 + (i % 10));
-
   const card = (id) => {
     const e = cards[id];
-    const cat = CATEGORIES[e.category];
     const value = h('span', { class: 'card-value' }, '?');
-    const cells = Array.from({ length: 100 }, () => h('i'));
-    let filled = 0;
-    const fill = (reading) => {
-      const n = Math.round(reading);
-      for (let i = Math.min(n, filled); i < Math.max(n, filled); i++) cells[fillOrder[i]].classList.toggle('on', i < n);
-      filled = n;
-    };
+    // The percentage as a slice of pie, swept round as the value counts up.
+    const pie = h('span', { class: 'pie', 'aria-hidden': 'true' });
+    const fill = (reading) => pie.style.setProperty('--v', reading.toFixed(2));
     const pick = h('button', {
       class: 'card-pick',
       type: 'button',
@@ -206,7 +198,7 @@ function renderRound({ pair, headline, pill, progress, onAnswer, onContinue, con
     h('span', { class: 'card-top' }, h('span', { class: 'card-cat' }, icon(e.category), catLabel(e.category)), h('span', { class: 'card-side', 'aria-hidden': 'true' }, id === 'a' ? 'L' : 'R')),
     h('span', { class: 'card-text' }, cardText(e)),
     h('span', { class: 'card-detail' }, cardDetail(e)),
-    h('span', { class: 'card-foot' }, h('span', { class: 'waffle', 'aria-hidden': 'true' }, cells), value),
+    h('span', { class: 'card-foot' }, pie, value),
     h('span', { class: 'stamp', 'aria-hidden': 'true' }, t('Higher')));
     const source = h('p', { class: 'card-source', hidden: true },
       t('Source:'), ' ', h('a', { href: e.sourceUrl, target: '_blank', rel: 'noopener' }, e.source), ` · ${e.year}`);
@@ -332,7 +324,6 @@ function home() {
   const cats = CATEGORY_IDS.filter((c) => categoryPool(c).length >= MIN_CATEGORY_CARDS);
   mount(
     h('section', { class: 'hero' },
-      h('p', { class: 'kicker' }, t(TAGLINE)),
       h('h1', { class: 'screen-title' }, t('Two numbers.'), ' ', h('span', {}, t('One is higher.'))),
       h('p', { class: 'lede' }, t('Real statistics about things that have nothing in common. Pick the bigger percentage and keep your streak alive.')),
       h('div', { class: 'actions' },
@@ -435,7 +426,6 @@ const guessBestKey = (cat) => (cat ? `percento:guessBest:${cat}` : 'percento:gue
 
 // Labels near the ends of the ruler lean inwards so they stay on screen.
 const edge = (v) => (v < 8 ? ' edge-l' : v > 92 ? ' edge-r' : '');
-const FILL_ORDER = Array.from({ length: 100 }, (_, i) => (9 - Math.floor(i / 10)) * 10 + (i % 10));
 
 /**
  * Renders one guessing round and returns a controller:
@@ -448,8 +438,9 @@ function renderGuess({ entry, headline, pill, progress, deadline, onLock }) {
   let guess = 50;
   let touched = false;
   let locked = false;
-  const cells = Array.from({ length: 100 }, () => h('i'));
-  const paint = (cls, n) => FILL_ORDER.forEach((c, k) => cells[c].classList.toggle(cls, k < n));
+  // Pie slice: --g is the guess (pale), --v the real value once revealed.
+  const pie = h('span', { class: 'pie', 'aria-hidden': 'true' });
+  const paint = (prop, n) => pie.style.setProperty(prop === 'g' ? '--g' : '--v', String(n));
   const value = h('span', { class: 'card-value' }, '?');
   const readout = h('output', { class: 'guess-readout', 'aria-live': 'off' }, '50', h('small', {}, '%'));
   const slider = h('input', { class: 'guess-slider', type: 'range', min: 0, max: 100, step: 1, value: 50, 'aria-label': t('Your guess for: {text}', { text: cardText(entry) }) });
@@ -474,7 +465,7 @@ function renderGuess({ entry, headline, pill, progress, deadline, onLock }) {
       h('span', { class: 'card-top' }, h('span', { class: 'card-cat' }, icon(entry.category), catLabel(entry.category)), h('span', { class: 'card-side' }, t('How much?'))),
       h('span', { class: 'card-text' }, cardText(entry)),
       h('span', { class: 'card-detail' }, cardDetail(entry)),
-      h('span', { class: 'card-foot' }, h('span', { class: 'waffle', 'aria-hidden': 'true' }, cells), value)),
+      h('span', { class: 'card-foot' }, pie, value)),
     h('p', { class: 'card-source', hidden: true }, t('Source:'), ' ', h('a', { href: entry.sourceUrl, target: '_blank', rel: 'noopener' }, entry.source), ` · ${entry.year}`));
   const controls = h('div', { class: 'guess-controls' }, readout, slider,
     h('div', { class: 'guess-buttons' }, nudge(-1), nudge(+1), lockBtn));
@@ -535,9 +526,9 @@ function renderGuess({ entry, headline, pill, progress, deadline, onLock }) {
       paint('g', 0);
       const truth = entry.value;
       const dial = createDial();
-      await dial.swing('a', truth, (r) => { value.textContent = formatReading(r, truth); paint('on', Math.round(r)); });
+      await dial.swing('a', truth, (r) => { value.textContent = formatReading(r, truth); paint('on', r.toFixed(2)); });
       value.textContent = formatValue(truth);
-      paint('on', Math.round(truth));
+      paint('on', truth);
       card.querySelector('.card-source').hidden = false;
       card.classList.add('revealed');
       ruler.hidden = false;

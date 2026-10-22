@@ -277,7 +277,7 @@ async function main() {
         await page.waitForSelector('.card-pick');
         const cats = await page.$$eval('.card-cat', (els) => els.map((e) => e.textContent.trim()));
         check(cats.length === 2 && cats.every((c) => c === 'Space'), `${label}: category play keeps to one category (${cats})`);
-        check((await page.$$('.card-a .waffle i')).length === 100, `${label}: each card has a 10×10 grid`);
+        check(Boolean(await page.$('.card-a .pie')) && Boolean(await page.$('.card-b .pie')), `${label}: each card has a pie for its percentage`);
         await audit(page, `${label} category round`);
         await page.screenshot({ path: join(SHOTS, `${label}-round.png`), fullPage: true });
         const score = await playEndless(page, label, { keyboard: scheme === 'dark' });

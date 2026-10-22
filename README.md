@@ -108,7 +108,7 @@ src/copy.js                 headlines, quips, end-screen lines
 src/share.js, storage.js    share/copy flow, safe localStorage
 src/online.js               accounts, saved progress, leaderboards, rooms (Supabase)
 src/audio.js, icons.js      synthesised sound and music; line icons for categories
-vendor/fonts/               Bricolage Grotesque + IBM Plex Mono (OFL), self-hosted
+vendor/fonts/               Unbounded + Rethink Sans (OFL), self-hosted
 vendor/                     supabase-js UMD build (pinned)
 supabase/migrations/        database schema and rules
 scripts/                    validate, build, serve, simulate, verify-sources, review
