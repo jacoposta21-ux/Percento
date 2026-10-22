@@ -1,0 +1,19 @@
+[
+  {
+    "id": "irena-solar-wind-additions",
+    "text": "Share of the world's new renewable power capacity in 2025 that was solar or wind",
+    "value": 96.8,
+    "year": 2025,
+    "category": "tech",
+    "tone": "serious",
+    "country": "WORLD",
+    "indicator": "renewable-additions-mix",
+    "source": "IRENA",
+    "sourceTitle": "Near-700 GW Surge in 2025 Proves Renewable Energy Resilience (press release)",
+    "sourceUrl": "https://www.irena.org/News/pressreleases/2026/Apr/Near-700-GW-Surge-in-2025-Proves-Renewable-Energy-Resilience",
+    "status": "unverified",
+    "evidence": "96.8%",
+    "reviewReason": "NOT_OPENED: the build environment could not open the source page (network policy); value and evidence are from an official-domain search excerpt. Run `npm run verify-sources`.",
+    "addedOn": "2026-10-22"
+  }
+]

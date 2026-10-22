@@ -1,0 +1,38 @@
+[
+  {
+    "id": "fr-bath-1954",
+    "text": "French homes that had a bathtub or shower at the 1954 census",
+    "value": 10.4,
+    "year": 1954,
+    "category": "history",
+    "tone": "curious",
+    "country": "FRA",
+    "indicator": "bath-or-shower-historic",
+    "source": "INSEE",
+    "sourceTitle": "Cinquante ans d'évolution des conditions de logement des ménages (Données sociales 2006)",
+    "sourceUrl": "https://www.insee.fr/fr/statistiques/fichier/1371983/donsoc06za.pdf",
+    "pdf": true,
+    "status": "unverified",
+    "evidence": "Baignoire ou douche 10,4",
+    "reviewReason": "NOT_OPENED: the build environment could not open the source page (network policy); value and evidence are from an official-domain search excerpt. Run `npm run verify-sources`.",
+    "addedOn": "2026-10-22"
+  },
+  {
+    "id": "fr-bath-1968",
+    "text": "French homes with a bathtub or shower in 1968",
+    "value": 47.5,
+    "year": 1968,
+    "category": "history",
+    "tone": "curious",
+    "country": "FRA",
+    "indicator": "bath-or-shower-historic",
+    "source": "INSEE",
+    "sourceTitle": "Cinquante ans d'évolution des conditions de logement des ménages (Données sociales 2006)",
+    "sourceUrl": "https://www.insee.fr/fr/statistiques/fichier/1371983/donsoc06za.pdf",
+    "pdf": true,
+    "status": "unverified",
+    "evidence": "Baignoire ou douche 10,4 28,9 47,5",
+    "reviewReason": "NOT_OPENED: the build environment could not open the source page (network policy); value and evidence are from an official-domain search excerpt. Run `npm run verify-sources`.",
+    "addedOn": "2026-10-22"
+  }
+]

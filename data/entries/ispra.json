@@ -1,0 +1,38 @@
+[
+  {
+    "id": "it-soil-sealed",
+    "text": "Share of Italy's territory covered by artificial surfaces, 'consumed soil' (2024)",
+    "value": 7.2,
+    "year": 2024,
+    "category": "nature",
+    "tone": "serious",
+    "country": "ITA",
+    "indicator": "soil-consumption",
+    "source": "ISPRA (Italian Institute for Environmental Protection)",
+    "sourceTitle": "Il consumo di suolo in Italia: i dati del Rapporto SNPA 2025",
+    "sourceUrl": "https://www.isprambiente.gov.it/files2025/eventi/suolo/consumo_suolo_2025_web-1.pdf",
+    "pdf": true,
+    "status": "unverified",
+    "evidence": "7,17%",
+    "reviewReason": "NOT_OPENED: the build environment could not open the source page (network policy); value and evidence are from an official-domain search excerpt. Run `npm run verify-sources`.",
+    "addedOn": "2026-10-22"
+  },
+  {
+    "id": "it-lombardy-soil-sealed",
+    "text": "Share of Lombardy covered by artificial surfaces, Italy's highest (2024)",
+    "value": 12.2,
+    "year": 2024,
+    "category": "geography",
+    "tone": "curious",
+    "country": "ITA",
+    "indicator": "soil-consumption",
+    "source": "ISPRA (Italian Institute for Environmental Protection)",
+    "sourceTitle": "Il consumo di suolo in Italia: i dati del Rapporto SNPA 2025",
+    "sourceUrl": "https://www.isprambiente.gov.it/files2025/eventi/suolo/consumo_suolo_2025_web-1.pdf",
+    "pdf": true,
+    "status": "unverified",
+    "evidence": "Lombardia (12,22%)",
+    "reviewReason": "NOT_OPENED: the build environment could not open the source page (network policy); value and evidence are from an official-domain search excerpt. Run `npm run verify-sources`.",
+    "addedOn": "2026-10-22"
+  }
+]

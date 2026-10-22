@@ -1,0 +1,36 @@
+[
+  {
+    "id": "nhsbt-ab-negative",
+    "text": "UK blood donors with AB negative, the rarest of the eight main blood types",
+    "value": 1,
+    "year": 2024,
+    "category": "body",
+    "tone": "curious",
+    "country": "GBR",
+    "indicator": "blood-type-share",
+    "source": "NHS Blood and Transplant",
+    "sourceTitle": "AB negative blood type - NHS Blood Donation",
+    "sourceUrl": "https://www.blood.co.uk/why-give-blood/blood-types/ab-negative-blood-type/",
+    "status": "unverified",
+    "evidence": "just 1% of the donor population has it",
+    "reviewReason": "NOT_OPENED: the build environment could not open the source page (network policy); value and evidence are from an official-domain search excerpt. Run `npm run verify-sources`.",
+    "addedOn": "2026-10-22"
+  },
+  {
+    "id": "nhsbt-rhd-positive",
+    "text": "UK blood donors whose blood is RhD positive",
+    "value": 77,
+    "year": 2024,
+    "category": "body",
+    "tone": "curious",
+    "country": "GBR",
+    "indicator": "rhd-positive-share",
+    "source": "NHS Blood and Transplant",
+    "sourceTitle": "Blood types - NHS Blood Donation",
+    "sourceUrl": "https://www.blood.co.uk/why-give-blood/blood-types/",
+    "status": "unverified",
+    "evidence": "most (77%) of our donors have the D antigen",
+    "reviewReason": "NOT_OPENED: the build environment could not open the source page (network policy); value and evidence are from an official-domain search excerpt. Run `npm run verify-sources`.",
+    "addedOn": "2026-10-22"
+  }
+]

@@ -1,0 +1,19 @@
+[
+  {
+    "id": "no-ev-stock-2017",
+    "text": "Share of Norway's passenger cars that were electric at the end of 2017",
+    "value": 5.1,
+    "year": 2017,
+    "category": "tech",
+    "tone": "curious",
+    "country": "NOR",
+    "indicator": "norway-ev-stock-share",
+    "source": "Statistics Norway (SSB)",
+    "sourceTitle": "Over 140 000 electric cars in Norway",
+    "sourceUrl": "https://www.ssb.no/en/transport-og-reiseliv/artikler-og-publikasjoner/over-140-000-electric-cars-in-norway",
+    "status": "unverified",
+    "evidence": "electric cars now constitute 5.1 per cent of the passenger car stock",
+    "reviewReason": "NOT_OPENED: the build environment could not open the source page (network policy); value and evidence are from an official-domain search excerpt. Run `npm run verify-sources`.",
+    "addedOn": "2026-10-22"
+  }
+]

@@ -6,6 +6,9 @@ import { CATEGORY_IDS, RULES, STATUSES, TONES } from '../../src/config.js';
 import { isLegalPair } from '../../src/pairs.js';
 import { isAuthoritativeUrl } from './sources.mjs';
 
+// Aggregates that are not a single country and so are exempt from the country cap.
+export const NON_COUNTRY = new Set(['WORLD', 'EU', 'OECD']);
+
 const ISO_DATE = /^\d{4}-\d{2}-\d{2}$/;
 const ID = /^[a-z0-9]+(-[a-z0-9]+)*$/;
 const REQUIRED = ['id', 'text', 'value', 'source', 'sourceUrl', 'year', 'category', 'tone',
@@ -41,6 +44,7 @@ export function validateEntry(e, today) {
     if (e[f] === undefined || e[f] === null || e[f] === '') errs.push(`${where} missing field "${f}"`);
   }
   for (const f of Object.keys(e)) if (!KNOWN.has(f)) errs.push(`${where} unknown field "${f}"`);
+  if (typeof e.country === 'string' && !/^([A-Z]{3}|WORLD|EU|OECD)$/.test(e.country)) errs.push(`${where} country must be ISO 3166 alpha-3, WORLD, EU or OECD`);
   if (typeof e.id === 'string' && !ID.test(e.id)) errs.push(`${where} id must be kebab-case`);
   if (typeof e.text === 'string') {
     if (e.text.length > RULES.maxTextLength) errs.push(`${where} text is ${e.text.length} chars (max ${RULES.maxTextLength})`);
@@ -106,7 +110,7 @@ export function validateDataset(entries, { mode = 'production', today = new Date
     if (capsApply && share(n, total) > RULES.maxSourceShare) errors.push(`source "${src}" is ${pct(share(n, total))} of the pool (max ${pct(RULES.maxSourceShare)})`);
   }
   for (const [c, n] of countBy(pool, (e) => e.country)) {
-    if (capsApply && share(n, total) > RULES.maxCountryShare) errors.push(`country "${c}" is ${pct(share(n, total))} of the pool (max ${pct(RULES.maxCountryShare)})`);
+    if (capsApply && !NON_COUNTRY.has(c) && share(n, total) > RULES.maxCountryShare) errors.push(`country "${c}" is ${pct(share(n, total))} of the pool (max ${pct(RULES.maxCountryShare)})`);
   }
 
   // Near-duplicate texts.

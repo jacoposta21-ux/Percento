@@ -1,0 +1,53 @@
+[
+  {
+    "id": "ecb-cash-pos",
+    "text": "Euro area shop payments (by number) made with good old cash in 2024",
+    "value": 52,
+    "year": 2024,
+    "category": "economy",
+    "tone": "curious",
+    "country": "EU",
+    "indicator": "cash-share-pos",
+    "source": "European Central Bank",
+    "sourceTitle": "Study on the payment attitudes of consumers in the euro area (SPACE) 2024",
+    "sourceUrl": "https://www.ecb.europa.eu/stats/ecb_surveys/space/html/ecb.space2024~19d46f0f17.en.html",
+    "status": "unverified",
+    "evidence": "52%",
+    "reviewReason": "NOT_OPENED: the build environment could not open the source page (network policy); value and evidence are from an official-domain search excerpt. Run `npm run verify-sources`.",
+    "addedOn": "2026-10-22"
+  },
+  {
+    "id": "ecb-prefer-cards",
+    "text": "Euro area consumers who prefer paying by card or other cashless means in shops (2024)",
+    "value": 55,
+    "year": 2024,
+    "category": "economy",
+    "tone": "curious",
+    "country": "EU",
+    "indicator": "payment-preference-cashless",
+    "source": "European Central Bank",
+    "sourceTitle": "Study on the payment attitudes of consumers in the euro area (SPACE) 2024",
+    "sourceUrl": "https://www.ecb.europa.eu/stats/ecb_surveys/space/html/ecb.space2024~19d46f0f17.en.html",
+    "status": "unverified",
+    "evidence": "55%",
+    "reviewReason": "NOT_OPENED: the build environment could not open the source page (network policy); value and evidence are from an official-domain search excerpt. Run `npm run verify-sources`.",
+    "addedOn": "2026-10-22"
+  },
+  {
+    "id": "ecb-online-payments",
+    "text": "Share of euro area consumers' day-to-day payments made online in 2024",
+    "value": 21,
+    "year": 2024,
+    "category": "tech",
+    "tone": "serious",
+    "country": "EU",
+    "indicator": "online-payment-share",
+    "source": "European Central Bank",
+    "sourceTitle": "Study on the payment attitudes of consumers in the euro area (SPACE) 2024",
+    "sourceUrl": "https://www.ecb.europa.eu/stats/ecb_surveys/space/html/ecb.space2024~19d46f0f17.en.html",
+    "status": "unverified",
+    "evidence": "from 17% to 21%",
+    "reviewReason": "NOT_OPENED: the build environment could not open the source page (network policy); value and evidence are from an official-domain search excerpt. Run `npm run verify-sources`.",
+    "addedOn": "2026-10-22"
+  }
+]

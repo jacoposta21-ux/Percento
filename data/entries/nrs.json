@@ -1,0 +1,53 @@
+[
+  {
+    "id": "sc-gaelic-skills",
+    "text": "People in Scotland aged 3+ with some Gaelic language skills (Census 2022)",
+    "value": 2.5,
+    "year": 2022,
+    "category": "everyday",
+    "tone": "curious",
+    "country": "GBR",
+    "indicator": "gaelic-skills",
+    "source": "Scotland's Census (National Records of Scotland)",
+    "sourceTitle": "Scotland's Census 2022 - Ethnic group, national identity, language and religion",
+    "sourceUrl": "https://www.scotlandscensus.gov.uk/2022-reports/scotland-s-census-2022-ethnic-group-national-identity-language-and-religion/",
+    "status": "unverified",
+    "evidence": "2.5% of people aged 3 and over had some skills in Gaelic",
+    "reviewReason": "NOT_OPENED: the build environment could not open the source page (network policy); value and evidence are from an official-domain search excerpt. Run `npm run verify-sources`.",
+    "addedOn": "2026-10-22"
+  },
+  {
+    "id": "sc-eilean-siar-gaelic",
+    "text": "People aged 3+ in the Western Isles (Eilean Siar) with some Gaelic skills (Census 2022)",
+    "value": 57.2,
+    "year": 2022,
+    "category": "geography",
+    "tone": "curious",
+    "country": "GBR",
+    "indicator": "gaelic-skills",
+    "source": "Scotland's Census (National Records of Scotland)",
+    "sourceTitle": "Scotland's Census 2022 - Ethnic group, national identity, language and religion",
+    "sourceUrl": "https://www.scotlandscensus.gov.uk/2022-reports/scotland-s-census-2022-ethnic-group-national-identity-language-and-religion/",
+    "status": "unverified",
+    "evidence": "57.2%",
+    "reviewReason": "NOT_OPENED: the build environment could not open the source page (network policy); value and evidence are from an official-domain search excerpt. Run `npm run verify-sources`.",
+    "addedOn": "2026-10-22"
+  },
+  {
+    "id": "sc-single-person",
+    "text": "Scottish households made up of one person living alone (Census 2022)",
+    "value": 37.1,
+    "year": 2022,
+    "category": "everyday",
+    "tone": "curious",
+    "country": "GBR",
+    "indicator": "one-person-households",
+    "source": "Scotland's Census (National Records of Scotland)",
+    "sourceTitle": "Scotland's Census 2022: large rise in single person households",
+    "sourceUrl": "https://www.nrscotland.gov.uk/latest-news/scotland-s-census-2022-large-rise-in-single-person-households/",
+    "status": "unverified",
+    "evidence": "(37.1%)",
+    "reviewReason": "NOT_OPENED: the build environment could not open the source page (network policy); value and evidence are from an official-domain search excerpt. Run `npm run verify-sources`.",
+    "addedOn": "2026-10-22"
+  }
+]

@@ -1,0 +1,38 @@
+[
+  {
+    "id": "ilo-informal-work",
+    "text": "Workers worldwide aged 15+ in informal employment: no contract, no social protection (2025)",
+    "value": 57.9,
+    "year": 2025,
+    "category": "economy",
+    "tone": "serious",
+    "country": "WORLD",
+    "indicator": "informal-employment",
+    "source": "International Labour Organization",
+    "sourceTitle": "Global Employment Trends for Youth 2026",
+    "sourceUrl": "https://www.ilo.org/sites/default/files/2026-08/9789220437612_PDFA_Web_ENG.pdf",
+    "pdf": true,
+    "status": "unverified",
+    "evidence": "57.9 per cent",
+    "reviewReason": "NOT_OPENED: the build environment could not open the source page (network policy); value and evidence are from an official-domain search excerpt. Run `npm run verify-sources`.",
+    "addedOn": "2026-10-22"
+  },
+  {
+    "id": "ilo-neet",
+    "text": "Young people aged 15–24 worldwide not in employment, education or training (2025)",
+    "value": 20,
+    "year": 2025,
+    "category": "economy",
+    "tone": "serious",
+    "country": "WORLD",
+    "indicator": "youth-neet",
+    "source": "International Labour Organization",
+    "sourceTitle": "Global Employment Trends for Youth 2026",
+    "sourceUrl": "https://www.ilo.org/sites/default/files/2026-08/9789220437612_PDFA_Web_ENG.pdf",
+    "pdf": true,
+    "status": "unverified",
+    "evidence": "20 per cent",
+    "reviewReason": "NOT_OPENED: the build environment could not open the source page (network policy); value and evidence are from an official-domain search excerpt. Run `npm run verify-sources`.",
+    "addedOn": "2026-10-22"
+  }
+]

@@ -1,0 +1,53 @@
+[
+  {
+    "id": "esa-dark-energy",
+    "text": "Share of the Universe's mass-energy that is 'dark energy', per ESA's Planck mission (2013)",
+    "value": 68.3,
+    "year": 2013,
+    "category": "space",
+    "tone": "curious",
+    "country": "WORLD",
+    "indicator": "universe-composition",
+    "source": "European Space Agency",
+    "sourceTitle": "Planck reveals an almost perfect Universe",
+    "sourceUrl": "https://www.esa.int/Science_Exploration/Space_Science/Planck/Planck_reveals_an_almost_perfect_Universe",
+    "status": "unverified",
+    "evidence": "accounts for 68.3%",
+    "reviewReason": "NOT_OPENED: the build environment could not open the source page (network policy); value and evidence are from an official-domain search excerpt. Run `npm run verify-sources`.",
+    "addedOn": "2026-10-22"
+  },
+  {
+    "id": "esa-dark-matter",
+    "text": "Dark matter's slice of the cosmic pie, as measured by ESA's Planck satellite (2013)",
+    "value": 26.8,
+    "year": 2013,
+    "category": "space",
+    "tone": "curious",
+    "country": "WORLD",
+    "indicator": "universe-composition",
+    "source": "European Space Agency",
+    "sourceTitle": "Planck reveals an almost perfect Universe",
+    "sourceUrl": "https://www.esa.int/Science_Exploration/Space_Science/Planck/Planck_reveals_an_almost_perfect_Universe",
+    "status": "unverified",
+    "evidence": "Dark matter was found to make up 26.8%",
+    "reviewReason": "NOT_OPENED: the build environment could not open the source page (network policy); value and evidence are from an official-domain search excerpt. Run `npm run verify-sources`.",
+    "addedOn": "2026-10-22"
+  },
+  {
+    "id": "esa-ordinary-matter",
+    "text": "Share of the Universe that is ordinary matter: stars, planets, you, your sofa (Planck, 2013)",
+    "value": 4.9,
+    "year": 2013,
+    "category": "space",
+    "tone": "silly",
+    "country": "WORLD",
+    "indicator": "universe-composition",
+    "source": "European Space Agency",
+    "sourceTitle": "Planck reveals an almost perfect Universe",
+    "sourceUrl": "https://www.esa.int/Science_Exploration/Space_Science/Planck/Planck_reveals_an_almost_perfect_Universe",
+    "status": "unverified",
+    "evidence": "contributes just 4.9% of the mass/energy density of the Universe",
+    "reviewReason": "NOT_OPENED: the build environment could not open the source page (network policy); value and evidence are from an official-domain search excerpt. Run `npm run verify-sources`.",
+    "addedOn": "2026-10-22"
+  }
+]

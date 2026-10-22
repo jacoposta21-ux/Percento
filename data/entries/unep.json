@@ -1,0 +1,36 @@
+[
+  {
+    "id": "unep-food-wasted",
+    "text": "Share of food available to consumers worldwide that ended up wasted in 2022",
+    "value": 19,
+    "year": 2022,
+    "category": "food",
+    "tone": "serious",
+    "country": "WORLD",
+    "indicator": "food-waste-share",
+    "source": "UN Environment Programme",
+    "sourceTitle": "World squanders over 1 billion meals a day - UN report (Food Waste Index Report 2024)",
+    "sourceUrl": "https://www.unep.org/en/news-and-stories/press-release/world-squanders-over-1-billion-meals-day-un-report",
+    "status": "unverified",
+    "evidence": "one fifth (19 per cent) of food available to consumers being wasted",
+    "reviewReason": "NOT_OPENED: the build environment could not open the source page (network policy); value and evidence are from an official-domain search excerpt. Run `npm run verify-sources`.",
+    "addedOn": "2026-10-22"
+  },
+  {
+    "id": "unep-waste-households",
+    "text": "Share of the world's food waste that happens in households, not shops or restaurants (2022)",
+    "value": 60,
+    "year": 2022,
+    "category": "food",
+    "tone": "curious",
+    "country": "WORLD",
+    "indicator": "food-waste-household-share",
+    "source": "UN Environment Programme",
+    "sourceTitle": "World squanders over 1 billion meals a day - UN report (Food Waste Index Report 2024)",
+    "sourceUrl": "https://www.unep.org/en/news-and-stories/press-release/world-squanders-over-1-billion-meals-day-un-report",
+    "status": "unverified",
+    "evidence": "60 per cent happened at the household level",
+    "reviewReason": "NOT_OPENED: the build environment could not open the source page (network policy); value and evidence are from an official-domain search excerpt. Run `npm run verify-sources`.",
+    "addedOn": "2026-10-22"
+  }
+]
