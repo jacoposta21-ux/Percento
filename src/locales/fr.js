@@ -409,5 +409,6 @@ export default {
   "← Left": "← Gauche",
   "⏱ Time is up! 15 seconds per card.": "⏱ Temps écoulé ! 15 secondes par carte.",
   "⏱ Time is up! Measuring…": "⏱ Temps écoulé ! Mesure en cours…",
-  "🏆 You win!": "🏆 Tu as gagné !"
+  "🏆 You win!": "🏆 Tu as gagné !",
+  "Privacy": "Confidentialité"
 };
