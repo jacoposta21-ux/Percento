@@ -388,7 +388,8 @@ async function main() {
       await page.goto(`${BASE}#/solo`);
       await page.click('.game-settings .seg:has-text("10s")');
       await page.goto(`${BASE}#/odd`);
-      await page.waitForSelector('.odd-grid .round-timer');
+      await page.waitForSelector('.odd-grid');
+      await page.waitForSelector('.round-timer');
       check((await page.textContent('.round-timer b')) === '10', 'settings: odd one out on a 10-second clock');
       await page.goto(`${BASE}#/guess`);
       await page.waitForSelector('.guess-slider');
