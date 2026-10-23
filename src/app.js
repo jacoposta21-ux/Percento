@@ -85,6 +85,8 @@ function mount(...children) {
   const nodes = children.flat(Infinity).filter((c) => c !== null && c !== undefined && c !== false);
   if (BUILD.mode === 'dev') nodes.unshift(h('p', { class: 'dev-banner' }, t('Test build with unverified statistics.'), ' ', h('a', { href: '#/review' }, t('Review mode'))));
   app.replaceChildren(...nodes);
+  // The context line (mode, room, a quip) follows the title instead of sitting above it.
+  for (const k of app.querySelectorAll('.context')) if (k.nextElementSibling?.classList.contains('screen-title')) k.nextElementSibling.after(k);
   const heading = app.querySelector('.screen-title');
   heading?.setAttribute('tabindex', '-1');
   heading?.focus({ preventScroll: true });
@@ -113,7 +115,6 @@ function leaderboardList(limit, highlightIndex = -1) {
   if (!runs.length) return h('p', { class: 'board-empty' }, t('No runs yet. Play Endless to set your first record.'));
   return h('ol', { class: 'board' }, runs.map((r, i) => h('li', { class: i === highlightIndex ? 'me' : '' },
     h('span', { class: `rank rank-${i + 1}` }, String(i + 1)),
-    h('span', { 'aria-hidden': 'true' }, i < 3 ? '👑' : '•'),
     h('span', { class: 'who' }, i === highlightIndex ? t('This run') : t('You'), h('small', {}, r.date)),
     h('span', { class: 'score' }, String(r.score)))));
 }
@@ -123,7 +124,6 @@ function boardList(rows, me) {
   if (!rows.length) return h('p', { class: 'board-empty' }, t('Nobody on the board yet. Be the first!'));
   return h('ol', { class: 'board' }, rows.map((r, i) => h('li', { class: r.username === me ? 'me' : '' },
     h('span', { class: `rank rank-${i + 1}` }, String(i + 1)),
-    h('span', { 'aria-hidden': 'true' }, i < 3 ? '👑' : '•'),
     h('span', { class: 'who' }, r.username, r.note ? h('small', {}, r.note) : null),
     h('span', { class: 'score' }, String(r.score)))));
 }
@@ -142,13 +142,7 @@ async function worldBoard(box, limit) {
 
 function renderPanel() {
   const board = h('section', { class: 'box' }, h('h2', {}, t('Leaderboard')), leaderboardList(5));
-  panel.replaceChildren(
-    board,
-    h('section', { class: 'box friends' },
-      icon('globe', 'icon icon-big'),
-      h('h2', {}, t('Play online')),
-      h('p', { class: 'muted' }, t('Strangers or friends, up to 10 players. Last one standing, or closest guess over 10 cards.')),
-      h('a', { class: 'btn btn-primary', href: '#/online' }, t('Find a game'))));
+  panel.replaceChildren(board);
   online.init().then(() => worldBoard(board, 5));
 }
 
@@ -181,8 +175,8 @@ function guessCrowdLine(stats) {
 function statCard(e, { side, ariaLabel, onPick, stamp = t('Higher') }) {
   const value = h('span', { class: 'card-value' }, '?');
   // The percentage as a slice of pie, swept round as the value counts up.
-  const pie = h('span', { class: 'pie', 'aria-hidden': 'true' });
-  const fill = (reading) => pie.style.setProperty('--v', reading.toFixed(2));
+  const pie = h('span', { class: 'pie unknown', 'aria-hidden': 'true' });
+  const fill = (reading) => { pie.classList.remove('unknown'); pie.style.setProperty('--v', reading.toFixed(2)); };
   const pick = h('button', { class: 'card-pick', type: 'button', 'aria-label': ariaLabel, onclick: onPick },
     h('span', { class: 'card-top' }, h('span', { class: 'card-cat' }, icon(e.category), catLabel(e.category)), h('span', { class: 'card-side', 'aria-hidden': 'true' }, side)),
     h('span', { class: 'card-text' }, cardText(e)),
@@ -243,9 +237,7 @@ function renderRound({
       : t(id === 'a' ? 'Left card: {text}, {detail}. Pick if it matches.' : 'Right card: {text}, {detail}. Pick if it matches.', vars);
     const c = statCard(e, { side: id === 'a' ? 'L' : 'R', ariaLabel, onPick: () => choose(id), stamp: higherMode ? t('Higher') : t('Match') });
     c.wrap.classList.add(`card-${id}`);
-    const answer = h('button', { class: 'answer', type: 'button', onclick: () => choose(id) },
-      id === 'a' ? t('← Left') : t('Right →'), h('small', {}, id === 'a' ? t('key 1') : t('key 2')));
-    dom[id] = { ...c, answer };
+    dom[id] = c;
     return c.wrap;
   };
 
@@ -260,12 +252,11 @@ function renderRound({
 
   mount(
     h('header', { class: 'round-head' },
-      h('div', {}, h('p', { class: 'kicker' }, headline), h('h1', { class: 'screen-title' }, t(title)), h('p', { class: 'sub' }, t(instruction))),
+      h('div', {}, h('p', { class: 'context' }, headline), h('h1', { class: 'screen-title' }, t(title)), h('p', { class: 'sub' }, t(instruction))),
       pill ? h('div', { class: 'pill' }, icon('bolt', 'icon bolt'), h('span', {}, h('b', {}, String(pill.value)), h('small', {}, pill.label))) : null),
     clock,
     lead,
     duel,
-    h('div', { class: 'answers' }, dom.a.answer, dom.b.answer),
     h('div', { class: 'reveal' }, dial.el, h('div', { class: 'reveal-side' }, feedback, next)),
     progress);
 
@@ -298,7 +289,7 @@ function renderRound({
     // (shared counters exist for "higher or lower" pairs only).
     const key = pairKey(pair.a, pair.b);
     const crowd = higherMode ? online.answerStats(key).catch(() => null) : Promise.resolve(null);
-    for (const k of ['a', 'b']) { dom[k].pick.disabled = true; dom[k].answer.disabled = true; }
+    for (const k of ['a', 'b']) dom[k].pick.disabled = true;
     if (id) dom[id].wrap.classList.add('chosen');
     feedback.textContent = id ? t('Measuring…') : t('⏱ Time is up! Measuring…');
     const swings = [];
@@ -307,7 +298,6 @@ function renderRound({
       let lastTick = 0;
       swings.push(dial.swing(k, target, (r) => {
         dom[k].value.textContent = formatReading(r, target);
-        dom[k].answer.textContent = formatReading(r, target);
         dom[k].fill(r);
         if (k === 'a' && Math.abs(r - lastTick) >= 8) { lastTick = r; audio.sfx('tick'); }
       }));
@@ -317,8 +307,6 @@ function renderRound({
     const high = target || (higherOf(pair) === pair.a ? 'a' : 'b');
     for (const k of ['a', 'b']) {
       dom[k].value.textContent = formatValue(cards[k].value);
-      dom[k].answer.textContent = formatValue(cards[k].value);
-      dom[k].answer.classList.add(k === high ? 'win' : 'lose');
       dom[k].fill(cards[k].value);
       dom[k].source.hidden = false;
     }
@@ -376,7 +364,7 @@ function home() {
         h('a', { class: 'btn', href: '#/daily' }, t('Daily challenge'))),
       h('p', { class: 'hero-meta' },
         streak().current ? h('a', { class: 'streak-chip', href: '#/daily' }, `🔥 ${t('{n}-day streak', { n: streak().current })}`) : null,
-        h('span', {}, t('Best streak {n}', { n: best })), h('span', {}, t('{n} statistics', { n: ENTRIES.length })), h('span', {}, t('{n} categories', { n: cats.length })))),
+        h('span', {}, [best ? t('Best streak {n}', { n: best }) : null, t('{n} statistics', { n: ENTRIES.length }), t('{n} categories', { n: cats.length })].filter(Boolean).join(' · ')))),
     modesSection(),
     cats.length ? categorySection(cats) : null);
 }
@@ -395,7 +383,9 @@ function categorySection(cats) {
     grid.replaceChildren(...cats.map((c) => h('li', {},
       h('a', { class: 'cat-tile', href: `#/${route}/${c}`, style: `--c:${CATEGORIES[c].color}` },
         icon(c), h('strong', {}, catLabel(c)),
-        h('small', {}, t('{n} stats · best {best}', { n: categoryPool(c).length, best: load(mode.best(c), 0) || 0 }))))));
+        h('small', {}, (load(mode.best(c), 0) || 0)
+          ? t('{n} stats · best {best}', { n: categoryPool(c).length, best: load(mode.best(c), 0) })
+          : t('{n} statistics', { n: categoryPool(c).length }))))));
   };
   show(gameMode(load(KEY, 'endless'))?.route ?? 'endless');
   return h('section', { class: 'cat-section' },
@@ -449,7 +439,7 @@ function endlessOver({ mode = 'pairs', cat, score, best, exhausted }) {
   const exhaustedLine = mode === 'pairs' ? N('Every pair has been played. Eyeball needs a nap.') : N('Every question has been played. Eyeball needs a nap.');
   audio.sfx(newBest ? 'win' : 'gameover');
   mount(
-    h('p', { class: 'kicker' }, `${t(gameMode(mode).name)} · ${cat ? t('{category} only', { category: catLabel(cat) }) : t('Mixed')}`),
+    h('p', { class: 'context' }, `${t(gameMode(mode).name)} · ${cat ? t('{category} only', { category: catLabel(cat) }) : t('Mixed')}`),
     h('h1', { class: 'screen-title' }, exhausted ? t('You ran out of statistics!') : t('Game over')),
     h('p', { class: 'big-score' }, h('span', {}, String(score)), h('small', {}, score === 1 ? t('correct answer') : t('correct answers'))),
     h('p', { class: 'lede' }, t(exhausted ? exhaustedLine : pickByScore(GAME_OVER_LINES, score, Math.floor(Math.random() * 2)))),
@@ -492,15 +482,15 @@ function renderOdd({ q, headline, pill, progress, onContinue }) {
     onPick: () => choose(i),
     stamp: t('Outsider'),
   }));
-  const feedback = h('p', { class: 'feedback', role: 'status', 'aria-live': 'polite' }, t('Three of these are close together. Which one is not?'));
+  const feedback = h('p', { class: 'feedback', role: 'status', 'aria-live': 'polite' });
   const explain = h('p', { class: 'odd-why', hidden: true });
   const ruler = h('div', { class: 'guess-ruler odd-ruler', hidden: true, 'aria-hidden': 'true' });
   const next = h('button', { class: 'btn btn-primary continue', type: 'button', hidden: true, onclick: () => advance() }, t('Continue'));
 
   mount(
     h('header', { class: 'round-head' },
-      h('div', {}, h('p', { class: 'kicker' }, headline), h('h1', { class: 'screen-title' }, t('Find the odd one out')),
-        h('p', { class: 'sub' }, t('Tap the statistic whose percentage is far from the other three.'))),
+      h('div', {}, h('p', { class: 'context' }, headline), h('h1', { class: 'screen-title' }, t('Find the odd one out')),
+        h('p', { class: 'sub sub-keep' }, t('Tap the statistic whose percentage is far from the other three.'))),
       pill ? h('div', { class: 'pill' }, icon('bolt', 'icon bolt'), h('span', {}, h('b', {}, String(pill.value)), h('small', {}, pill.label))) : null),
     h('div', { class: 'odd-grid' }, cards.map((c) => c.wrap)),
     h('div', { class: 'odd-reveal' }, feedback, explain, ruler, next),
@@ -625,7 +615,7 @@ function modesSection() {
         modeVisual(m.id),
         h('strong', {}, t(m.name)),
         h('span', {}, t(m.desc)),
-        h('small', {}, t('Best {n}', { n: load(m.best(null), 0) || 0 })))))));
+        load(m.best(null), 0) ? h('small', {}, t('Best {n}', { n: load(m.best(null), 0) })) : null)))));
 }
 
 // ---------- closest guess ----------
@@ -684,7 +674,7 @@ function renderGuess({ entry, headline, pill, progress, deadline, onLock }) {
 
   mount(
     h('header', { class: 'round-head' },
-      h('div', {}, h('p', { class: 'kicker' }, headline), h('h1', { class: 'screen-title' }, t('Guess the percentage')), h('p', { class: 'sub' }, t('Closest wins. 15 seconds.'))),
+      h('div', {}, h('p', { class: 'context' }, headline), h('h1', { class: 'screen-title' }, t('Guess the percentage')), h('p', { class: 'sub' }, t('Closest wins. 15 seconds.'))),
       pill ? h('div', { class: 'pill' }, icon('bolt', 'icon bolt'), h('span', {}, h('b', {}, String(pill.value)), h('small', {}, pill.label))) : null),
     clock,
     h('div', { class: 'guess-stage' }, card, h('div', { class: 'guess-side' }, controls, status, ruler)),
@@ -813,7 +803,7 @@ function guessOver({ cat, total, results }) {
   audio.sfx(newBest ? 'win' : 'gameover');
   setKeys((ev) => { if (ev.key === 'Enter') { ev.preventDefault(); startGuess(cat); } });
   mount(
-    h('p', { class: 'kicker' }, `${t('Closest guess')} · ${cat ? catLabel(cat) : t('Mixed')}`),
+    h('p', { class: 'context' }, `${t('Closest guess')} · ${cat ? catLabel(cat) : t('Mixed')}`),
     h('h1', { class: 'screen-title' }, total >= 800 ? t('Human calculator.') : total >= 550 ? t('Sharp eye.') : total >= 300 ? t('Not bad at all.') : t('The numbers fooled you.')),
     h('p', { class: 'big-score' }, h('span', {}, String(total)), h('small', {}, t('of {n} points', { n: results.length * 100 }))),
     h('p', { class: 'muted' }, newBest ? t('New personal best: {n}!', { n: total }) : t('Personal best: {n}', { n: Math.max(best, total) })),
@@ -823,7 +813,7 @@ function guessOver({ cat, total, results }) {
       h('a', { class: 'btn', href: '#/' }, t('Home'))),
     h('section', { class: 'box' }, h('h2', {}, t('Your guesses')),
       h('ol', { class: 'board guess-recap' }, results.map((r, k) => h('li', {},
-        h('span', { class: 'rank' }, String(k + 1)), h('span', {}, ''),
+        h('span', { class: 'rank' }, String(k + 1)),
         h('span', { class: 'who' }, cardText(r.entry), h('small', {}, r.guess === null ? t('no guess · real {value}', { value: formatValue(r.entry.value) }) : t('you {guess} · real {value}', { guess: formatPercent(r.guess), value: formatValue(r.entry.value) }))),
         h('span', { class: 'score' }, `+${r.points}`))))));
 }
@@ -968,7 +958,7 @@ function dailyResults(date, pairs, answers) {
   const otherDone = (load(dailyGuessKey(date), null)?.answers?.length ?? 0) >= DAILY_GUESS_CARDS;
   mount(
     dailyTabs('pairs'),
-    h('p', { class: 'kicker' }, t('Daily · Higher or lower')),
+    h('p', { class: 'context' }, t('Daily · Higher or lower')),
     h('h1', { class: 'screen-title' }, t('Daily {date}', { date })),
     h('p', { class: 'big-score' }, h('span', {}, `${score}/${answers.length}`), h('small', {}, t('pairs right'))),
     h('p', { class: 'grid', 'aria-label': answers.map((a, i) => t(a ? 'Pair {i} right' : 'Pair {i} wrong', { i: i + 1 })).join(', ') }, answers.map((a) => (a ? '🟩' : '🟥')).join('')),
@@ -1049,7 +1039,7 @@ function dailyGuessResults(date, cards, state) {
   const otherDone = (load(dailyKey(date), null)?.answers?.length ?? 0) >= RULES.dailyPairs;
   mount(
     dailyTabs('guess'),
-    h('p', { class: 'kicker' }, t('Daily · Closest guess')),
+    h('p', { class: 'context' }, t('Daily · Closest guess')),
     h('h1', { class: 'screen-title' }, t('Daily {date}', { date })),
     h('p', { class: 'big-score' }, h('span', {}, String(score)), h('small', {}, `of ${cards.length * 100} points`)),
     h('p', { class: 'grid', 'aria-label': state.answers.map((a, i) => t('Card {i}: {points} points', { i: i + 1, points: a.points })).join(', ') }, grid),
@@ -1062,7 +1052,7 @@ function dailyGuessResults(date, cards, state) {
     distributionBox({ date, game: 'guess', score, state, stateKey: dailyGuessKey(date) }),
     h('section', { class: 'box', style: 'margin-top:16px' }, h('h2', {}, t("Today's cards")),
       h('ol', { class: 'board guess-recap' }, cards.map((e, k) => h('li', {},
-        h('span', { class: 'rank' }, guessSquare(state.answers[k].points)), h('span', {}, ''),
+        h('span', { class: 'rank' }, guessSquare(state.answers[k].points)),
         h('span', { class: 'who' }, cardText(e), h('small', {}, state.answers[k].guess === null ? t('no guess · real {value}', { value: formatValue(e.value) }) : t('you {guess} · real {value}', { guess: formatPercent(state.answers[k].guess), value: formatValue(e.value) }))),
         h('span', { class: 'score' }, `+${state.answers[k].points}`))))));
 }
@@ -1083,8 +1073,8 @@ function leaderboard() {
     h('section', { class: 'box', style: 'margin-top:16px' }, h('h2', {}, t('This device: best Endless runs')), leaderboardList(10)),
     h('section', { class: 'box', style: 'margin-top:16px' }, h('h2', {}, t('This device: Daily history')),
       history.length
-        ? h('ol', { class: 'board' }, history.slice(0, 14).map(([d, sc]) => h('li', {},
-          h('span', { class: 'rank' }, '📅'), h('span', {}, ''), h('span', { class: 'who' }, d), h('span', { class: 'score' }, `${sc}/10`))))
+        ? h('ol', { class: 'board board-plain' }, history.slice(0, 14).map(([d, sc]) => h('li', {},
+          h('span', { class: 'who' }, d), h('span', { class: 'score' }, `${sc}/10`))))
         : h('p', { class: 'board-empty' }, t('No Daily Challenge played yet.'))),
     h('div', { class: 'actions' }, h('a', { class: 'btn btn-primary', href: '#/' }, t('Play Endless')), h('a', { class: 'btn', href: '#/daily' }, t('Daily Challenge'))));
   online.init().then(async (ok) => {
@@ -1265,7 +1255,7 @@ async function profileScreen(me) {
   const message = h('p', { class: 'form-message', role: 'alert' });
   const [nameField, name] = field(t('Player name'), { name: 'username', value: me.username, required: true, minlength: 3, maxlength: 20, pattern: '[A-Za-z0-9_]+' });
   mount(
-    h('p', { class: 'kicker' }, me.guest ? t('Playing online as a guest') : t('Signed in')),
+    h('p', { class: 'context' }, me.guest ? t('Playing online as a guest') : t('Signed in')),
     h('h1', { class: 'screen-title' }, `Hi, ${me.username}!`),
     h('p', { class: 'lede' }, me.guest
       ? t('Your games are saved on this browser only. Add an email and password to keep them on every device; your name and records stay.')
@@ -1298,8 +1288,8 @@ async function profileScreen(me) {
       h('p', {}, h('b', {}, String(best)), h('small', {}, t('Best Endless'))),
       h('p', {}, h('b', {}, String(data.games)), h('small', {}, t('Endless games'))),
       h('p', {}, h('b', {}, String(data.daily.filter((d) => d.answers.length === 10).length)), h('small', {}, t('Dailies played')))),
-    data.daily.length ? h('ol', { class: 'board' }, data.daily.map((d) => h('li', {},
-      h('span', { class: 'rank' }, '📅'), h('span', {}, ''), h('span', { class: 'who' }, d.day),
+    data.daily.length ? h('ol', { class: 'board board-plain' }, data.daily.map((d) => h('li', {},
+      h('span', { class: 'who' }, d.day),
       h('span', { class: 'score' }, `${d.score}/${d.answers.length}`)))) : h('p', { class: 'board-empty' }, t('No Daily Challenge saved yet.')));
 }
 
@@ -1400,7 +1390,7 @@ async function friends() {
   };
   setMode(mode);
   mount(
-    h('p', { class: 'kicker' }, t('Online')),
+    h('p', { class: 'context' }, t('Online')),
     title,
     h('div', { class: 'segmented', role: 'group', 'aria-label': t('Game mode') }, modeButtons),
     lede,
@@ -1448,9 +1438,8 @@ async function room(code) {
   const mine = () => data.players.find((p) => p.user_id === me.id);
 
   const ranking = () => [...data.players].sort((a, b) => b.score - a.score || Number(b.alive) - Number(a.alive));
-  const standings = (compact) => h('ol', { class: 'board room-board' }, ranking().slice(0, compact ? 4 : 10).map((p, i) => h('li', { class: p.user_id === me.id ? 'me' : '' },
+  const standings = (compact) => h('ol', { class: 'board room-board' }, ranking().slice(0, compact ? 4 : 10).map((p, i) => h('li', { class: `${p.user_id === me.id ? 'me' : ''}${!p.alive && data.room.status === 'playing' ? ' out' : ''}` },
     h('span', { class: `rank rank-${i + 1}` }, String(i + 1)),
-    h('span', { 'aria-hidden': 'true' }, p.alive && data.room.status === 'playing' ? '🔥' : (i === 0 && data.room.status === 'finished' ? '🏆' : '•')),
     h('span', { class: 'who' }, p.username, h('small', {}, { lobby: p.user_id === data.room.host_id ? 'host' : 'ready', playing: p.alive ? t('still playing') : 'out', finished: t('final score') }[data.room.status])),
     h('span', { class: 'score' }, String(p.score)))));
 
@@ -1506,7 +1495,7 @@ async function room(code) {
     const cat = data.room.category ? CATEGORIES[data.room.category]?.label : null;
     const guessMode = data.room.mode === 'guess';
     mount(
-      h('p', { class: 'kicker' }, isPublic ? t('Public game') : t('Private room'), ` · ${t(guessMode ? 'Closest guess' : 'Last one standing')}`, cat ? ` · ${t('{category} only', { category: cat })}` : ''),
+      h('p', { class: 'context' }, isPublic ? t('Public game') : t('Private room'), ` · ${t(guessMode ? 'Closest guess' : 'Last one standing')}`, cat ? ` · ${t('{category} only', { category: cat })}` : ''),
       h('h1', { class: 'screen-title' }, isPublic ? t('Finding players…') : t('Room {code}', { code })),
       h('p', { class: 'lede' }, isPublic
         ? (n < 2 ? t('Waiting for at least one more player. The game starts 20 seconds after the second player joins, or at once with 10.') : h('span', {}, ...tx('Game starts in {time}. {n} of {max} players.', { time: countdown }, { n, max: online.ROOM_SIZE })))
@@ -1585,7 +1574,7 @@ async function room(code) {
       return [...sum.entries()].map(([id, pts]) => ({ id, name: name(id), pts })).sort((a, b) => b.pts - a.pts);
     };
     const table = (upTo) => h('ol', { class: 'board room-board' }, totals(upTo).slice(0, 10).map((row, k) => h('li', { class: row.id === me.id ? 'me' : '' },
-      h('span', { class: `rank rank-${k + 1}` }, String(k + 1)), h('span', {}, ''),
+      h('span', { class: `rank rank-${k + 1}` }, String(k + 1)),
       h('span', { class: 'who' }, row.name), h('span', { class: 'score' }, String(row.pts)))));
     const refreshGuesses = async () => { guesses = await online.fetchGuesses(r.id).catch(() => guesses); };
 
@@ -1638,7 +1627,7 @@ async function room(code) {
       const iWon = winners.some((row) => row.id === me.id);
       audio.sfx(iWon ? 'win' : 'gameover');
       mount(
-        h('p', { class: 'kicker' }, `${r.is_public ? t('Public game') : t('Room {code}', { code })} · ${t('Closest guess')}`),
+        h('p', { class: 'context' }, `${r.is_public ? t('Public game') : t('Room {code}', { code })} · ${t('Closest guess')}`),
         h('h1', { class: 'screen-title' }, winners.length > 1 ? `🏆 ${t("It's a tie: {names}!", { names: winners.map((w) => w.name).join(' & ') })}` : iWon ? t('🏆 You win!') : `🏆 ${t('{name} wins!', { name: winners[0]?.name ?? '?' })}`),
         h('p', { class: 'big-score' }, h('span', {}, String(ranking.find((row) => row.id === me.id)?.pts ?? 0)), h('small', {}, t('of {n} points', { n: r.rounds * 100 }))),
         h('section', { class: 'box' }, h('h2', {}, t('Final standings')), table(r.rounds - 1)),
@@ -1658,7 +1647,7 @@ async function room(code) {
         if (phase !== 'ready') {
           phase = 'ready';
           audio.sfx('start');
-          mount(h('p', { class: 'kicker' }, t('Closest guess')), h('h1', { class: 'screen-title' }, t('Get ready…')),
+          mount(h('p', { class: 'context' }, t('Closest guess')), h('h1', { class: 'screen-title' }, t('Get ready…')),
             h('p', { class: 'big-score' }, ready, h('small', {}, t('{rounds} cards · {seconds} seconds each', { rounds: r.rounds, seconds: r.round_seconds }))));
         }
         ready.textContent = String(Math.ceil(-elapsed / 1000));
@@ -1684,7 +1673,7 @@ async function room(code) {
     const iWon = winners.some((p) => p.user_id === me.id);
     if (status === 'finished' && !fanfare) { fanfare = true; audio.sfx(iWon ? 'win' : 'gameover'); }
     mount(
-      h('p', { class: 'kicker' }, t('Room {code}', { code })),
+      h('p', { class: 'context' }, t('Room {code}', { code })),
       h('h1', { class: 'screen-title' }, status !== 'finished' ? t('You are out!')
         : winners.length > 1 ? `🏆 ${t("It's a tie: {names}!", { names: winners.map((p) => p.username).join(' & ') })}`
           : iWon ? t('🏆 You win!') : `🏆 ${t('{name} wins!', { name: winners[0].username })}`),
@@ -1729,6 +1718,8 @@ function route() {
     a.classList.toggle('active', active);
     if (active) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current');
   }
+  // The side panel (leaderboard) belongs to the home screen; games get the full width.
+  document.querySelector('.layout').classList.toggle('has-panel', entry[1] === home);
   renderPanel();
   entry[1]();
 }
