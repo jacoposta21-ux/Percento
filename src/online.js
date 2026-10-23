@@ -192,9 +192,10 @@ export async function dailyBoard(day, limit = 10) {
 }
 
 // ---------- friend rooms ----------
-/** mode: 'standing' (higher or lower), 'match', 'odd' (last one standing) or 'guess' (closest guess). */
-export async function createRoom(category = null, mode = 'standing') {
-  const { data, error } = await client.rpc('create_room', { room_category: category, room_mode: mode });
+/** mode: 'standing' (higher or lower), 'match', 'odd' (last one standing) or 'guess' (closest guess).
+ * seconds: 10/15/20/25 per question; lives: 1/3/5 (always 1 in closest guess). */
+export async function createRoom(category = null, mode = 'standing', { seconds = 15, lives = 1 } = {}) {
+  const { data, error } = await client.rpc('create_room', { room_category: category, room_mode: mode, room_seconds: seconds, room_lives: lives });
   return error ? { error: fail(error) } : { code: data };
 }
 
@@ -241,14 +242,14 @@ export async function startRoom(code) {
   return { error: fail(error) };
 }
 
-export async function reportScore(code, score, alive) {
-  await client.rpc('report_room_score', { room_code: code, new_score: score, still_alive: alive });
+export async function reportScore(code, score, alive, misses = 0) {
+  await client.rpc('report_room_score', { room_code: code, new_score: score, still_alive: alive, new_misses: misses });
 }
 
 export async function fetchRoom(code) {
-  const { data: room } = await client.from('rooms').select('id, code, host_id, seed, status, started_at, starts_at, is_public, category, mode, round_seconds, reveal_seconds, rounds').eq('code', code).maybeSingle();
+  const { data: room } = await client.from('rooms').select('id, code, host_id, seed, status, started_at, starts_at, is_public, category, mode, round_seconds, reveal_seconds, rounds, lives').eq('code', code).maybeSingle();
   if (!room) return null;
-  const { data: players } = await client.from('room_players').select('user_id, username, score, alive, finished_at, joined_at')
+  const { data: players } = await client.from('room_players').select('user_id, username, score, alive, misses, finished_at, joined_at')
     .eq('room_id', room.id).order('joined_at');
   return { room, players: players || [] };
 }

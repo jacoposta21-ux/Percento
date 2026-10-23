@@ -15,7 +15,10 @@
   const err = (message) => ({ data: null, error: { message } });
   // Guessing games run on short clocks here (15 s + 6 s × 10 rounds on the server).
   const GUESS_CLOCK = { round_seconds: 4, reveal_seconds: 3, rounds: 3 };
-  const roomDefaults = (mode) => ({ mode: mode || 'standing', ...GUESS_CLOCK, started_at: null });
+  // Other games use the host's clock and lives (15 s and 1 life by default, as on the server).
+  const roomDefaults = (mode, seconds = 15, lives = 1) => (mode === 'guess'
+    ? { mode, ...GUESS_CLOCK, lives: 1, started_at: null }
+    : { mode: mode || 'standing', round_seconds: seconds, reveal_seconds: 6, rounds: 10, lives, started_at: null });
   const startNow = (r) => { r.status = 'playing'; r.started_at = new Date(Date.now() + (r.mode === 'guess' ? 1500 : 0)).toISOString(); };
   const roundOpens = (r, round) => Date.parse(r.started_at) + round * (r.round_seconds + r.reveal_seconds) * 1000;
 
@@ -141,7 +144,7 @@
       return { data: r.code, error: null };
     }
     if (name === 'create_room') {
-      const r = { id: `room-${db.seq++}`, code: newCode(), host_id: me, seed: Math.floor(Math.random() * 2 ** 31), status: 'lobby', is_public: false, starts_at: null, category: args?.room_category ?? null, ...roomDefaults(args?.room_mode) };
+      const r = { id: `room-${db.seq++}`, code: newCode(), host_id: me, seed: Math.floor(Math.random() * 2 ** 31), status: 'lobby', is_public: false, starts_at: null, category: args?.room_category ?? null, ...roomDefaults(args?.room_mode, args?.room_seconds ?? 15, args?.room_lives ?? 1) };
       db.rooms.push(r);
       db.room_players.push({ room_id: r.id, user_id: me, username: profile.username, score: 0, alive: true, joined_at: new Date().toISOString() });
       touch();
@@ -186,7 +189,11 @@
     if (name === 'report_room_score') {
       if (room.status !== 'playing') return { data: null, error: null };
       const p = players.find((x) => x.user_id === me && x.alive);
-      if (p) { p.score = Math.max(p.score, args.new_score); p.alive = args.still_alive; }
+      if (p) {
+        p.misses = Math.max(p.misses || 0, Math.min(args.new_misses ?? 0, room.lives || 1));
+        p.score = Math.max(p.score, args.new_score);
+        p.alive = args.still_alive && p.misses < (room.lives || 1);
+      }
       if (!db.room_players.some((x) => x.room_id === room.id && x.alive)) room.status = 'finished';
       touch();
       return { data: null, error: null };

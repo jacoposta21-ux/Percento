@@ -352,6 +352,50 @@ async function main() {
       await context.close();
     }
 
+    log('▶ game settings');
+    {
+      const context = await newContext({ viewport: { width: 360, height: 760 } });
+      const page = await context.newPage();
+      watch(page);
+      await page.goto(`${BASE}#/solo`);
+      await page.waitForSelector('.game-settings');
+      await audit(page, 'game settings');
+      await page.click('.game-settings .seg:has-text("No limit")');
+      await page.click('.game-settings .seg:text-is("3")');
+      // Three lives: the run goes on after a wrong answer and stops after the third.
+      await page.goto(`${BASE}#/endless`);
+      await page.waitForSelector('.card-pick');
+      check(!(await page.$('.round-timer')), 'settings: no clock without a time limit');
+      check((await page.textContent('.pill small')).includes('♥♥♥'), 'settings: three hearts at the start');
+      let misses = 0;
+      for (let round = 0; round < 80 && misses < 3; round++) {
+        await page.waitForSelector('.card-pick:not([disabled])');
+        await page.click('.card-a .card-pick');
+        const ok = await waitReveal(page);
+        if (ok) { await page.waitForSelector('.card-pick:not([disabled])', { timeout: 5000 }).catch(() => {}); continue; }
+        misses++;
+        await page.click('.continue');
+        if (misses < 3) {
+          await page.waitForSelector('.card-pick:not([disabled])', { timeout: 5000 });
+          check((await page.textContent('.pill small')).includes('♥'.repeat(3 - misses) + '♡'.repeat(misses)), `settings: ${3 - misses} hearts left`);
+        }
+      }
+      await page.waitForSelector('.big-score', { timeout: 5000 });
+      check(misses === 3, 'settings: the run ends when the lives run out');
+      check((await page.textContent('main')).includes('do not count for the leaderboard'), 'settings: untimed runs are not ranked');
+      check(((await page.evaluate(() => localStorage.getItem('percento:runs'))) || '[]') === '[]', 'settings: untimed run kept off the device board');
+      // A 10-second clock, also in Closest guess.
+      await page.goto(`${BASE}#/solo`);
+      await page.click('.game-settings .seg:has-text("10s")');
+      await page.goto(`${BASE}#/odd`);
+      await page.waitForSelector('.odd-grid .round-timer');
+      check((await page.textContent('.round-timer b')) === '10', 'settings: odd one out on a 10-second clock');
+      await page.goto(`${BASE}#/guess`);
+      await page.waitForSelector('.guess-slider');
+      check((await page.textContent('.round-head .sub')).includes('10'), 'settings: closest guess on a 10-second clock');
+      await context.close();
+    }
+
     log('▶ match the card and odd one out');
     for (const [w, hgt, name] of [[360, 760, 'mobile'], [1280, 800, 'desktop']]) {
       const context = await newContext({ viewport: { width: w, height: hgt } });
@@ -612,9 +656,12 @@ async function main() {
       check((await p1.$$('.cat-chip')).length === 14, 'multiplayer: mixed plus every category');
       await p1.click('.mode-tile:has-text("Odd one out")');
       await p1.click('.cat-chip:has-text("Space")');
+      await p1.click('.box .seg:has-text("20s")');
+      await p1.click('.box .seg:text-is("3")');
       await audit(p1, 'multiplayer choices');
       await p1.click('main button:has-text("Create a room")');
       await p1.waitForSelector('.kicker:has-text("Odd one out")');
+      check((await p1.textContent('main')).includes('20 seconds each') && (await p1.textContent('main')).includes('3 lives each'), 'odd room: the host settings are shown in the lobby');
       const oddRoom = p1.url().split('#/room/')[1];
       await p2.goto(`${BASE}#/room/${oddRoom}`);
       await p2.waitForSelector('text=Waiting for the host');
@@ -624,10 +671,15 @@ async function main() {
       await p2.waitForSelector('.odd-grid .card-pick:not([disabled])', { timeout: 10000 });
       check(JSON.stringify(await cardTexts(p1)) === JSON.stringify(await cardTexts(p2)), 'odd room: same four cards for both');
       check((await p1.$$eval('.card-cat', (els) => els.map((e) => e.textContent.trim()))).every((c) => c === 'Space'), 'odd room: cards from the chosen category');
-      check(Boolean(await p1.$('.round-timer')), 'odd room: 15 seconds per question');
+      check((await p1.textContent('.round-timer b')) === '20', 'odd room: 20 seconds per question');
+      check((await p1.textContent('.pill small')).includes('♥♥♥'), 'odd room: three lives');
       await audit(p1, 'odd room round');
       await p1.click('.odd-grid .card:nth-child(1) .card-pick');
-      await waitReveal(p1);
+      if (!(await waitReveal(p1))) {
+        await p1.click('.continue:has-text("Continue")');
+        await p1.waitForSelector('.odd-grid .card-pick:not([disabled])', { timeout: 5000 });
+        check((await p1.textContent('.pill small')).includes('♥♥♡'), 'odd room: a mistake costs one life, the game goes on');
+      }
       await p2.waitForSelector('.room-live', { timeout: 5000 });
 
       // Closest guess with a friend: same card, the guesses meet on a ruler,

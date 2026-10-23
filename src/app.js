@@ -326,7 +326,7 @@ function renderRound({
       if (line && feedback.isConnected) feedback.after(line);
       if (id && higherMode) online.recordPair(key, correct).catch(() => {});
     });
-    feedback.textContent = id ? `${correct ? '✓' : '✗'} ${t(pickFrom(correct ? RIGHT_QUIPS : WRONG_QUIPS))}` : t('⏱ Time is up! 15 seconds per card.');
+    feedback.textContent = id ? `${correct ? '✓' : '✗'} ${t(pickFrom(correct ? RIGHT_QUIPS : WRONG_QUIPS))}` : t('⏱ Time is up!');
     phase = 'done';
     if (correct) {
       feedback.append(h('span', { class: 'auto-next', style: `--t:${AUTO_NEXT_MS}ms`, 'aria-hidden': 'true' }));
@@ -392,6 +392,7 @@ function solo() {
   mount(
     h('h1', { class: 'screen-title' }, t('Single player')),
     h('p', { class: 'lede' }, t('Four games, mixed or by category. Your best scores stay on this device.')),
+    soloSettingsBox(),
     modesSection(),
     cats.length ? categorySection(cats) : null);
 }
@@ -418,6 +419,41 @@ function categorySection(cats) {
     note, grid);
 }
 
+// ---------- single player settings ----------
+// Seconds per question (0 = no limit, single player only) and lives for every
+// game but Closest guess. Games without a time limit stay off the leaderboard.
+const SOLO_TIME_KEY = 'percento:soloTime';
+const SOLO_LIVES_KEY = 'percento:soloLives';
+const TIME_OPTIONS = [10, 15, 20, 25];
+const LIVES_OPTIONS = [1, 3, 5];
+function soloSettings() {
+  const time = load(SOLO_TIME_KEY, 15);
+  const lives = load(SOLO_LIVES_KEY, 1);
+  return { time: [0, ...TIME_OPTIONS].includes(time) ? time : 15, lives: LIVES_OPTIONS.includes(lives) ? lives : 1 };
+}
+const hearts = (left, total) => '♥'.repeat(Math.max(0, left)) + '♡'.repeat(Math.max(0, total - left));
+/** The pill under the score: best streak, plus the hearts left when playing with lives. */
+const streakLabel = (best, left, total) => `${t('Streak · best {n}', { n: best })}${total > 1 ? ` · ${hearts(left, total)}` : ''}`;
+const formatSeconds = (n) => (n ? t('{n}s', { n }) : t('No limit'));
+
+/** A row of choices, like the segmented controls elsewhere. */
+function choiceRow({ label, options, value, format, onChange }) {
+  const buttons = options.map((v) => h('button', { class: 'seg', type: 'button', 'aria-pressed': String(v === value), onclick: () => {
+    for (const b of buttons) b.setAttribute('aria-pressed', String(b === buttons[options.indexOf(v)]));
+    onChange(v);
+  } }, format(v)));
+  return h('div', { class: 'setting-choice' }, h('p', {}, label), h('div', { class: 'segmented', role: 'group', 'aria-label': label }, buttons));
+}
+
+function soloSettingsBox() {
+  const { time, lives } = soloSettings();
+  return h('section', { class: 'box game-settings' },
+    h('h2', {}, t('Game settings')),
+    choiceRow({ label: t('Time per question'), options: [0, ...TIME_OPTIONS], value: time, format: formatSeconds, onChange: (v) => save(SOLO_TIME_KEY, v) }),
+    choiceRow({ label: t('Lives'), options: LIVES_OPTIONS, value: lives, format: String, onChange: (v) => save(SOLO_LIVES_KEY, v) }),
+    h('p', { class: 'muted' }, t('Lives do not apply to Closest guess. Games without a time limit do not count for the leaderboard.')));
+}
+
 // ---------- endless ----------
 // One generator per mode and page session, so pairs never repeat across runs either.
 const sessionGens = new Map();
@@ -429,19 +465,25 @@ function startEndless(cat = null) {
   const gen = sessionGens.get(cat);
   const key = cat ? catBestKey(cat) : BEST_KEY;
   const label = cat ? catLabel(cat) : t('Mixed');
+  const { time, lives } = soloSettings();
+  let left = lives;
   let score = 0;
   let best = load(key, 0) || 0;
 
   const round = () => {
     const pair = gen.next();
-    if (!pair) return endlessOver({ cat, score, best, exhausted: true });
+    if (!pair) return endlessOver({ cat, score, best, exhausted: true, timed: time > 0 });
     renderRound({
       pair,
       headline: cat ? `${t('{category} only', { category: label })} · ${t(pickFrom(HEADLINES))}` : t(pickFrom(HEADLINES)),
-      pill: { value: score, label: t('Streak · best {n}', { n: best }) },
+      pill: { value: score, label: streakLabel(best, left, lives) },
       progress: h('div', { class: 'progress' }, h('span', {}, `${label} · ${t('score {n}', { n: score })}`), h('span', {}, t('Personal best {n}', { n: best }))),
+      timeLimit: time * 1000,
       onContinue: (correct) => {
-        if (!correct) return endlessOver({ cat, score, best, exhausted: false });
+        if (!correct) {
+          left--;
+          return left > 0 ? round() : endlessOver({ cat, score, best, exhausted: false, timed: time > 0 });
+        }
         score++;
         if (score > best) { best = score; save(key, best); }
         round();
@@ -451,9 +493,9 @@ function startEndless(cat = null) {
   round();
 }
 
-function endlessOver({ mode = 'pairs', cat, score, best, exhausted }) {
-  // The world board and the device top 10 rank mixed "higher or lower" only.
-  const ranked = mode === 'pairs' && !cat;
+function endlessOver({ mode = 'pairs', cat, score, best, exhausted, timed = false }) {
+  // The world board and the device top 10 rank timed, mixed "higher or lower" only.
+  const ranked = mode === 'pairs' && !cat && timed;
   if (ranked) recordRun(score);
   renderPanel();
   const runs = load(RUNS_KEY, []) || [];
@@ -470,6 +512,7 @@ function endlessOver({ mode = 'pairs', cat, score, best, exhausted }) {
     h('p', { class: 'lede' }, t(exhausted ? exhaustedLine : pickByScore(GAME_OVER_LINES, score, Math.floor(Math.random() * 2)))),
     h('p', { class: 'muted' }, newBest ? t('New personal best: {n}!', { n: best }) : t('Personal best: {n}', { n: best })),
     storageAvailable() ? null : h('p', { class: 'note' }, t('Your browser blocks storage, so your scores last only until you close this tab.')),
+    mode === 'pairs' && !cat && !timed ? h('p', { class: 'muted' }, t('Games without a time limit do not count for the leaderboard.')) : null,
     h('div', { class: 'actions' },
       h('button', { class: 'btn btn-primary', type: 'button', onclick: again }, t('Play again')),
       h('a', { class: 'btn', href: '#/solo' }, cat ? t('Other categories') : t('Other games')),
@@ -553,7 +596,7 @@ function renderOdd({ q, headline, pill, progress, onAnswer, onContinue, continue
     await countUp(cards, values);
     cards.forEach((c, k) => c.wrap.classList.add(k === q.odd ? 'higher' : 'lower'));
     feedback.className = `feedback ${correct ? 'ok' : 'ko'}`;
-    feedback.textContent = i === null ? t('⏱ Time is up! 15 seconds per card.') : `${correct ? '✓' : '✗'} ${t(pickFrom(correct ? RIGHT_QUIPS : WRONG_QUIPS))}`;
+    feedback.textContent = i === null ? t('⏱ Time is up!') : `${correct ? '✓' : '✗'} ${t(pickFrom(correct ? RIGHT_QUIPS : WRONG_QUIPS))}`;
     audio.sfx(correct ? 'right' : 'wrong');
     // Why: the outsider's distance from the group, and all four on one ruler.
     const away = Math.round(q.distance * 10) / 10;
@@ -607,19 +650,25 @@ function startStreak(mode, cat = null) {
   const gen = sessionGens.get(sessionKey);
   const key = streakBestKey(mode, cat);
   const label = cat ? catLabel(cat) : t('Mixed');
+  const { time, lives } = soloSettings();
+  let left = lives;
   let score = 0;
   let best = load(key, 0) || 0;
 
   const round = () => {
     const q = gen.next();
-    if (!q) return score || best ? endlessOver({ mode, cat, score, best, exhausted: true }) : calibrating();
+    if (!q) return score || best ? endlessOver({ mode, cat, score, best, exhausted: true, timed: time > 0 }) : calibrating();
     STREAK_MODES[mode].render({
       q,
       headline: `${t(gameMode(mode).name)} · ${label}`,
-      pill: { value: score, label: t('Streak · best {n}', { n: best }) },
+      pill: { value: score, label: streakLabel(best, left, lives) },
       progress: h('div', { class: 'progress' }, h('span', {}, `${label} · ${t('score {n}', { n: score })}`), h('span', {}, t('Personal best {n}', { n: best }))),
+      timeLimit: time * 1000,
       onContinue: (correct) => {
-        if (!correct) return endlessOver({ mode, cat, score, best, exhausted: false });
+        if (!correct) {
+          left--;
+          return left > 0 ? round() : endlessOver({ mode, cat, score, best, exhausted: false, timed: time > 0 });
+        }
         score++;
         if (score > best) { best = score; save(key, best); }
         round();
@@ -686,7 +735,7 @@ const edge = (v) => (v < 8 ? ' edge-l' : v > 92 ? ' edge-r' : '');
  * Options: entry, headline, pill, progress, deadline (local ms), onLock(guess, touched).
  * The guess locks with the button, Enter, or by itself when the clock runs out.
  */
-function renderGuess({ entry, headline, pill, progress, deadline, onLock }) {
+function renderGuess({ entry, headline, pill, progress, deadline = null, seconds: fixedSeconds = 0, onLock }) {
   const color = colorOf(entry);
   let guess = 50;
   let touched = false;
@@ -710,8 +759,10 @@ function renderGuess({ entry, headline, pill, progress, deadline, onLock }) {
   const lockBtn = h('button', { class: 'btn btn-primary lock', type: 'button', onclick: () => lock() }, t('Lock in'));
   const status = h('p', { class: 'guess-status', role: 'status', 'aria-live': 'polite' }, t('Drag to set your percentage, then lock it in.'));
   const clockB = h('b', {}, '15');
-  const clock = h('div', { class: 'round-timer', role: 'timer', 'aria-label': t('Time left') },
-    h('span', { class: 'round-timer-bar', style: `--t:${Math.max(0, deadline - Date.now())}ms` }), clockB);
+  // No deadline: solo play without a time limit, so no clock and no auto-lock.
+  const clock = deadline ? h('div', { class: 'round-timer', role: 'timer', 'aria-label': t('Time left') },
+    h('span', { class: 'round-timer-bar', style: `--t:${Math.max(0, deadline - Date.now())}ms` }), clockB) : null;
+  const seconds = fixedSeconds || (deadline ? Math.round((deadline - Date.now()) / 1000) : 0);
   const ruler = h('div', { class: 'guess-ruler', hidden: true, 'aria-hidden': 'true' });
   const card = h('div', { class: 'card guess-card', style: `--c:${color}` },
     h('div', { class: 'card-pick' },
@@ -725,7 +776,7 @@ function renderGuess({ entry, headline, pill, progress, deadline, onLock }) {
 
   mount(
     h('header', { class: 'round-head' },
-      h('div', {}, h('p', { class: 'kicker' }, headline), h('h1', { class: 'screen-title' }, t('Guess the percentage')), h('p', { class: 'sub' }, t('Closest wins. 15 seconds.'))),
+      h('div', {}, h('p', { class: 'kicker' }, headline), h('h1', { class: 'screen-title' }, t('Guess the percentage')), h('p', { class: 'sub' }, seconds ? t('Closest wins. {n} seconds.', { n: seconds }) : t('Closest wins. Take your time.'))),
       pill ? h('div', { class: 'pill' }, icon('bolt', 'icon bolt'), h('span', {}, h('b', {}, String(pill.value)), h('small', {}, pill.label))) : null),
     clock,
     h('div', { class: 'guess-stage' }, card, h('div', { class: 'guess-side' }, controls, status, ruler)),
@@ -735,7 +786,7 @@ function renderGuess({ entry, headline, pill, progress, deadline, onLock }) {
   touched = false;
 
   let lastSec = null;
-  const timer = setInterval(() => {
+  const timer = deadline && setInterval(() => {
     const left = deadline - Date.now();
     const secs = Math.max(0, Math.ceil(left / 1000));
     if (secs !== lastSec) {
@@ -775,7 +826,7 @@ function renderGuess({ entry, headline, pill, progress, deadline, onLock }) {
     async reveal({ pins, message }) {
       lock(true);
       clearInterval(timer);
-      clock.classList.add('stopped');
+      clock?.classList.add('stopped');
       paint('g', 0);
       const truth = entry.value;
       const dial = createDial();
@@ -803,6 +854,7 @@ function startGuess(cat = null) {
   if (pool.length < 2) return calibrating();
   const cards = pickCards(pool, Math.random, GUESS_ROUNDS);
   const label = cat ? catLabel(cat) : t('Mixed');
+  const { time } = soloSettings();
   const results = [];
   let total = 0;
 
@@ -818,7 +870,7 @@ function startGuess(cat = null) {
       headline: `${t('Closest guess')} · ${label} · ${t('card {i} of {n}', { i: i + 1, n: cards.length })}`,
       pill: { value: total, label: t('Points') },
       progress: h('div', { class: 'progress' }, h('span', { class: 'status' }, t('Card {i} of {n}', { i: i + 1, n: cards.length })), dots(i)),
-      deadline: Date.now() + GUESS_TIME_MS,
+      deadline: time ? Date.now() + time * 1000 : null,
       onLock: (guess, touched) => {
         const points = touched ? guessPoints(guess, entry.value) : 0;
         total += points;
@@ -1401,7 +1453,6 @@ function needAccount(hash, title, why) {
 }
 
 // ---------- friends: rooms ----------
-const ROOM_TIME_MS = 15000;
 // Last-one-standing games in rooms: how each builds its questions and draws a round.
 const ROOM_GAMES = {
   standing: { make: (pool, rng, opts) => createPairGenerator(pool, rng, opts), render: (pair, opts) => renderRound({ pair, ...opts }) },
@@ -1433,6 +1484,13 @@ async function friends() {
   let mode = GAME_MODES.some((m) => m.online === load(MODE_KEY, 'standing')) ? load(MODE_KEY, 'standing') : 'standing';
   let cat = cats.includes(load(CAT_KEY, '')) ? load(CAT_KEY, '') : '';
   const rules = h('p', { class: 'muted mode-rules' });
+  // Private rooms: the host picks the clock and, except in Closest guess, the lives.
+  // Public games always use 15 seconds and 1 life.
+  const ROOM_TIME_KEY = 'percento:roomTime';
+  const ROOM_LIVES_KEY = 'percento:roomLives';
+  let seconds = TIME_OPTIONS.includes(load(ROOM_TIME_KEY, 15)) ? load(ROOM_TIME_KEY, 15) : 15;
+  let lives = LIVES_OPTIONS.includes(load(ROOM_LIVES_KEY, 1)) ? load(ROOM_LIVES_KEY, 1) : 1;
+  const livesRow = choiceRow({ label: t('Lives'), options: LIVES_OPTIONS, value: lives, format: String, onChange: (v) => { lives = v; save(ROOM_LIVES_KEY, v); } });
   const modeButtons = GAME_MODES.map((m) => h('button', { class: `mode-tile mode-${m.id}`, type: 'button', 'data-mode': m.online, onclick: () => setMode(m.online) },
     modeVisual(m.id), h('strong', {}, t(m.name)), h('span', {}, t(m.desc))));
   const catButtons = ['', ...cats].map((c) => h('button', { class: 'cat-chip', type: 'button', 'data-cat': c, style: c ? `--c:${CATEGORIES[c].color}` : '', onclick: () => setCat(c) },
@@ -1441,6 +1499,7 @@ async function friends() {
     mode = id;
     save(MODE_KEY, id);
     rules.textContent = t(onlineGame(id).rules);
+    livesRow.hidden = id === 'guess';
     for (const b of modeButtons) b.setAttribute('aria-pressed', String(b.dataset.mode === id));
   };
   const setCat = (c) => {
@@ -1465,11 +1524,14 @@ async function friends() {
         icon('globe', 'icon icon-big'),
         h('h2', {}, t('Play with strangers')),
         h('p', { class: 'muted' }, t('Jump into the next public game. It starts 20 seconds after a second player joins, or at once with 10.')),
+        h('p', { class: 'muted' }, t('Public games: 15 seconds per question, 1 life.')),
         h('button', { class: 'btn btn-primary btn-big', type: 'button', onclick: (ev) => busy(ev.currentTarget, () => online.quickMatch(mode, cat || null)) }, t('Find a game'))),
       h('section', { class: 'box form' },
         h('h2', {}, t('Room with friends')),
         h('p', { class: 'muted' }, t('Create a private room, send the link, start when everybody is in.')),
-        h('button', { class: 'btn', type: 'button', onclick: (ev) => busy(ev.currentTarget, () => online.createRoom(cat || null, mode)) }, t('Create a room'))),
+        choiceRow({ label: t('Time per question'), options: TIME_OPTIONS, value: seconds, format: formatSeconds, onChange: (v) => { seconds = v; save(ROOM_TIME_KEY, v); } }),
+        livesRow,
+        h('button', { class: 'btn', type: 'button', onclick: (ev) => busy(ev.currentTarget, () => online.createRoom(cat || null, mode, { seconds, lives: mode === 'guess' ? 1 : lives })) }, t('Create a room'))),
       h('form', { class: 'box form', onsubmit: (ev) => {
         ev.preventDefault();
         const c = code.value.trim().toUpperCase();
@@ -1506,7 +1568,8 @@ async function room(code) {
   const standings = (compact) => h('ol', { class: 'board room-board' }, ranking().slice(0, compact ? 4 : 10).map((p, i) => h('li', { class: p.user_id === me.id ? 'me' : '' },
     h('span', { class: `rank rank-${i + 1}` }, String(i + 1)),
     h('span', { 'aria-hidden': 'true' }, p.alive && data.room.status === 'playing' ? '🔥' : (i === 0 && data.room.status === 'finished' ? '🏆' : '•')),
-    h('span', { class: 'who' }, p.username, h('small', {}, { lobby: p.user_id === data.room.host_id ? 'host' : 'ready', playing: p.alive ? t('still playing') : 'out', finished: t('final score') }[data.room.status])),
+    h('span', { class: 'who' }, p.username, h('small', {}, { lobby: p.user_id === data.room.host_id ? 'host' : 'ready', playing: p.alive ? t('still playing') : 'out', finished: t('final score') }[data.room.status],
+      (data.room.lives || 1) > 1 && data.room.status === 'playing' && p.alive ? ` · ${hearts((data.room.lives || 1) - (p.misses || 0), data.room.lives)}` : '')),
     h('span', { class: 'score' }, String(p.score)))));
 
   const refresh = async () => {
@@ -1565,7 +1628,7 @@ async function room(code) {
       h('h1', { class: 'screen-title' }, isPublic ? t('Finding players…') : t('Room {code}', { code })),
       h('p', { class: 'lede' }, isPublic
         ? (n < 2 ? t('Waiting for at least one more player. The game starts 20 seconds after the second player joins, or at once with 10.') : h('span', {}, ...tx('Game starts in {time}. {n} of {max} players.', { time: countdown }, { n, max: online.ROOM_SIZE })))
-        : `${t('{n} of {max} players.', { n, max: online.ROOM_SIZE })} ${guessMode ? t('{rounds} cards, {seconds} seconds each to set your percentage. Closest scores most.', { rounds: data.room.rounds, seconds: data.room.round_seconds }) : t('Same cards for everyone, 15 seconds each, last one standing wins.')}`),
+        : `${t('{n} of {max} players.', { n, max: online.ROOM_SIZE })} ${guessMode ? t('{rounds} cards, {seconds} seconds each to set your percentage. Closest scores most.', { rounds: data.room.rounds, seconds: data.room.round_seconds }) : `${t('Same cards for everyone, {seconds} seconds each, last one standing wins.', { seconds: data.room.round_seconds || 15 })}${(data.room.lives || 1) > 1 ? ` ${t('{n} lives each.', { n: data.room.lives })}` : ''}`}`),
       h('div', { class: 'actions' },
         h('button', { class: isPublic ? 'btn' : 'btn btn-primary', type: 'button', onclick: async () => {
           const r = await shareResult(t('Join my Eyeball game {code}: which percentage is higher? {link}', { code, link }));
@@ -1593,23 +1656,25 @@ async function room(code) {
     // Everyone builds the same generator from the room's seed, so the questions match.
     const gen = game.make(cat ? categoryPool(cat) : ENTRIES, mulberry32(Number(data.room.seed)), { sameCategory: Boolean(cat) });
     let score = mine().score;
+    let misses = mine().misses || 0;
+    const lives = data.room.lives || 1;
     // Resume after a reload: skip the questions already answered.
-    for (let i = 0; i < score; i++) gen.next();
+    for (let i = 0; i < score + misses; i++) gen.next();
     const round = () => {
       const q = gen.next();
       if (!q) { pending = online.reportScore(code, score, false); leave(); return; }
       standingsBox = h('div', { class: 'box room-live' }, standings(true));
       game.render(q, {
         headline: `${t('Room {code}', { code })} · ${t('last one standing wins')}`,
-        pill: { value: score, label: t('Your score') },
+        pill: { value: score, label: lives > 1 ? `${t('Your score')} · ${hearts(lives - misses, lives)}` : t('Your score') },
         progress: standingsBox,
-        timeLimit: ROOM_TIME_MS,
+        timeLimit: (data.room.round_seconds || 15) * 1000,
         onAnswer: (correct) => {
-          if (correct) score++;
-          pending = online.reportScore(code, score, correct).catch(() => {});
+          if (correct) score++; else misses++;
+          pending = online.reportScore(code, score, misses < lives, misses).catch(() => {});
         },
-        onContinue: (correct) => (correct ? round() : leave()),
-        continueLabel: t('See standings'),
+        onContinue: () => (misses < lives ? round() : leave()),
+        continueLabel: misses + 1 >= lives ? t('See standings') : t('Continue'),
       });
     };
     round();
@@ -1655,6 +1720,7 @@ async function room(code) {
         pill: { value: totals(i - 1).find((row) => row.id === me.id)?.pts ?? 0, label: t('Your points') },
         progress: board,
         deadline: start + i * period + roundMs - offset,
+        seconds: r.round_seconds,
         onLock: (guess, touched) => { if (touched) online.submitGuess(code, i, guess).catch(() => {}); },
       });
     };
@@ -1700,7 +1766,7 @@ async function room(code) {
         h('section', { class: 'box' }, h('h2', {}, t('Final standings')), table(r.rounds - 1)),
         h('div', { class: 'actions' },
           h('button', { class: 'btn btn-primary', type: 'button', onclick: async () => {
-            const res = r.is_public ? await online.quickMatch('guess', r.category) : await online.createRoom(r.category, 'guess');
+            const res = r.is_public ? await online.quickMatch('guess', r.category) : await online.createRoom(r.category, 'guess', { seconds: r.round_seconds, lives: 1 });
             if (res.error) toast(res.error); else location.hash = `#/room/${res.code}`;
           } }, r.is_public ? t('Find another game') : t('New room')),
           h('a', { class: 'btn', href: '#/solo' }, t('Practise solo'))));
@@ -1749,7 +1815,8 @@ async function room(code) {
       h('section', { class: 'box' }, h('h2', {}, t('Standings')), standings(false)),
       h('div', { class: 'actions' },
         h('button', { class: 'btn btn-primary', type: 'button', onclick: async () => {
-          const res = data.room.is_public ? await online.quickMatch(data.room.mode, data.room.category) : await online.createRoom(data.room.category, data.room.mode);
+          const res = data.room.is_public ? await online.quickMatch(data.room.mode, data.room.category)
+            : await online.createRoom(data.room.category, data.room.mode, { seconds: data.room.round_seconds || 15, lives: data.room.lives || 1 });
           if (res.error) toast(res.error); else location.hash = `#/room/${res.code}`;
         } }, data.room.is_public ? t('Find another game') : t('New room')),
         h('a', { class: 'btn', href: '#/solo' }, t('Play solo'))));
