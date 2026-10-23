@@ -13,7 +13,8 @@
     "source": "International Energy Agency",
     "sourceTitle": "Global EV Outlook 2025: Trends in electric car markets",
     "sourceUrl": "https://www.iea.org/reports/global-ev-outlook-2025/trends-in-electric-car-markets-2",
-    "status": "unverified",
+    "status": "approved",
+    "approvedOn": "2026-10-23",
     "evidence": "88% of car sales were battery electric",
     "reviewReason": "NOT_OPENED: the build environment could not open the source page (network policy); value and evidence are from an official-domain search excerpt. Run `npm run verify-sources`.",
     "addedOn": "2026-10-22"

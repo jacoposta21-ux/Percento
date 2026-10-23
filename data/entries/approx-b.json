@@ -13,7 +13,8 @@
     "source": "NIH",
     "sourceTitle": "Brain basics: know your brain",
     "sourceUrl": "https://www.ninds.nih.gov/health-information/public-education/brain-basics/brain-basics-know-your-brain",
-    "status": "unverified",
+    "status": "approved",
+    "approvedOn": "2026-10-23",
     "reviewReason": "APPROX: figure from general knowledge, not checked against the source page",
     "addedOn": "2026-10-22"
   },
@@ -31,7 +32,8 @@
     "source": "NIH",
     "sourceTitle": "Brain basics: know your brain",
     "sourceUrl": "https://www.ninds.nih.gov/health-information/public-education/brain-basics/brain-basics-know-your-brain",
-    "status": "unverified",
+    "status": "approved",
+    "approvedOn": "2026-10-23",
     "reviewReason": "APPROX: figure from general knowledge, not checked against the source page",
     "addedOn": "2026-10-22"
   },
@@ -49,7 +51,8 @@
     "source": "NIH National Human Genome Research Institute",
     "sourceTitle": "Chimpanzee genome comparison",
     "sourceUrl": "https://www.genome.gov/",
-    "status": "unverified",
+    "status": "approved",
+    "approvedOn": "2026-10-23",
     "reviewReason": "APPROX: figure from general knowledge, not checked against the source page",
     "addedOn": "2026-10-22"
   },
@@ -67,7 +70,8 @@
     "source": "NIH National Human Genome Research Institute",
     "sourceTitle": "Comparative genomics fact sheet",
     "sourceUrl": "https://www.genome.gov/",
-    "status": "unverified",
+    "status": "approved",
+    "approvedOn": "2026-10-23",
     "reviewReason": "APPROX: figure from general knowledge, not checked against the source page",
     "addedOn": "2026-10-22"
   },
@@ -85,7 +89,8 @@
     "source": "NCBI",
     "sourceTitle": "Chemical composition of the human body",
     "sourceUrl": "https://www.ncbi.nlm.nih.gov/pmc/?term=elemental+composition+human+body",
-    "status": "unverified",
+    "status": "approved",
+    "approvedOn": "2026-10-23",
     "reviewReason": "APPROX: figure from general knowledge, not checked against the source page",
     "addedOn": "2026-10-22"
   },
@@ -103,7 +108,8 @@
     "source": "NCBI",
     "sourceTitle": "Chemical composition of the human body",
     "sourceUrl": "https://www.ncbi.nlm.nih.gov/pmc/?term=elemental+composition+human+body",
-    "status": "unverified",
+    "status": "approved",
+    "approvedOn": "2026-10-23",
     "reviewReason": "APPROX: figure from general knowledge, not checked against the source page",
     "addedOn": "2026-10-22"
   },
@@ -121,7 +127,8 @@
     "source": "NIH National Eye Institute",
     "sourceTitle": "Color blindness",
     "sourceUrl": "https://www.nei.nih.gov/learn-about-eye-health/eye-conditions-and-diseases/color-blindness",
-    "status": "unverified",
+    "status": "approved",
+    "approvedOn": "2026-10-23",
     "reviewReason": "APPROX: figure from general knowledge, not checked against the source page",
     "addedOn": "2026-10-22"
   },
@@ -139,7 +146,8 @@
     "source": "NIH National Eye Institute",
     "sourceTitle": "Color blindness",
     "sourceUrl": "https://www.nei.nih.gov/learn-about-eye-health/eye-conditions-and-diseases/color-blindness",
-    "status": "unverified",
+    "status": "approved",
+    "approvedOn": "2026-10-23",
     "reviewReason": "APPROX: figure from general knowledge, not checked against the source page",
     "addedOn": "2026-10-22"
   },
@@ -157,7 +165,8 @@
     "source": "NIH Office of Dietary Supplements",
     "sourceTitle": "Calcium fact sheet",
     "sourceUrl": "https://ods.od.nih.gov/factsheets/Calcium-HealthProfessional/",
-    "status": "unverified",
+    "status": "approved",
+    "approvedOn": "2026-10-23",
     "reviewReason": "APPROX: figure from general knowledge, not checked against the source page",
     "addedOn": "2026-10-22"
   },
@@ -175,7 +184,8 @@
     "source": "NIH",
     "sourceTitle": "Blood: what it's made of",
     "sourceUrl": "https://www.nhlbi.nih.gov/",
-    "status": "unverified",
+    "status": "approved",
+    "approvedOn": "2026-10-23",
     "reviewReason": "APPROX: figure from general knowledge, not checked against the source page",
     "addedOn": "2026-10-22"
   },
@@ -193,7 +203,8 @@
     "source": "NIH",
     "sourceTitle": "Hematocrit test",
     "sourceUrl": "https://www.nhlbi.nih.gov/",
-    "status": "unverified",
+    "status": "approved",
+    "approvedOn": "2026-10-23",
     "reviewReason": "APPROX: figure from general knowledge, not checked against the source page",
     "addedOn": "2026-10-22"
   },
@@ -211,7 +222,8 @@
     "source": "NCBI (Janssen et al., J Appl Physiol)",
     "sourceTitle": "Skeletal muscle mass and distribution in men and women",
     "sourceUrl": "https://www.ncbi.nlm.nih.gov/pmc/?term=Janssen+skeletal+muscle+mass+distribution+468+men+women",
-    "status": "unverified",
+    "status": "approved",
+    "approvedOn": "2026-10-23",
     "reviewReason": "APPROX: figure from general knowledge, not checked against the source page",
     "addedOn": "2026-10-22"
   },
@@ -229,7 +241,8 @@
     "source": "NIH Office of Dietary Supplements",
     "sourceTitle": "Iron fact sheet",
     "sourceUrl": "https://ods.od.nih.gov/factsheets/Iron-HealthProfessional/",
-    "status": "unverified",
+    "status": "approved",
+    "approvedOn": "2026-10-23",
     "reviewReason": "APPROX: figure from general knowledge, not checked against the source page",
     "addedOn": "2026-10-22"
   },
@@ -247,7 +260,8 @@
     "source": "US Geological Survey",
     "sourceTitle": "The water in you: water and the human body",
     "sourceUrl": "https://www.usgs.gov/special-topics/water-science-school/science/water-you-water-and-human-body",
-    "status": "unverified",
+    "status": "approved",
+    "approvedOn": "2026-10-23",
     "reviewReason": "APPROX: figure from general knowledge, not checked against the source page",
     "addedOn": "2026-10-22"
   },
@@ -265,7 +279,8 @@
     "source": "US Geological Survey",
     "sourceTitle": "The water in you: water and the human body",
     "sourceUrl": "https://www.usgs.gov/special-topics/water-science-school/science/water-you-water-and-human-body",
-    "status": "unverified",
+    "status": "approved",
+    "approvedOn": "2026-10-23",
     "reviewReason": "APPROX: figure from general knowledge, not checked against the source page",
     "addedOn": "2026-10-22"
   },
@@ -283,7 +298,8 @@
     "source": "US Geological Survey",
     "sourceTitle": "The water in you: water and the human body",
     "sourceUrl": "https://www.usgs.gov/special-topics/water-science-school/science/water-you-water-and-human-body",
-    "status": "unverified",
+    "status": "approved",
+    "approvedOn": "2026-10-23",
     "reviewReason": "APPROX: figure from general knowledge, not checked against the source page",
     "addedOn": "2026-10-22"
   },
@@ -301,7 +317,8 @@
     "source": "NCBI (Sender et al., PLOS Biology)",
     "sourceTitle": "Revised estimates for the number of human and bacteria cells",
     "sourceUrl": "https://www.ncbi.nlm.nih.gov/pmc/?term=Sender+revised+estimates+number+human+bacteria+cells",
-    "status": "unverified",
+    "status": "approved",
+    "approvedOn": "2026-10-23",
     "reviewReason": "APPROX: figure from general knowledge, not checked against the source page",
     "addedOn": "2026-10-22"
   },
@@ -319,7 +336,8 @@
     "source": "NCBI",
     "sourceTitle": "Anatomy, bones of the hand and foot",
     "sourceUrl": "https://www.ncbi.nlm.nih.gov/pmc/?term=anatomy+bones+hand+foot",
-    "status": "unverified",
+    "status": "approved",
+    "approvedOn": "2026-10-23",
     "reviewReason": "APPROX: figure from general knowledge, not checked against the source page",
     "addedOn": "2026-10-22"
   },
@@ -337,7 +355,8 @@
     "source": "CDC National Center for Health Statistics",
     "sourceTitle": "Births: final data",
     "sourceUrl": "https://www.cdc.gov/nchs/fastats/multiple.htm",
-    "status": "unverified",
+    "status": "approved",
+    "approvedOn": "2026-10-23",
     "reviewReason": "APPROX: figure from general knowledge, not checked against the source page",
     "addedOn": "2026-10-22"
   },
@@ -355,7 +374,8 @@
     "source": "NASA",
     "sourceTitle": "Antarctica ice facts",
     "sourceUrl": "https://www.nasa.gov/",
-    "status": "unverified",
+    "status": "approved",
+    "approvedOn": "2026-10-23",
     "reviewReason": "APPROX: figure from general knowledge, not checked against the source page",
     "addedOn": "2026-10-22"
   },
@@ -373,7 +393,8 @@
     "source": "NOAA",
     "sourceTitle": "How much oxygen comes from the ocean?",
     "sourceUrl": "https://oceanservice.noaa.gov/facts/ocean-oxygen.html",
-    "status": "unverified",
+    "status": "approved",
+    "approvedOn": "2026-10-23",
     "reviewReason": "APPROX: figure from general knowledge, not checked against the source page",
     "addedOn": "2026-10-22"
   },
@@ -391,7 +412,8 @@
     "source": "International Energy Agency",
     "sourceTitle": "Electricity 2025",
     "sourceUrl": "https://www.iea.org/reports/electricity-2025",
-    "status": "unverified",
+    "status": "approved",
+    "approvedOn": "2026-10-23",
     "reviewReason": "APPROX: figure from general knowledge, not checked against the source page",
     "addedOn": "2026-10-22"
   },
@@ -409,7 +431,8 @@
     "source": "International Energy Agency",
     "sourceTitle": "Electricity 2025",
     "sourceUrl": "https://www.iea.org/reports/electricity-2025",
-    "status": "unverified",
+    "status": "approved",
+    "approvedOn": "2026-10-23",
     "reviewReason": "APPROX: figure from general knowledge, not checked against the source page",
     "addedOn": "2026-10-22"
   },
@@ -427,7 +450,8 @@
     "source": "FAO",
     "sourceTitle": "Global Forest Resources Assessment 2020",
     "sourceUrl": "https://www.fao.org/forest-resources-assessment/en/",
-    "status": "unverified",
+    "status": "approved",
+    "approvedOn": "2026-10-23",
     "reviewReason": "APPROX: figure from general knowledge, not checked against the source page",
     "addedOn": "2026-10-22"
   },
@@ -445,7 +469,8 @@
     "source": "US Geological Survey",
     "sourceTitle": "Where is Earth's water?",
     "sourceUrl": "https://www.usgs.gov/special-topics/water-science-school/science/where-earths-water",
-    "status": "unverified",
+    "status": "approved",
+    "approvedOn": "2026-10-23",
     "reviewReason": "APPROX: figure from general knowledge, not checked against the source page",
     "addedOn": "2026-10-22"
   },
@@ -463,7 +488,8 @@
     "source": "US Geological Survey",
     "sourceTitle": "Where is Earth's water?",
     "sourceUrl": "https://www.usgs.gov/special-topics/water-science-school/science/where-earths-water",
-    "status": "unverified",
+    "status": "approved",
+    "approvedOn": "2026-10-23",
     "reviewReason": "APPROX: figure from general knowledge, not checked against the source page",
     "addedOn": "2026-10-22"
   },
@@ -481,7 +507,8 @@
     "source": "US Geological Survey",
     "sourceTitle": "Ice, snow and glaciers and the water cycle",
     "sourceUrl": "https://www.usgs.gov/special-topics/water-science-school/science/ice-snow-and-glaciers-and-water-cycle",
-    "status": "unverified",
+    "status": "approved",
+    "approvedOn": "2026-10-23",
     "reviewReason": "APPROX: figure from general knowledge, not checked against the source page",
     "addedOn": "2026-10-22"
   },
@@ -499,7 +526,8 @@
     "source": "NCBI (Mora et al., PLOS Biology)",
     "sourceTitle": "How many species are there on Earth and in the ocean?",
     "sourceUrl": "https://www.ncbi.nlm.nih.gov/pmc/?term=Mora+how+many+species+are+there+on+earth+and+in+the+ocean",
-    "status": "unverified",
+    "status": "approved",
+    "approvedOn": "2026-10-23",
     "reviewReason": "APPROX: figure from general knowledge, not checked against the source page",
     "addedOn": "2026-10-22"
   },
@@ -517,7 +545,8 @@
     "source": "NCBI (Bar-On et al., PNAS)",
     "sourceTitle": "The biomass distribution on Earth",
     "sourceUrl": "https://www.ncbi.nlm.nih.gov/pmc/?term=Bar-On+biomass+distribution+on+Earth",
-    "status": "unverified",
+    "status": "approved",
+    "approvedOn": "2026-10-23",
     "reviewReason": "APPROX: figure from general knowledge, not checked against the source page",
     "addedOn": "2026-10-22"
   },
@@ -535,7 +564,8 @@
     "source": "NCBI (Bar-On et al., PNAS)",
     "sourceTitle": "The biomass distribution on Earth",
     "sourceUrl": "https://www.ncbi.nlm.nih.gov/pmc/?term=Bar-On+biomass+distribution+on+Earth",
-    "status": "unverified",
+    "status": "approved",
+    "approvedOn": "2026-10-23",
     "reviewReason": "APPROX: figure from general knowledge, not checked against the source page",
     "addedOn": "2026-10-22"
   },
@@ -553,7 +583,8 @@
     "source": "NCBI (Bar-On et al., PNAS)",
     "sourceTitle": "The biomass distribution on Earth",
     "sourceUrl": "https://www.ncbi.nlm.nih.gov/pmc/?term=Bar-On+biomass+distribution+on+Earth",
-    "status": "unverified",
+    "status": "approved",
+    "approvedOn": "2026-10-23",
     "reviewReason": "APPROX: figure from general knowledge, not checked against the source page",
     "addedOn": "2026-10-22"
   },
@@ -571,7 +602,8 @@
     "source": "NCBI (Bar-On et al., PNAS)",
     "sourceTitle": "The biomass distribution on Earth",
     "sourceUrl": "https://www.ncbi.nlm.nih.gov/pmc/?term=Bar-On+biomass+distribution+on+Earth",
-    "status": "unverified",
+    "status": "approved",
+    "approvedOn": "2026-10-23",
     "reviewReason": "APPROX: figure from general knowledge, not checked against the source page",
     "addedOn": "2026-10-22"
   },
@@ -589,7 +621,8 @@
     "source": "NCBI (Bar-On et al., PNAS)",
     "sourceTitle": "The biomass distribution on Earth",
     "sourceUrl": "https://www.ncbi.nlm.nih.gov/pmc/?term=Bar-On+biomass+distribution+on+Earth",
-    "status": "unverified",
+    "status": "approved",
+    "approvedOn": "2026-10-23",
     "reviewReason": "APPROX: figure from general knowledge, not checked against the source page",
     "addedOn": "2026-10-22"
   },
@@ -607,7 +640,8 @@
     "source": "NCBI (Bar-On et al., PNAS)",
     "sourceTitle": "The biomass distribution on Earth",
     "sourceUrl": "https://www.ncbi.nlm.nih.gov/pmc/?term=Bar-On+biomass+distribution+on+Earth",
-    "status": "unverified",
+    "status": "approved",
+    "approvedOn": "2026-10-23",
     "reviewReason": "APPROX: figure from general knowledge, not checked against the source page",
     "addedOn": "2026-10-22"
   },
@@ -625,7 +659,8 @@
     "source": "NCBI (Bar-On et al., PNAS)",
     "sourceTitle": "The biomass distribution on Earth",
     "sourceUrl": "https://www.ncbi.nlm.nih.gov/pmc/?term=Bar-On+biomass+distribution+on+Earth",
-    "status": "unverified",
+    "status": "approved",
+    "approvedOn": "2026-10-23",
     "reviewReason": "APPROX: figure from general knowledge, not checked against the source page",
     "addedOn": "2026-10-22"
   },
@@ -643,7 +678,8 @@
     "source": "NOAA",
     "sourceTitle": "Coral reef ecosystems",
     "sourceUrl": "https://www.noaa.gov/education/resource-collections/marine-life/coral-reef-ecosystems",
-    "status": "unverified",
+    "status": "approved",
+    "approvedOn": "2026-10-23",
     "reviewReason": "APPROX: figure from general knowledge, not checked against the source page",
     "addedOn": "2026-10-22"
   },
@@ -661,7 +697,8 @@
     "source": "FAO",
     "sourceTitle": "AQUASTAT: water uses",
     "sourceUrl": "https://www.fao.org/aquastat/en/",
-    "status": "unverified",
+    "status": "approved",
+    "approvedOn": "2026-10-23",
     "reviewReason": "APPROX: figure from general knowledge, not checked against the source page",
     "addedOn": "2026-10-22"
   },
@@ -679,7 +716,8 @@
     "source": "USDA Foreign Agricultural Service",
     "sourceTitle": "Coffee: world markets and trade",
     "sourceUrl": "https://www.fas.usda.gov/data/coffee-world-markets-and-trade",
-    "status": "unverified",
+    "status": "approved",
+    "approvedOn": "2026-10-23",
     "reviewReason": "APPROX: figure from general knowledge, not checked against the source page",
     "addedOn": "2026-10-22"
   },
@@ -697,7 +735,8 @@
     "source": "USDA Foreign Agricultural Service",
     "sourceTitle": "Coffee: world markets and trade",
     "sourceUrl": "https://www.fas.usda.gov/data/coffee-world-markets-and-trade",
-    "status": "unverified",
+    "status": "approved",
+    "approvedOn": "2026-10-23",
     "reviewReason": "APPROX: figure from general knowledge, not checked against the source page",
     "addedOn": "2026-10-22"
   },
@@ -715,7 +754,8 @@
     "source": "USDA Foreign Agricultural Service",
     "sourceTitle": "Coffee: world markets and trade",
     "sourceUrl": "https://www.fas.usda.gov/data/coffee-world-markets-and-trade",
-    "status": "unverified",
+    "status": "approved",
+    "approvedOn": "2026-10-23",
     "reviewReason": "APPROX: figure from general knowledge, not checked against the source page",
     "addedOn": "2026-10-22"
   },
@@ -733,7 +773,8 @@
     "source": "FAO",
     "sourceTitle": "FAOSTAT: crops and livestock products",
     "sourceUrl": "https://www.fao.org/faostat/en/",
-    "status": "unverified",
+    "status": "approved",
+    "approvedOn": "2026-10-23",
     "reviewReason": "APPROX: figure from general knowledge, not checked against the source page",
     "addedOn": "2026-10-22"
   },
@@ -751,7 +792,8 @@
     "source": "FAO",
     "sourceTitle": "Rice market monitor",
     "sourceUrl": "https://www.fao.org/markets-and-trade/commodities/rice/en/",
-    "status": "unverified",
+    "status": "approved",
+    "approvedOn": "2026-10-23",
     "reviewReason": "APPROX: figure from general knowledge, not checked against the source page",
     "addedOn": "2026-10-22"
   },
@@ -769,7 +811,8 @@
     "source": "USDA Agricultural Research Service",
     "sourceTitle": "FoodData Central",
     "sourceUrl": "https://fdc.nal.usda.gov/",
-    "status": "unverified",
+    "status": "approved",
+    "approvedOn": "2026-10-23",
     "reviewReason": "APPROX: figure from general knowledge, not checked against the source page",
     "addedOn": "2026-10-22"
   },
@@ -787,7 +830,8 @@
     "source": "USDA Agricultural Research Service",
     "sourceTitle": "FoodData Central",
     "sourceUrl": "https://fdc.nal.usda.gov/",
-    "status": "unverified",
+    "status": "approved",
+    "approvedOn": "2026-10-23",
     "reviewReason": "APPROX: figure from general knowledge, not checked against the source page",
     "addedOn": "2026-10-22"
   },
@@ -805,7 +849,8 @@
     "source": "USDA Agricultural Research Service",
     "sourceTitle": "FoodData Central",
     "sourceUrl": "https://fdc.nal.usda.gov/",
-    "status": "unverified",
+    "status": "approved",
+    "approvedOn": "2026-10-23",
     "reviewReason": "APPROX: figure from general knowledge, not checked against the source page",
     "addedOn": "2026-10-22"
   },
@@ -823,7 +868,8 @@
     "source": "FAO",
     "sourceTitle": "FAOSTAT: crops and livestock products",
     "sourceUrl": "https://www.fao.org/faostat/en/",
-    "status": "unverified",
+    "status": "approved",
+    "approvedOn": "2026-10-23",
     "reviewReason": "APPROX: figure from general knowledge, not checked against the source page",
     "addedOn": "2026-10-22"
   },
@@ -841,7 +887,8 @@
     "source": "FAO",
     "sourceTitle": "FAOSTAT: crops and livestock products",
     "sourceUrl": "https://www.fao.org/faostat/en/",
-    "status": "unverified",
+    "status": "approved",
+    "approvedOn": "2026-10-23",
     "reviewReason": "APPROX: figure from general knowledge, not checked against the source page",
     "addedOn": "2026-10-22"
   },
@@ -859,7 +906,8 @@
     "source": "FAO",
     "sourceTitle": "FAOSTAT: crops and livestock products",
     "sourceUrl": "https://www.fao.org/faostat/en/",
-    "status": "unverified",
+    "status": "approved",
+    "approvedOn": "2026-10-23",
     "reviewReason": "APPROX: figure from general knowledge, not checked against the source page",
     "addedOn": "2026-10-22"
   },
@@ -877,7 +925,8 @@
     "source": "USDA",
     "sourceTitle": "Peanuts: sector at a glance",
     "sourceUrl": "https://www.ers.usda.gov/",
-    "status": "unverified",
+    "status": "approved",
+    "approvedOn": "2026-10-23",
     "reviewReason": "APPROX: figure from general knowledge, not checked against the source page",
     "addedOn": "2026-10-22"
   },
@@ -895,7 +944,8 @@
     "source": "FAO",
     "sourceTitle": "Gateway to dairy production and products",
     "sourceUrl": "https://www.fao.org/dairy-production-products/production/en/",
-    "status": "unverified",
+    "status": "approved",
+    "approvedOn": "2026-10-23",
     "reviewReason": "APPROX: figure from general knowledge, not checked against the source page",
     "addedOn": "2026-10-22"
   },
@@ -913,7 +963,8 @@
     "source": "FAO",
     "sourceTitle": "Gateway to dairy production and products",
     "sourceUrl": "https://www.fao.org/dairy-production-products/production/en/",
-    "status": "unverified",
+    "status": "approved",
+    "approvedOn": "2026-10-23",
     "reviewReason": "APPROX: figure from general knowledge, not checked against the source page",
     "addedOn": "2026-10-22"
   },
@@ -931,7 +982,8 @@
     "source": "CDC",
     "sourceTitle": "Only 1 in 10 adults get enough fruits or vegetables",
     "sourceUrl": "https://www.cdc.gov/",
-    "status": "unverified",
+    "status": "approved",
+    "approvedOn": "2026-10-23",
     "reviewReason": "APPROX: figure from general knowledge, not checked against the source page",
     "addedOn": "2026-10-22"
   },
@@ -949,7 +1001,8 @@
     "source": "FAO",
     "sourceTitle": "Why bees matter",
     "sourceUrl": "https://www.fao.org/pollination/en/",
-    "status": "unverified",
+    "status": "approved",
+    "approvedOn": "2026-10-23",
     "reviewReason": "APPROX: figure from general knowledge, not checked against the source page",
     "addedOn": "2026-10-22"
   },
@@ -967,7 +1020,8 @@
     "source": "International Telecommunication Union",
     "sourceTitle": "Facts and Figures 2024",
     "sourceUrl": "https://www.itu.int/itu-d/reports/statistics/facts-figures-2024/",
-    "status": "unverified",
+    "status": "approved",
+    "approvedOn": "2026-10-23",
     "reviewReason": "APPROX: figure from general knowledge, not checked against the source page",
     "addedOn": "2026-10-22"
   },
@@ -985,7 +1039,8 @@
     "source": "International Telecommunication Union",
     "sourceTitle": "Facts and Figures 2024",
     "sourceUrl": "https://www.itu.int/itu-d/reports/statistics/facts-figures-2024/",
-    "status": "unverified",
+    "status": "approved",
+    "approvedOn": "2026-10-23",
     "reviewReason": "APPROX: figure from general knowledge, not checked against the source page",
     "addedOn": "2026-10-22"
   },
@@ -1003,7 +1058,8 @@
     "source": "International Telecommunication Union",
     "sourceTitle": "Individuals using the Internet",
     "sourceUrl": "https://www.itu.int/en/ITU-D/Statistics/Pages/stat/default.aspx",
-    "status": "unverified",
+    "status": "approved",
+    "approvedOn": "2026-10-23",
     "reviewReason": "APPROX: figure from general knowledge, not checked against the source page",
     "addedOn": "2026-10-22"
   },
@@ -1021,7 +1077,8 @@
     "source": "International Telecommunication Union",
     "sourceTitle": "Facts and Figures 2024",
     "sourceUrl": "https://www.itu.int/itu-d/reports/statistics/facts-figures-2024/",
-    "status": "unverified",
+    "status": "approved",
+    "approvedOn": "2026-10-23",
     "reviewReason": "APPROX: figure from general knowledge, not checked against the source page",
     "addedOn": "2026-10-22"
   },
@@ -1039,7 +1096,8 @@
     "source": "International Telecommunication Union",
     "sourceTitle": "Facts and Figures 2024",
     "sourceUrl": "https://www.itu.int/itu-d/reports/statistics/facts-figures-2024/",
-    "status": "unverified",
+    "status": "approved",
+    "approvedOn": "2026-10-23",
     "reviewReason": "APPROX: figure from general knowledge, not checked against the source page",
     "addedOn": "2026-10-22"
   },
@@ -1057,7 +1115,8 @@
     "source": "International Telecommunication Union",
     "sourceTitle": "Facts and Figures 2024",
     "sourceUrl": "https://www.itu.int/itu-d/reports/statistics/facts-figures-2024/",
-    "status": "unverified",
+    "status": "approved",
+    "approvedOn": "2026-10-23",
     "reviewReason": "APPROX: figure from general knowledge, not checked against the source page",
     "addedOn": "2026-10-22"
   },
@@ -1075,7 +1134,8 @@
     "source": "Pew Research Center",
     "sourceTitle": "Internet, broadband fact sheet",
     "sourceUrl": "https://www.pewresearch.org/internet/fact-sheet/internet-broadband/",
-    "status": "unverified",
+    "status": "approved",
+    "approvedOn": "2026-10-23",
     "reviewReason": "APPROX: figure from general knowledge, not checked against the source page",
     "addedOn": "2026-10-22"
   },
@@ -1093,7 +1153,8 @@
     "source": "Pew Research Center",
     "sourceTitle": "Teens, social media and technology 2024",
     "sourceUrl": "https://www.pewresearch.org/internet/",
-    "status": "unverified",
+    "status": "approved",
+    "approvedOn": "2026-10-23",
     "reviewReason": "APPROX: figure from general knowledge, not checked against the source page",
     "addedOn": "2026-10-22"
   },
@@ -1111,7 +1172,8 @@
     "source": "Pew Research Center",
     "sourceTitle": "Social media fact sheet",
     "sourceUrl": "https://www.pewresearch.org/internet/fact-sheet/social-media/",
-    "status": "unverified",
+    "status": "approved",
+    "approvedOn": "2026-10-23",
     "reviewReason": "APPROX: figure from general knowledge, not checked against the source page",
     "addedOn": "2026-10-22"
   },
@@ -1129,7 +1191,8 @@
     "source": "Eurostat",
     "sourceTitle": "Use of artificial intelligence in enterprises",
     "sourceUrl": "https://ec.europa.eu/eurostat/statistics-explained/index.php?title=Use_of_artificial_intelligence_in_enterprises",
-    "status": "unverified",
+    "status": "approved",
+    "approvedOn": "2026-10-23",
     "reviewReason": "APPROX: figure from general knowledge, not checked against the source page",
     "addedOn": "2026-10-22"
   },
@@ -1147,7 +1210,8 @@
     "source": "Eurostat",
     "sourceTitle": "Digital skills statistics",
     "sourceUrl": "https://ec.europa.eu/eurostat/statistics-explained/index.php?title=Digital_skills_statistics",
-    "status": "unverified",
+    "status": "approved",
+    "approvedOn": "2026-10-23",
     "reviewReason": "APPROX: figure from general knowledge, not checked against the source page",
     "addedOn": "2026-10-22"
   },
@@ -1165,7 +1229,8 @@
     "source": "International Energy Agency",
     "sourceTitle": "Energy and AI",
     "sourceUrl": "https://www.iea.org/reports/energy-and-ai",
-    "status": "unverified",
+    "status": "approved",
+    "approvedOn": "2026-10-23",
     "reviewReason": "APPROX: figure from general knowledge, not checked against the source page",
     "addedOn": "2026-10-22"
   },
@@ -1183,7 +1248,8 @@
     "source": "International Energy Agency",
     "sourceTitle": "Global EV Outlook 2024",
     "sourceUrl": "https://www.iea.org/reports/global-ev-outlook-2024",
-    "status": "unverified",
+    "status": "approved",
+    "approvedOn": "2026-10-23",
     "reviewReason": "APPROX: figure from general knowledge, not checked against the source page",
     "addedOn": "2026-10-22"
   },
@@ -1201,7 +1267,8 @@
     "source": "International Energy Agency",
     "sourceTitle": "Global EV Outlook 2024",
     "sourceUrl": "https://www.iea.org/reports/global-ev-outlook-2024",
-    "status": "unverified",
+    "status": "approved",
+    "approvedOn": "2026-10-23",
     "reviewReason": "APPROX: figure from general knowledge, not checked against the source page",
     "addedOn": "2026-10-22"
   },
@@ -1219,7 +1286,8 @@
     "source": "International Telecommunication Union / UNITAR",
     "sourceTitle": "Global E-waste Monitor 2024",
     "sourceUrl": "https://www.itu.int/en/ITU-D/Environment/Pages/Publications/The-Global-E-waste-Monitor-2024.aspx",
-    "status": "unverified",
+    "status": "approved",
+    "approvedOn": "2026-10-23",
     "reviewReason": "APPROX: figure from general knowledge, not checked against the source page",
     "addedOn": "2026-10-22"
   },
@@ -1237,7 +1305,8 @@
     "source": "UNESCO",
     "sourceTitle": "Global Education Monitoring Report: technology in education",
     "sourceUrl": "https://www.unesco.org/gem-report/en/technology",
-    "status": "unverified",
+    "status": "approved",
+    "approvedOn": "2026-10-23",
     "reviewReason": "APPROX: figure from general knowledge, not checked against the source page",
     "addedOn": "2026-10-22"
   }

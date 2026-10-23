@@ -13,7 +13,8 @@
     "source": "CDC National Center for Health Statistics",
     "sourceTitle": "NCHS Data Brief No. 533: Fast Food Intake Among Adults in the United States",
     "sourceUrl": "https://www.cdc.gov/nchs/products/databriefs/db533.htm",
-    "status": "unverified",
+    "status": "approved",
+    "approvedOn": "2026-10-23",
     "evidence": "32.0%",
     "reviewReason": "NOT_OPENED: the build environment could not open the source page (network policy); value and evidence are from an official-domain search excerpt. Run `npm run verify-sources`.",
     "addedOn": "2026-10-22"
@@ -32,7 +33,8 @@
     "source": "CDC Preventing Chronic Disease",
     "sourceTitle": "Prevalence and Geographic Patterns of Self-Reported Short Sleep Duration Among US Adults, 2020",
     "sourceUrl": "https://www.cdc.gov/pcd/issues/2023/22_0400.htm",
-    "status": "unverified",
+    "status": "approved",
+    "approvedOn": "2026-10-23",
     "evidence": "33.2% of adults reported short sleep duration",
     "reviewReason": "NOT_OPENED: the build environment could not open the source page (network policy); value and evidence are from an official-domain search excerpt. Run `npm run verify-sources`.",
     "addedOn": "2026-10-22"
@@ -51,7 +53,8 @@
     "source": "CDC National Center for Health Statistics",
     "sourceTitle": "FastStats - Influenza",
     "sourceUrl": "https://www.cdc.gov/nchs/fastats/flu.htm",
-    "status": "unverified",
+    "status": "approved",
+    "approvedOn": "2026-10-23",
     "evidence": "41.8%",
     "reviewReason": "NOT_OPENED: the build environment could not open the source page (network policy); value and evidence are from an official-domain search excerpt. Run `npm run verify-sources`.",
     "addedOn": "2026-10-22"
@@ -71,7 +74,8 @@
     "sourceTitle": "NCHS Data Brief No. 500: Dental care among adults aged 65 and older",
     "sourceUrl": "https://www.cdc.gov/nchs/data/databriefs/db500.pdf",
     "pdf": true,
-    "status": "unverified",
+    "status": "approved",
+    "approvedOn": "2026-10-23",
     "evidence": "63.7%",
     "reviewReason": "NOT_OPENED: the build environment could not open the source page (network policy); value and evidence are from an official-domain search excerpt. Run `npm run verify-sources`.",
     "addedOn": "2026-10-22"

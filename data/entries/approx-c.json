@@ -13,7 +13,8 @@
     "source": "NASA",
     "sourceTitle": "Planetary Fact Sheet",
     "sourceUrl": "https://nssdc.gsfc.nasa.gov/planetary/factsheet/",
-    "status": "unverified",
+    "status": "approved",
+    "approvedOn": "2026-10-23",
     "reviewReason": "APPROX: figure from general knowledge, not checked against the source page",
     "addedOn": "2026-10-22"
   },
@@ -31,7 +32,8 @@
     "source": "NASA",
     "sourceTitle": "Moon Fact Sheet",
     "sourceUrl": "https://nssdc.gsfc.nasa.gov/planetary/factsheet/moonfact.html",
-    "status": "unverified",
+    "status": "approved",
+    "approvedOn": "2026-10-23",
     "reviewReason": "APPROX: figure from general knowledge, not checked against the source page",
     "addedOn": "2026-10-22"
   },
@@ -49,7 +51,8 @@
     "source": "NASA",
     "sourceTitle": "Venus Fact Sheet",
     "sourceUrl": "https://nssdc.gsfc.nasa.gov/planetary/factsheet/venusfact.html",
-    "status": "unverified",
+    "status": "approved",
+    "approvedOn": "2026-10-23",
     "reviewReason": "APPROX: figure from general knowledge, not checked against the source page",
     "addedOn": "2026-10-22"
   },
@@ -67,7 +70,8 @@
     "source": "NASA",
     "sourceTitle": "Saturn Fact Sheet",
     "sourceUrl": "https://nssdc.gsfc.nasa.gov/planetary/factsheet/saturnfact.html",
-    "status": "unverified",
+    "status": "approved",
+    "approvedOn": "2026-10-23",
     "reviewReason": "APPROX: figure from general knowledge, not checked against the source page",
     "addedOn": "2026-10-22"
   },
@@ -85,7 +89,8 @@
     "source": "NASA",
     "sourceTitle": "Moon Fact Sheet",
     "sourceUrl": "https://nssdc.gsfc.nasa.gov/planetary/factsheet/moonfact.html",
-    "status": "unverified",
+    "status": "approved",
+    "approvedOn": "2026-10-23",
     "reviewReason": "APPROX: figure from general knowledge, not checked against the source page",
     "addedOn": "2026-10-22"
   },
@@ -103,7 +108,8 @@
     "source": "NASA",
     "sourceTitle": "Asteroids: Facts",
     "sourceUrl": "https://science.nasa.gov/solar-system/asteroids/facts/",
-    "status": "unverified",
+    "status": "approved",
+    "approvedOn": "2026-10-23",
     "reviewReason": "APPROX: figure from general knowledge, not checked against the source page",
     "addedOn": "2026-10-22"
   },
@@ -121,7 +127,8 @@
     "source": "NASA",
     "sourceTitle": "Moon Fact Sheet",
     "sourceUrl": "https://nssdc.gsfc.nasa.gov/planetary/factsheet/moonfact.html",
-    "status": "unverified",
+    "status": "approved",
+    "approvedOn": "2026-10-23",
     "reviewReason": "APPROX: figure from general knowledge, not checked against the source page",
     "addedOn": "2026-10-22"
   },
@@ -139,7 +146,8 @@
     "source": "NASA",
     "sourceTitle": "Climate and Earth's Energy Budget",
     "sourceUrl": "https://earthobservatory.nasa.gov/features/EnergyBalance",
-    "status": "unverified",
+    "status": "approved",
+    "approvedOn": "2026-10-23",
     "reviewReason": "APPROX: figure from general knowledge, not checked against the source page",
     "addedOn": "2026-10-22"
   },
@@ -157,7 +165,8 @@
     "source": "NASA",
     "sourceTitle": "Climate and Earth's Energy Budget",
     "sourceUrl": "https://earthobservatory.nasa.gov/features/EnergyBalance",
-    "status": "unverified",
+    "status": "approved",
+    "approvedOn": "2026-10-23",
     "reviewReason": "APPROX: figure from general knowledge, not checked against the source page",
     "addedOn": "2026-10-22"
   },
@@ -175,7 +184,8 @@
     "source": "NASA",
     "sourceTitle": "Mercury Fact Sheet",
     "sourceUrl": "https://nssdc.gsfc.nasa.gov/planetary/factsheet/mercuryfact.html",
-    "status": "unverified",
+    "status": "approved",
+    "approvedOn": "2026-10-23",
     "reviewReason": "APPROX: figure from general knowledge, not checked against the source page",
     "addedOn": "2026-10-22"
   },
@@ -193,7 +203,8 @@
     "source": "NASA",
     "sourceTitle": "Venus Fact Sheet",
     "sourceUrl": "https://nssdc.gsfc.nasa.gov/planetary/factsheet/venusfact.html",
-    "status": "unverified",
+    "status": "approved",
+    "approvedOn": "2026-10-23",
     "reviewReason": "APPROX: figure from general knowledge, not checked against the source page",
     "addedOn": "2026-10-22"
   },
@@ -211,7 +222,8 @@
     "source": "NASA",
     "sourceTitle": "Pluto Fact Sheet",
     "sourceUrl": "https://nssdc.gsfc.nasa.gov/planetary/factsheet/plutofact.html",
-    "status": "unverified",
+    "status": "approved",
+    "approvedOn": "2026-10-23",
     "reviewReason": "APPROX: figure from general knowledge, not checked against the source page",
     "addedOn": "2026-10-22"
   },
@@ -229,7 +241,8 @@
     "source": "NASA",
     "sourceTitle": "Red Dwarfs",
     "sourceUrl": "https://science.nasa.gov/universe/stars/",
-    "status": "unverified",
+    "status": "approved",
+    "approvedOn": "2026-10-23",
     "reviewReason": "APPROX: figure from general knowledge, not checked against the source page",
     "addedOn": "2026-10-22"
   },
@@ -247,7 +260,8 @@
     "source": "NASA",
     "sourceTitle": "Saturn Fact Sheet",
     "sourceUrl": "https://nssdc.gsfc.nasa.gov/planetary/factsheet/saturnfact.html",
-    "status": "unverified",
+    "status": "approved",
+    "approvedOn": "2026-10-23",
     "reviewReason": "APPROX: figure from general knowledge, not checked against the source page",
     "addedOn": "2026-10-22"
   },
@@ -265,7 +279,8 @@
     "source": "NASA",
     "sourceTitle": "How Old Is the Universe?",
     "sourceUrl": "https://science.nasa.gov/universe/",
-    "status": "unverified",
+    "status": "approved",
+    "approvedOn": "2026-10-23",
     "reviewReason": "APPROX: figure from general knowledge, not checked against the source page",
     "addedOn": "2026-10-22"
   },
@@ -283,7 +298,8 @@
     "source": "NASA",
     "sourceTitle": "Jupiter Fact Sheet",
     "sourceUrl": "https://nssdc.gsfc.nasa.gov/planetary/factsheet/jupiterfact.html",
-    "status": "unverified",
+    "status": "approved",
+    "approvedOn": "2026-10-23",
     "reviewReason": "APPROX: figure from general knowledge, not checked against the source page",
     "addedOn": "2026-10-22"
   },
@@ -301,7 +317,8 @@
     "source": "Smithsonian Institution",
     "sourceTitle": "Numbers of Insects (Species and Individuals)",
     "sourceUrl": "https://www.si.edu/spotlight/buginfo/bugnos",
-    "status": "unverified",
+    "status": "approved",
+    "approvedOn": "2026-10-23",
     "reviewReason": "APPROX: figure from general knowledge, not checked against the source page",
     "addedOn": "2026-10-22"
   },
@@ -319,7 +336,8 @@
     "source": "Smithsonian Institution",
     "sourceTitle": "Bats",
     "sourceUrl": "https://www.si.edu/",
-    "status": "unverified",
+    "status": "approved",
+    "approvedOn": "2026-10-23",
     "reviewReason": "APPROX: figure from general knowledge, not checked against the source page",
     "addedOn": "2026-10-22"
   },
@@ -337,7 +355,8 @@
     "source": "IUCN Red List",
     "sourceTitle": "The IUCN Red List of Threatened Species",
     "sourceUrl": "https://www.iucnredlist.org/",
-    "status": "unverified",
+    "status": "approved",
+    "approvedOn": "2026-10-23",
     "reviewReason": "APPROX: figure from general knowledge, not checked against the source page",
     "addedOn": "2026-10-22"
   },
@@ -355,7 +374,8 @@
     "source": "IUCN Red List",
     "sourceTitle": "The IUCN Red List of Threatened Species",
     "sourceUrl": "https://www.iucnredlist.org/",
-    "status": "unverified",
+    "status": "approved",
+    "approvedOn": "2026-10-23",
     "reviewReason": "APPROX: figure from general knowledge, not checked against the source page",
     "addedOn": "2026-10-22"
   },
@@ -373,7 +393,8 @@
     "source": "Estrada et al., Science Advances",
     "sourceTitle": "Impending extinction crisis of the world's primates",
     "sourceUrl": "https://www.science.org/doi/10.1126/sciadv.1600946",
-    "status": "unverified",
+    "status": "approved",
+    "approvedOn": "2026-10-23",
     "reviewReason": "APPROX: figure from general knowledge, not checked against the source page",
     "addedOn": "2026-10-22"
   },
@@ -391,7 +412,8 @@
     "source": "IUCN Red List",
     "sourceTitle": "The IUCN Red List of Threatened Species",
     "sourceUrl": "https://www.iucnredlist.org/",
-    "status": "unverified",
+    "status": "approved",
+    "approvedOn": "2026-10-23",
     "reviewReason": "APPROX: figure from general knowledge, not checked against the source page",
     "addedOn": "2026-10-22"
   },
@@ -409,7 +431,8 @@
     "source": "IUCN Red List",
     "sourceTitle": "The IUCN Red List of Threatened Species",
     "sourceUrl": "https://www.iucnredlist.org/",
-    "status": "unverified",
+    "status": "approved",
+    "approvedOn": "2026-10-23",
     "reviewReason": "APPROX: figure from general knowledge, not checked against the source page",
     "addedOn": "2026-10-22"
   },
@@ -427,7 +450,8 @@
     "source": "IUCN Red List",
     "sourceTitle": "The IUCN Red List of Threatened Species",
     "sourceUrl": "https://www.iucnredlist.org/",
-    "status": "unverified",
+    "status": "approved",
+    "approvedOn": "2026-10-23",
     "reviewReason": "APPROX: figure from general knowledge, not checked against the source page",
     "addedOn": "2026-10-22"
   },
@@ -445,7 +469,8 @@
     "source": "Mora et al., PLoS Biology",
     "sourceTitle": "How Many Species Are There on Earth and in the Ocean?",
     "sourceUrl": "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3160336/",
-    "status": "unverified",
+    "status": "approved",
+    "approvedOn": "2026-10-23",
     "reviewReason": "APPROX: figure from general knowledge, not checked against the source page",
     "addedOn": "2026-10-22"
   },
@@ -463,7 +488,8 @@
     "source": "IBGE",
     "sourceTitle": "Pesquisa Nacional de Saúde",
     "sourceUrl": "https://www.ibge.gov.br/",
-    "status": "unverified",
+    "status": "approved",
+    "approvedOn": "2026-10-23",
     "reviewReason": "APPROX: figure from general knowledge, not checked against the source page",
     "addedOn": "2026-10-22"
   },
@@ -481,7 +507,8 @@
     "source": "USDA",
     "sourceTitle": "Pollinators",
     "sourceUrl": "https://www.usda.gov/peoples-garden/pollinators",
-    "status": "unverified",
+    "status": "approved",
+    "approvedOn": "2026-10-23",
     "reviewReason": "APPROX: figure from general knowledge, not checked against the source page",
     "addedOn": "2026-10-22"
   },
@@ -499,7 +526,8 @@
     "source": "IUCN Red List",
     "sourceTitle": "The IUCN Red List of Threatened Species",
     "sourceUrl": "https://www.iucnredlist.org/",
-    "status": "unverified",
+    "status": "approved",
+    "approvedOn": "2026-10-23",
     "reviewReason": "APPROX: figure from general knowledge, not checked against the source page",
     "addedOn": "2026-10-22"
   },
@@ -517,7 +545,8 @@
     "source": "IUCN Red List",
     "sourceTitle": "Freshwater biodiversity",
     "sourceUrl": "https://www.iucnredlist.org/",
-    "status": "unverified",
+    "status": "approved",
+    "approvedOn": "2026-10-23",
     "reviewReason": "APPROX: figure from general knowledge, not checked against the source page",
     "addedOn": "2026-10-22"
   },
@@ -535,7 +564,8 @@
     "source": "Statistics Canada",
     "sourceTitle": "Census of Population 2021",
     "sourceUrl": "https://www.statcan.gc.ca/",
-    "status": "unverified",
+    "status": "approved",
+    "approvedOn": "2026-10-23",
     "reviewReason": "APPROX: figure from general knowledge, not checked against the source page",
     "addedOn": "2026-10-22"
   },
@@ -553,7 +583,8 @@
     "source": "US Census Bureau",
     "sourceTitle": "American Community Survey: Commuting",
     "sourceUrl": "https://www.census.gov/topics/employment/commuting.html",
-    "status": "unverified",
+    "status": "approved",
+    "approvedOn": "2026-10-23",
     "reviewReason": "APPROX: figure from general knowledge, not checked against the source page",
     "addedOn": "2026-10-22"
   },
@@ -571,7 +602,8 @@
     "source": "Office for National Statistics",
     "sourceTitle": "One in eight British households has no garden",
     "sourceUrl": "https://www.ons.gov.uk/",
-    "status": "unverified",
+    "status": "approved",
+    "approvedOn": "2026-10-23",
     "reviewReason": "APPROX: figure from general knowledge, not checked against the source page",
     "addedOn": "2026-10-22"
   },
@@ -589,7 +621,8 @@
     "source": "US Energy Information Administration",
     "sourceTitle": "Residential Energy Consumption Survey",
     "sourceUrl": "https://www.eia.gov/consumption/residential/",
-    "status": "unverified",
+    "status": "approved",
+    "approvedOn": "2026-10-23",
     "reviewReason": "APPROX: figure from general knowledge, not checked against the source page",
     "addedOn": "2026-10-22"
   },
@@ -607,7 +640,8 @@
     "source": "Office for National Statistics",
     "sourceTitle": "Census 2021: Housing",
     "sourceUrl": "https://www.ons.gov.uk/",
-    "status": "unverified",
+    "status": "approved",
+    "approvedOn": "2026-10-23",
     "reviewReason": "APPROX: figure from general knowledge, not checked against the source page",
     "addedOn": "2026-10-22"
   },
@@ -625,7 +659,8 @@
     "source": "US Energy Information Administration",
     "sourceTitle": "Residential Energy Consumption Survey",
     "sourceUrl": "https://www.eia.gov/consumption/residential/",
-    "status": "unverified",
+    "status": "approved",
+    "approvedOn": "2026-10-23",
     "reviewReason": "APPROX: figure from general knowledge, not checked against the source page",
     "addedOn": "2026-10-22"
   },
@@ -643,7 +678,8 @@
     "source": "Statistics Bureau of Japan",
     "sourceTitle": "Housing and Land Survey 2023",
     "sourceUrl": "https://www.stat.go.jp/english/data/jyutaku/index.html",
-    "status": "unverified",
+    "status": "approved",
+    "approvedOn": "2026-10-23",
     "reviewReason": "APPROX: figure from general knowledge, not checked against the source page",
     "addedOn": "2026-10-22"
   },
@@ -661,7 +697,8 @@
     "source": "GOV.UK (English Housing Survey)",
     "sourceTitle": "English Housing Survey headline report",
     "sourceUrl": "https://www.gov.uk/government/collections/english-housing-survey",
-    "status": "unverified",
+    "status": "approved",
+    "approvedOn": "2026-10-23",
     "reviewReason": "APPROX: figure from general knowledge, not checked against the source page",
     "addedOn": "2026-10-22"
   },
@@ -679,7 +716,8 @@
     "source": "Destatis",
     "sourceTitle": "Microcensus: housing",
     "sourceUrl": "https://www.destatis.de/",
-    "status": "unverified",
+    "status": "approved",
+    "approvedOn": "2026-10-23",
     "reviewReason": "APPROX: figure from general knowledge, not checked against the source page",
     "addedOn": "2026-10-22"
   },
@@ -697,7 +735,8 @@
     "source": "World Health Organization",
     "sourceTitle": "Household air pollution",
     "sourceUrl": "https://www.who.int/news-room/fact-sheets/detail/household-air-pollution-and-health",
-    "status": "unverified",
+    "status": "approved",
+    "approvedOn": "2026-10-23",
     "reviewReason": "APPROX: figure from general knowledge, not checked against the source page",
     "addedOn": "2026-10-22"
   },
@@ -715,7 +754,8 @@
     "source": "GOV.UK (English Housing Survey)",
     "sourceTitle": "English Housing Survey headline report",
     "sourceUrl": "https://www.gov.uk/government/collections/english-housing-survey",
-    "status": "unverified",
+    "status": "approved",
+    "approvedOn": "2026-10-23",
     "reviewReason": "APPROX: figure from general knowledge, not checked against the source page",
     "addedOn": "2026-10-22"
   },
@@ -733,7 +773,8 @@
     "source": "IBGE",
     "sourceTitle": "PNAD Contínua: household characteristics",
     "sourceUrl": "https://www.ibge.gov.br/",
-    "status": "unverified",
+    "status": "approved",
+    "approvedOn": "2026-10-23",
     "reviewReason": "APPROX: figure from general knowledge, not checked against the source page",
     "addedOn": "2026-10-22"
   },
@@ -751,7 +792,8 @@
     "source": "Eurostat",
     "sourceTitle": "Housing in Europe",
     "sourceUrl": "https://ec.europa.eu/eurostat/web/interactive-publications/housing-2023",
-    "status": "unverified",
+    "status": "approved",
+    "approvedOn": "2026-10-23",
     "reviewReason": "APPROX: figure from general knowledge, not checked against the source page",
     "addedOn": "2026-10-22"
   },
@@ -769,7 +811,8 @@
     "source": "UN DESA Population Division",
     "sourceTitle": "World Population Prospects",
     "sourceUrl": "https://population.un.org/wpp/",
-    "status": "unverified",
+    "status": "approved",
+    "approvedOn": "2026-10-23",
     "reviewReason": "APPROX: figure from general knowledge, not checked against the source page",
     "addedOn": "2026-10-22"
   },
@@ -787,7 +830,8 @@
     "source": "UN DESA Population Division",
     "sourceTitle": "World Population Prospects",
     "sourceUrl": "https://population.un.org/wpp/",
-    "status": "unverified",
+    "status": "approved",
+    "approvedOn": "2026-10-23",
     "reviewReason": "APPROX: figure from general knowledge, not checked against the source page",
     "addedOn": "2026-10-22"
   },
@@ -805,7 +849,8 @@
     "source": "UN DESA Population Division",
     "sourceTitle": "World Population Prospects",
     "sourceUrl": "https://population.un.org/wpp/",
-    "status": "unverified",
+    "status": "approved",
+    "approvedOn": "2026-10-23",
     "reviewReason": "APPROX: figure from general knowledge, not checked against the source page",
     "addedOn": "2026-10-22"
   },
@@ -823,7 +868,8 @@
     "source": "UN DESA Population Division",
     "sourceTitle": "World Population Prospects",
     "sourceUrl": "https://population.un.org/wpp/",
-    "status": "unverified",
+    "status": "approved",
+    "approvedOn": "2026-10-23",
     "reviewReason": "APPROX: figure from general knowledge, not checked against the source page",
     "addedOn": "2026-10-22"
   },
@@ -841,7 +887,8 @@
     "source": "World Bank",
     "sourceTitle": "Land area (sq. km)",
     "sourceUrl": "https://data.worldbank.org/indicator/AG.LND.TOTL.K2",
-    "status": "unverified",
+    "status": "approved",
+    "approvedOn": "2026-10-23",
     "reviewReason": "APPROX: figure from general knowledge, not checked against the source page",
     "addedOn": "2026-10-22"
   },
@@ -859,7 +906,8 @@
     "source": "World Bank",
     "sourceTitle": "Land area (sq. km)",
     "sourceUrl": "https://data.worldbank.org/indicator/AG.LND.TOTL.K2",
-    "status": "unverified",
+    "status": "approved",
+    "approvedOn": "2026-10-23",
     "reviewReason": "APPROX: figure from general knowledge, not checked against the source page",
     "addedOn": "2026-10-22"
   },
@@ -877,7 +925,8 @@
     "source": "NOAA",
     "sourceTitle": "Ocean and land facts",
     "sourceUrl": "https://oceanservice.noaa.gov/",
-    "status": "unverified",
+    "status": "approved",
+    "approvedOn": "2026-10-23",
     "reviewReason": "APPROX: figure from general knowledge, not checked against the source page",
     "addedOn": "2026-10-22"
   },
@@ -895,7 +944,8 @@
     "source": "NASA",
     "sourceTitle": "Greenland Ice Sheet",
     "sourceUrl": "https://climate.nasa.gov/",
-    "status": "unverified",
+    "status": "approved",
+    "approvedOn": "2026-10-23",
     "reviewReason": "APPROX: figure from general knowledge, not checked against the source page",
     "addedOn": "2026-10-22"
   },
@@ -913,7 +963,8 @@
     "source": "IBGE",
     "sourceTitle": "Brazil territorial area",
     "sourceUrl": "https://www.ibge.gov.br/",
-    "status": "unverified",
+    "status": "approved",
+    "approvedOn": "2026-10-23",
     "reviewReason": "APPROX: figure from general knowledge, not checked against the source page",
     "addedOn": "2026-10-22"
   },
@@ -931,7 +982,8 @@
     "source": "Office for National Statistics",
     "sourceTitle": "Population estimates for the UK",
     "sourceUrl": "https://www.ons.gov.uk/peoplepopulationandcommunity/populationandmigration/populationestimates",
-    "status": "unverified",
+    "status": "approved",
+    "approvedOn": "2026-10-23",
     "reviewReason": "APPROX: figure from general knowledge, not checked against the source page",
     "addedOn": "2026-10-22"
   },
@@ -949,7 +1001,8 @@
     "source": "US Census Bureau",
     "sourceTitle": "State Area Measurements",
     "sourceUrl": "https://www.census.gov/geographies/reference-files/2010/geo/state-area.html",
-    "status": "unverified",
+    "status": "approved",
+    "approvedOn": "2026-10-23",
     "reviewReason": "APPROX: figure from general knowledge, not checked against the source page",
     "addedOn": "2026-10-22"
   },
@@ -967,7 +1020,8 @@
     "source": "Gallup",
     "sourceTitle": "Three in Four Americans Believe in Paranormal",
     "sourceUrl": "https://news.gallup.com/poll/16915/three-four-americans-believe-paranormal.aspx",
-    "status": "unverified",
+    "status": "approved",
+    "approvedOn": "2026-10-23",
     "reviewReason": "APPROX: figure from general knowledge, not checked against the source page",
     "addedOn": "2026-10-22"
   },
@@ -985,7 +1039,8 @@
     "source": "Pew Research Center",
     "sourceTitle": "About three-in-ten U.S. adults say they are 'almost constantly' online",
     "sourceUrl": "https://www.pewresearch.org/",
-    "status": "unverified",
+    "status": "approved",
+    "approvedOn": "2026-10-23",
     "reviewReason": "APPROX: figure from general knowledge, not checked against the source page",
     "addedOn": "2026-10-22"
   },
@@ -1003,7 +1058,8 @@
     "source": "European Commission (Eurobarometer)",
     "sourceTitle": "Special Eurobarometer: Blood and cell donation",
     "sourceUrl": "https://europa.eu/eurobarometer/",
-    "status": "unverified",
+    "status": "approved",
+    "approvedOn": "2026-10-23",
     "reviewReason": "APPROX: figure from general knowledge, not checked against the source page",
     "addedOn": "2026-10-22"
   },
@@ -1021,7 +1077,8 @@
     "source": "ISTAT",
     "sourceTitle": "L'uso della lingua italiana, dei dialetti e di altre lingue",
     "sourceUrl": "https://www.istat.it/",
-    "status": "unverified",
+    "status": "approved",
+    "approvedOn": "2026-10-23",
     "reviewReason": "APPROX: figure from general knowledge, not checked against the source page",
     "addedOn": "2026-10-22"
   }

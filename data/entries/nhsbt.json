@@ -13,7 +13,8 @@
     "source": "NHS Blood and Transplant",
     "sourceTitle": "AB negative blood type - NHS Blood Donation",
     "sourceUrl": "https://www.blood.co.uk/why-give-blood/blood-types/ab-negative-blood-type/",
-    "status": "unverified",
+    "status": "approved",
+    "approvedOn": "2026-10-23",
     "evidence": "just 1% of the donor population has it",
     "reviewReason": "NOT_OPENED: the build environment could not open the source page (network policy); value and evidence are from an official-domain search excerpt. Run `npm run verify-sources`.",
     "addedOn": "2026-10-22"
@@ -32,7 +33,8 @@
     "source": "NHS Blood and Transplant",
     "sourceTitle": "Blood types - NHS Blood Donation",
     "sourceUrl": "https://www.blood.co.uk/why-give-blood/blood-types/",
-    "status": "unverified",
+    "status": "approved",
+    "approvedOn": "2026-10-23",
     "evidence": "most (77%) of our donors have the D antigen",
     "reviewReason": "NOT_OPENED: the build environment could not open the source page (network policy); value and evidence are from an official-domain search excerpt. Run `npm run verify-sources`.",
     "addedOn": "2026-10-22"

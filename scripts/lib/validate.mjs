@@ -1,8 +1,8 @@
 // Dataset validation. Returns { errors, warnings, stats } for a set of entries.
-// mode "production": only verified entries form the pool and every target
+// mode "production": only verified and approved entries form the pool and every target
 // (size, category spread, tone share) is enforced. mode "dev": the pool is
 // every entry; schema and caps are still enforced, targets become warnings.
-import { CATEGORY_IDS, RULES, STATUSES, TONES } from '../../src/config.js';
+import { CATEGORY_IDS, RULES, STATUSES, TONES, isPlayable } from '../../src/config.js';
 import { isLegalPair } from '../../src/pairs.js';
 import { isAuthoritativeUrl } from './sources.mjs';
 import { valueMatchesEvidence } from '../verify-sources.mjs';
@@ -14,7 +14,7 @@ const ISO_DATE = /^\d{4}-\d{2}-\d{2}$/;
 const ID = /^[a-z0-9]+(-[a-z0-9]+)*$/;
 const REQUIRED = ['id', 'text', 'detail', 'emoji', 'value', 'source', 'sourceUrl', 'year', 'category', 'tone',
   'status', 'addedOn', 'country', 'indicator'];
-const KNOWN = new Set([...REQUIRED, 'evidence', 'verifiedOn', 'verifiedUrl', 'reviewReason',
+const KNOWN = new Set([...REQUIRED, 'evidence', 'verifiedOn', 'verifiedUrl', 'approvedOn', 'reviewReason',
   'sourceTitle', 'unit', 'notes', 'pdf']);
 
 const isValidDate = (s) => typeof s === 'string' && ISO_DATE.test(s) && !Number.isNaN(Date.parse(s))
@@ -85,6 +85,10 @@ export function validateEntry(e, today) {
   if (e.evidence && typeof e.value === 'number' && !valueMatchesEvidence(e.value, e.evidence)) {
     errs.push(`${where} value ${e.value} does not match any number in its evidence`);
   }
+  if (e.status === 'approved') {
+    if (!isValidDate(e.approvedOn)) errs.push(`${where} approved entry needs a valid "approvedOn"`);
+    else if (e.approvedOn > today) errs.push(`${where} approvedOn is in the future`);
+  }
   if (e.status === 'unverified' && !e.reviewReason) errs.push(`${where} unverified entry needs "reviewReason"`);
   return errs;
 }
@@ -101,7 +105,7 @@ export function validateDataset(entries, { mode = 'production', today = new Date
     ids.add(e.id);
   }
 
-  const pool = mode === 'production' ? entries.filter((e) => e.status === 'verified') : entries;
+  const pool = mode === 'production' ? entries.filter(isPlayable) : entries;
   const total = pool.length;
   // Targets are hard errors in production and reminders in dev.
   const target = (msg) => (mode === 'production' ? errors : warnings).push(msg);
@@ -151,6 +155,7 @@ export function validateDataset(entries, { mode = 'production', today = new Date
     total: entries.length,
     pool: total,
     verified: entries.filter((e) => e.status === 'verified').length,
+    approved: entries.filter((e) => e.status === 'approved').length,
     unverified: entries.filter((e) => e.status === 'unverified').length,
     byCategory: Object.fromEntries([...byCategory].sort()),
     byTone: Object.fromEntries([...countBy(pool, (e) => e.tone)].sort()),

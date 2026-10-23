@@ -119,6 +119,14 @@ test('production pool ignores unverified entries', () => {
   assert.match(validateDataset(p, { today: TODAY }).errors.join('\n'), /pool has 0 entries/);
 });
 
+test('founder-approved entries play in production and need an approval date', () => {
+  const approved = (over) => base({ status: 'approved', approvedOn: '2026-10-03', verifiedOn: undefined, reviewReason: 'APPROX: from memory', ...over });
+  assert.deepEqual(validateEntry(approved(), TODAY), []);
+  assert.match(validateEntry(approved({ approvedOn: undefined }), TODAY).join('\n'), /approvedOn/);
+  const p = goodPool().map((e) => ({ ...e, status: 'approved', approvedOn: '2026-10-03', verifiedOn: undefined }));
+  assert.equal(validateDataset(p, { today: TODAY }).errors.length, 0);
+});
+
 test('verified entries with no legal partner fail', () => {
   const lonely = [
     base({ id: 'a', category: 'food', value: 10 }),

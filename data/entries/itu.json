@@ -13,7 +13,8 @@
     "source": "International Telecommunication Union",
     "sourceTitle": "Facts and Figures 2025 press release",
     "sourceUrl": "https://www.itu.int/en/mediacentre/Pages/PR-2025-11-17-Facts-and-Figures.aspx",
-    "status": "unverified",
+    "status": "approved",
+    "approvedOn": "2026-10-23",
     "evidence": "74 per cent",
     "reviewReason": "NOT_OPENED: the build environment could not open the source page (network policy); value and evidence are from an official-domain search excerpt. Run `npm run verify-sources`.",
     "addedOn": "2026-10-22"
@@ -32,7 +33,8 @@
     "source": "International Telecommunication Union",
     "sourceTitle": "Facts and Figures 2025 press release",
     "sourceUrl": "https://www.itu.int/en/mediacentre/Pages/PR-2025-11-17-Facts-and-Figures.aspx",
-    "status": "unverified",
+    "status": "approved",
+    "approvedOn": "2026-10-23",
     "evidence": "55 per cent",
     "reviewReason": "NOT_OPENED: the build environment could not open the source page (network policy); value and evidence are from an official-domain search excerpt. Run `npm run verify-sources`.",
     "addedOn": "2026-10-22"

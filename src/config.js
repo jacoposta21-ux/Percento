@@ -19,7 +19,10 @@ export const CATEGORIES = {
 
 export const CATEGORY_IDS = Object.keys(CATEGORIES);
 export const TONES = ['serious', 'curious', 'silly'];
-export const STATUSES = ['verified', 'unverified'];
+export const STATUSES = ['verified', 'approved', 'unverified'];
+// Playable in production: checked against the source page (verified) or
+// read and accepted by the founder in a review (approved).
+export const isPlayable = (e) => e.status === 'verified' || e.status === 'approved';
 
 export const RULES = {
   minGap: 3, // never pair values less than this many points apart

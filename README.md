@@ -64,7 +64,7 @@ npm ci && npm run build   # fails unless the production pool meets every target
 # upload dist/
 ```
 
-`npm run build` deliberately fails while fewer than 300 entries are verified (see below).
+`npm run build` fails while fewer than 300 entries are playable (verified or approved; see below).
 
 ## Data
 
@@ -76,7 +76,7 @@ Each data file in `data/entries/*.json` is an array of entries:
 | `source`, `sourceTitle`, `sourceUrl`, `verifiedUrl?`, `pdf?` | where it comes from (authoritative domains only, see `scripts/lib/sources.mjs`) |
 | `year` | data reference year if stated, else publication year |
 | `category`, `tone` (`serious`/`curious`/`silly`), `country` (ISO3, `WORLD`, `EU`, `OECD`), `indicator` | balancing |
-| `status` (`verified`/`unverified`), `addedOn`, `evidence`, `verifiedOn`, `reviewReason` | provenance |
+| `status` (`verified`/`approved`/`unverified`), `addedOn`, `evidence`, `verifiedOn`, `approvedOn`, `reviewReason` | provenance |
 
 The validator (`scripts/validate.mjs`) fails the build on: missing or unknown fields, invalid values, values that are not a number in their `evidence`, non-authoritative URLs, more than 3 entries per indicator, more than 15% of the pool from one source, more than 20% from one country, less than 40% curious/silly, near-duplicate texts, entries with no legal partner, and (production only) fewer than 300 entries / 13 categories / 20 per category.
 
@@ -86,11 +86,13 @@ The validator (`scripts/validate.mjs`) fails the build on: missing or unknown fi
 
 `data/entries/approx-*.json` (about 200 cards) were added for category play from well-established general knowledge, at the founder's request, without opening the source page. They carry `reviewReason: "APPROX: …"`, are listed in DATA_REVIEW.md, and like every unverified entry are served only by the dev build.
 
-## Current status: data is not yet verified
+## Current status: founder-approved data
 
-The game, tooling and tests are complete, but **production currently serves 0 statistics**. The research environment could not open any statistics website: its network policy allowed only package registries, and the page fetcher could not resolve any host. All 328 candidates were collected from search excerpts restricted to the official source domain, with the exact wording quoted in `evidence`. The data rules require the source page itself to be opened, so every entry is `unverified` and listed in [DATA_REVIEW.md](DATA_REVIEW.md).
+All 497 cards are `approved`: on 2026-10-23 the founder read them in a review page and accepted them all, so production serves them. None is `verified` yet, because no source page could be opened from the research environment (its network policy allowed only package registries). About 200 cards (`approx-*.json`) are figures from general knowledge rather than from a search excerpt of the source.
 
-To publish, on a machine with internet access:
+Statuses: `verified` (the quoted evidence and the number were found on the source page; `verifiedOn`), `approved` (accepted by the founder without opening the source; `approvedOn`, keeps its `reviewReason`), `unverified` (dev build only). Production plays `verified` and `approved`.
+
+To check the sources properly, on a machine with internet access:
 
 ```bash
 sudo apt-get install poppler-utils   # pdftotext, for PDF sources
@@ -98,7 +100,7 @@ npm run verify-sources               # promotes entries whose quoted evidence an
 npm run review && npm run validate && npm run build
 ```
 
-Entries that fail (hedged wording, different number, page moved) stay unverified, with the reason written into the entry and DATA_REVIEW.md. Then a human checks the 10% spot-check sample in DATA_REVIEW.md.
+Entries that fail (hedged wording, different number, page moved) keep their status, with the reason written into the entry and DATA_REVIEW.md.
 
 ## Layout
 

@@ -13,7 +13,8 @@
     "source": "Statistics Finland",
     "sourceTitle": "Dwellings and housing conditions 2018, table 5",
     "sourceUrl": "https://stat.fi/til/asas/2018/01/asas_2018_01_2019-10-10_tau_005_en.html",
-    "status": "unverified",
+    "status": "approved",
+    "approvedOn": "2026-10-23",
     "evidence": "54.9",
     "reviewReason": "NOT_OPENED: the build environment could not open the source page (network policy); value and evidence are from an official-domain search excerpt. Run `npm run verify-sources`.",
     "addedOn": "2026-10-22"

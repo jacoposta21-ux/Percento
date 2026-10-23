@@ -13,7 +13,8 @@
     "source": "World Bank",
     "sourceTitle": "Tracking SDG7 2024 press release",
     "sourceUrl": "https://www.worldbank.org/en/news/press-release/2024/06/11/progress-on-basic-energy-access-reverses-for-first-time-in-a-decade",
-    "status": "unverified",
+    "status": "approved",
+    "approvedOn": "2026-10-23",
     "evidence": "from 78% to 91%",
     "reviewReason": "NOT_OPENED: the build environment could not open the source page (network policy); value and evidence are from an official-domain search excerpt. Run `npm run verify-sources`.",
     "addedOn": "2026-10-22"
@@ -32,7 +33,8 @@
     "source": "World Bank",
     "sourceTitle": "The Global Findex Database 2025",
     "sourceUrl": "https://www.worldbank.org/en/publication/globalfindex",
-    "status": "unverified",
+    "status": "approved",
+    "approvedOn": "2026-10-23",
     "evidence": "79 percent of adults have an account",
     "reviewReason": "NOT_OPENED: the build environment could not open the source page (network policy); value and evidence are from an official-domain search excerpt. Run `npm run verify-sources`.",
     "addedOn": "2026-10-22"
@@ -51,7 +53,8 @@
     "source": "World Bank",
     "sourceTitle": "FINDEX: Financial Inclusion in Sub-Saharan Africa",
     "sourceUrl": "https://www.worldbank.org/en/publication/globalfindex/brief/financial-inclusion-in-sub-saharan-Africa-data-from-the-global-findex",
-    "status": "unverified",
+    "status": "approved",
+    "approvedOn": "2026-10-23",
     "evidence": "40 percent of adults having a mobile money account in 2024",
     "reviewReason": "NOT_OPENED: the build environment could not open the source page (network policy); value and evidence are from an official-domain search excerpt. Run `npm run verify-sources`.",
     "addedOn": "2026-10-22"

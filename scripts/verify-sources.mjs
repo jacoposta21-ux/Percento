@@ -124,7 +124,7 @@ async function main() {
     const entries = JSON.parse(readFileSync(path, 'utf8'));
     let changed = false;
     for (const e of entries) {
-      if (e.status !== 'unverified') continue;
+      if (e.status === 'verified') continue;
       if (ONLY && !ONLY.has(e.id)) continue;
       if (!ONLY && !ALL && !e.reviewReason.startsWith('NOT_OPENED')) continue;
       checked++;
@@ -148,6 +148,7 @@ async function main() {
         e.status = 'verified';
         e.verifiedOn = today;
         delete e.reviewReason;
+        delete e.approvedOn;
         promoted++;
       } else {
         e.reviewReason = `${outcome.result}: ${outcome.detail} (checked ${today}; ${url}).`;

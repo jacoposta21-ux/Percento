@@ -1,9 +1,10 @@
 // Builds dist/: copies the static app and writes dist/src/data.js.
-// --mode=production serves verified entries only; --mode=dev serves all
+// --mode=production serves verified and approved entries only; --mode=dev serves all
 // entries (with review mode and a banner).
 import { cpSync, existsSync, mkdirSync, readdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { loadEntries, ROOT, argValue } from './lib/data.mjs';
+import { isPlayable } from '../src/config.js';
 
 const mode = argValue('mode', 'production');
 const out = join(ROOT, argValue('out', 'dist'));
@@ -11,7 +12,7 @@ const KEEP = ['id', 'text', 'detail', 'emoji', 'value', 'source', 'sourceUrl', '
   'addedOn', 'verifiedOn', 'country', 'reviewReason'];
 
 const all = loadEntries();
-const entries = (mode === 'production' ? all.filter((e) => e.status === 'verified') : all)
+const entries = (mode === 'production' ? all.filter(isPlayable) : all)
   .map((e) => Object.fromEntries(KEEP.filter((k) => e[k] !== undefined && (mode === 'dev' || k !== 'reviewReason')).map((k) => [k, e[k]])))
   .sort((a, b) => (a.id < b.id ? -1 : 1));
 

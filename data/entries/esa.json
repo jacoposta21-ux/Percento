@@ -13,7 +13,8 @@
     "source": "European Space Agency",
     "sourceTitle": "Planck reveals an almost perfect Universe",
     "sourceUrl": "https://www.esa.int/Science_Exploration/Space_Science/Planck/Planck_reveals_an_almost_perfect_Universe",
-    "status": "unverified",
+    "status": "approved",
+    "approvedOn": "2026-10-23",
     "evidence": "accounts for 68.3%",
     "reviewReason": "NOT_OPENED: the build environment could not open the source page (network policy); value and evidence are from an official-domain search excerpt. Run `npm run verify-sources`.",
     "addedOn": "2026-10-22"
@@ -32,7 +33,8 @@
     "source": "European Space Agency",
     "sourceTitle": "Planck reveals an almost perfect Universe",
     "sourceUrl": "https://www.esa.int/Science_Exploration/Space_Science/Planck/Planck_reveals_an_almost_perfect_Universe",
-    "status": "unverified",
+    "status": "approved",
+    "approvedOn": "2026-10-23",
     "evidence": "Dark matter was found to make up 26.8%",
     "reviewReason": "NOT_OPENED: the build environment could not open the source page (network policy); value and evidence are from an official-domain search excerpt. Run `npm run verify-sources`.",
     "addedOn": "2026-10-22"
@@ -51,7 +53,8 @@
     "source": "European Space Agency",
     "sourceTitle": "Planck reveals an almost perfect Universe",
     "sourceUrl": "https://www.esa.int/Science_Exploration/Space_Science/Planck/Planck_reveals_an_almost_perfect_Universe",
-    "status": "unverified",
+    "status": "approved",
+    "approvedOn": "2026-10-23",
     "evidence": "contributes just 4.9% of the mass/energy density of the Universe",
     "reviewReason": "NOT_OPENED: the build environment could not open the source page (network policy); value and evidence are from an official-domain search excerpt. Run `npm run verify-sources`.",
     "addedOn": "2026-10-22"

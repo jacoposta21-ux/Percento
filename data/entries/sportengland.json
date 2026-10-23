@@ -13,7 +13,8 @@
     "source": "Sport England",
     "sourceTitle": "Active Lives Survey 2023-24 Year 7",
     "sourceUrl": "https://www.sportengland.org/research-and-data/data/active-lives/active-lives-data-tables/active-lives-survey-2023-24-year-7",
-    "status": "unverified",
+    "status": "approved",
+    "approvedOn": "2026-10-23",
     "evidence": "70%",
     "reviewReason": "NOT_OPENED: the build environment could not open the source page (network policy); value and evidence are from an official-domain search excerpt. Run `npm run verify-sources`.",
     "addedOn": "2026-10-22"
@@ -32,7 +33,8 @@
     "source": "Sport England",
     "sourceTitle": "Active Lives Adult Survey, November 2023-24 report",
     "sourceUrl": "https://www.sportengland.org/research-and-data/data/active-lives",
-    "status": "unverified",
+    "status": "approved",
+    "approvedOn": "2026-10-23",
     "evidence": "11.8 million people (25.1%) classed as less active",
     "reviewReason": "NOT_OPENED: the build environment could not open the source page (network policy); value and evidence are from an official-domain search excerpt. Run `npm run verify-sources`.",
     "addedOn": "2026-10-22"
@@ -51,7 +53,8 @@
     "source": "Sport England",
     "sourceTitle": "Children's activity levels remain stable but significant and sustained action required",
     "sourceUrl": "https://www.sportengland.org/news-and-inspiration/childrens-activity-levels-remain-stable-significant-and-sustained-action",
-    "status": "unverified",
+    "status": "approved",
+    "approvedOn": "2026-10-23",
     "evidence": "47.8% (3.3m) are active",
     "reviewReason": "NOT_OPENED: the build environment could not open the source page (network policy); value and evidence are from an official-domain search excerpt. Run `npm run verify-sources`.",
     "addedOn": "2026-10-22"

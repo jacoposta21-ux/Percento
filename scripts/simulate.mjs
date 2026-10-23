@@ -1,7 +1,7 @@
 // Simulates endless play and checks every pairing rule.
 //   node scripts/simulate.mjs [--mode=production|dev] [--pairs=1000] [--seed=42]
 import { createPairGenerator, isCrossFamily, mulberry32, pairKey } from '../src/pairs.js';
-import { RULES } from '../src/config.js';
+import { RULES, isPlayable } from '../src/config.js';
 import { loadEntries, argValue } from './lib/data.mjs';
 
 /** Draws `pairs` rounds from one session; returns rule stats. */
@@ -32,7 +32,7 @@ export function simulate(pool, { pairs = 1000, seed = 42 } = {}) {
 if (import.meta.url === `file://${process.argv[1]}`) {
   const mode = argValue('mode', 'production');
   const all = loadEntries();
-  const pool = mode === 'production' ? all.filter((e) => e.status === 'verified') : all;
+  const pool = mode === 'production' ? all.filter(isPlayable) : all;
   const report = simulate(pool, { pairs: Number(argValue('pairs', 1000)), seed: Number(argValue('seed', 42)) });
   console.log(JSON.stringify({ mode, poolSize: pool.length, ...report, violations: report.violations.slice(0, 20) }, null, 2));
   process.exit(report.violations.length || report.pairs < Number(argValue('pairs', 1000)) || report.crossFamilyShare < 0.8 ? 1 : 0);

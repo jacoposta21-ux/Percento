@@ -13,7 +13,8 @@
     "source": "UN Environment Programme",
     "sourceTitle": "World squanders over 1 billion meals a day - UN report (Food Waste Index Report 2024)",
     "sourceUrl": "https://www.unep.org/en/news-and-stories/press-release/world-squanders-over-1-billion-meals-day-un-report",
-    "status": "unverified",
+    "status": "approved",
+    "approvedOn": "2026-10-23",
     "evidence": "one fifth (19 per cent) of food available to consumers being wasted",
     "reviewReason": "NOT_OPENED: the build environment could not open the source page (network policy); value and evidence are from an official-domain search excerpt. Run `npm run verify-sources`.",
     "addedOn": "2026-10-22"
@@ -32,7 +33,8 @@
     "source": "UN Environment Programme",
     "sourceTitle": "World squanders over 1 billion meals a day - UN report (Food Waste Index Report 2024)",
     "sourceUrl": "https://www.unep.org/en/news-and-stories/press-release/world-squanders-over-1-billion-meals-day-un-report",
-    "status": "unverified",
+    "status": "approved",
+    "approvedOn": "2026-10-23",
     "evidence": "60 per cent happened at the household level",
     "reviewReason": "NOT_OPENED: the build environment could not open the source page (network policy); value and evidence are from an official-domain search excerpt. Run `npm run verify-sources`.",
     "addedOn": "2026-10-22"

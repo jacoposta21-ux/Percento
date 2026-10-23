@@ -13,7 +13,8 @@
     "source": "NHS England (Health Survey for England)",
     "sourceTitle": "Health Survey for England, 2022 Part 1: Adult drinking",
     "sourceUrl": "https://digital.nhs.uk/data-and-information/publications/statistical/health-survey-for-england/2022-part-1/adult-drinking",
-    "status": "unverified",
+    "status": "approved",
+    "approvedOn": "2026-10-23",
     "evidence": "81% of adults reported that they had drunk alcohol in the last 12 months",
     "reviewReason": "NOT_OPENED: the build environment could not open the source page (network policy); value and evidence are from an official-domain search excerpt. Run `npm run verify-sources`.",
     "addedOn": "2026-10-22"

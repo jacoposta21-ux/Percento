@@ -13,7 +13,8 @@
     "source": "US Census Bureau",
     "sourceTitle": "Increasing Urbanization (data visualization)",
     "sourceUrl": "https://www.census.gov/dataviz/visualizations/005/",
-    "status": "unverified",
+    "status": "approved",
+    "approvedOn": "2026-10-23",
     "evidence": "5.1",
     "reviewReason": "NOT_OPENED: the build environment could not open the source page (network policy); value and evidence are from an official-domain search excerpt. Run `npm run verify-sources`.",
     "addedOn": "2026-10-22"
@@ -32,7 +33,8 @@
     "source": "US Census Bureau",
     "sourceTitle": "Radio in the 1930s",
     "sourceUrl": "https://www.census.gov/library/photos/radio-in-the-1930s.html",
-    "status": "unverified",
+    "status": "approved",
+    "approvedOn": "2026-10-23",
     "evidence": "12,048,762 households (40.3 percent) owned a radio",
     "reviewReason": "NOT_OPENED: the build environment could not open the source page (network policy); value and evidence are from an official-domain search excerpt. Run `npm run verify-sources`.",
     "addedOn": "2026-10-22"
@@ -51,7 +53,8 @@
     "source": "US Census Bureau",
     "sourceTitle": "Commuting (Journey to Work): ACS 1-year estimates",
     "sourceUrl": "https://www.census.gov/topics/employment/commuting/guidance/acs-1yr.html",
-    "status": "unverified",
+    "status": "approved",
+    "approvedOn": "2026-10-23",
     "evidence": "13.8%",
     "reviewReason": "NOT_OPENED: the build environment could not open the source page (network policy); value and evidence are from an official-domain search excerpt. Run `npm run verify-sources`.",
     "addedOn": "2026-10-22"
@@ -70,7 +73,8 @@
     "source": "US Census Bureau",
     "sourceTitle": "United States Commuting At A Glance: ACS 1-Year Estimates",
     "sourceUrl": "https://www.census.gov/topics/employment/commuting/guidance/acs-1yr.html",
-    "status": "unverified",
+    "status": "approved",
+    "approvedOn": "2026-10-23",
     "evidence": "8.9 percent",
     "reviewReason": "NOT_OPENED: the build environment could not open the source page (network policy); value and evidence are from an official-domain search excerpt. Run `npm run verify-sources`.",
     "addedOn": "2026-10-22"
@@ -90,7 +94,8 @@
     "sourceTitle": "1910 Census bulletin: Population of cities",
     "sourceUrl": "https://www2.census.gov/library/publications/decennial/1910/bulletins/demographics/362-population-us-cities.pdf",
     "pdf": true,
-    "status": "unverified",
+    "status": "approved",
+    "approvedOn": "2026-10-23",
     "evidence": "46.3 per cent",
     "reviewReason": "NOT_OPENED: the build environment could not open the source page (network policy); value and evidence are from an official-domain search excerpt. Run `npm run verify-sources`.",
     "addedOn": "2026-10-22"

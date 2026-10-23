@@ -14,7 +14,8 @@
     "sourceTitle": "World Urbanization Prospects: The 2018 Revision (Report)",
     "sourceUrl": "https://population.un.org/wup/assets/WUP2018-Report.pdf",
     "pdf": true,
-    "status": "unverified",
+    "status": "approved",
+    "approvedOn": "2026-10-23",
     "evidence": "30 per cent of the world's population",
     "reviewReason": "NOT_OPENED: the build environment could not open the source page (network policy); value and evidence are from an official-domain search excerpt. Run `npm run verify-sources`.",
     "addedOn": "2026-10-22"
@@ -34,7 +35,8 @@
     "sourceTitle": "World Urbanization Prospects: The 2018 Revision (Highlights)",
     "sourceUrl": "https://population.un.org/wup/assets/WUP2018-Highlights.pdf",
     "pdf": true,
-    "status": "unverified",
+    "status": "approved",
+    "approvedOn": "2026-10-23",
     "evidence": "55 per cent of the world's population lived in urban areas in 2018",
     "reviewReason": "NOT_OPENED: the build environment could not open the source page (network policy); value and evidence are from an official-domain search excerpt. Run `npm run verify-sources`.",
     "addedOn": "2026-10-22"

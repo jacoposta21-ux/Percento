@@ -13,7 +13,8 @@
     "source": "Australian Bureau of Statistics",
     "sourceTitle": "Cultural diversity of Australia",
     "sourceUrl": "https://www.abs.gov.au/articles/cultural-diversity-australia",
-    "status": "unverified",
+    "status": "approved",
+    "approvedOn": "2026-10-23",
     "evidence": "27.6% of the population",
     "reviewReason": "NOT_OPENED: the build environment could not open the source page (network policy); value and evidence are from an official-domain search excerpt. Run `npm run verify-sources`.",
     "addedOn": "2026-10-22"

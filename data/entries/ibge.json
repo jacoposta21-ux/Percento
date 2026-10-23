@@ -13,7 +13,8 @@
     "source": "IBGE",
     "sourceTitle": "Internet was accessed in 72.5 million Brazilian households in 2023",
     "sourceUrl": "https://agenciadenoticias.ibge.gov.br/en/agencia-news/2184-news-agency/news/41029-internet-was-accessed-in-72-5-million-brazilian-households-in-2023",
-    "status": "unverified",
+    "status": "approved",
+    "approvedOn": "2026-10-23",
     "evidence": "16.0%",
     "reviewReason": "NOT_OPENED: the build environment could not open the source page (network policy); value and evidence are from an official-domain search excerpt. Run `npm run verify-sources`.",
     "addedOn": "2026-10-22"

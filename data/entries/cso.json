@@ -14,7 +14,8 @@
     "sourceTitle": "That was then, This is now: Change in Ireland, 1949-1999",
     "sourceUrl": "https://www.cso.ie/en/media/csoie/releasespublications/documents/otherreleases/thatwasthenthisisnow.pdf",
     "pdf": true,
-    "status": "unverified",
+    "status": "approved",
+    "approvedOn": "2026-10-23",
     "evidence": "61.3%",
     "reviewReason": "NOT_OPENED: the build environment could not open the source page (network policy); value and evidence are from an official-domain search excerpt. Run `npm run verify-sources`.",
     "addedOn": "2026-10-22"
@@ -33,7 +34,8 @@
     "source": "Central Statistics Office Ireland",
     "sourceTitle": "Key Findings - Then and Now: Life in Ireland in 1926 and 2022",
     "sourceUrl": "https://www.cso.ie/en/releasesandpublications/ep/p-tnli/thenandnowlifeinirelandin1926and2022/keyfindings/",
-    "status": "unverified",
+    "status": "approved",
+    "approvedOn": "2026-10-23",
     "evidence": "97%",
     "reviewReason": "NOT_OPENED: the build environment could not open the source page (network policy); value and evidence are from an official-domain search excerpt. Run `npm run verify-sources`.",
     "addedOn": "2026-10-22"
