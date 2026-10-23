@@ -3,7 +3,7 @@
 export function shareText({ date, answers, url }) {
   const score = answers.filter(Boolean).length;
   const grid = answers.map((ok) => (ok ? '🟩' : '🟥')).join('');
-  return `PERCENTO Daily ${date}: ${score}/${answers.length}\n${grid}\n${url}`;
+  return `Eyeball Daily ${date}: ${score}/${answers.length}\n${grid}\n${url}`;
 }
 
 const isTouchDevice = () =>

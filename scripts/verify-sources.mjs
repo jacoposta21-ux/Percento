@@ -95,7 +95,7 @@ export function valueOffset(span, value) {
 }
 
 async function fetchText(url) {
-  const res = await fetch(url, { redirect: 'follow', headers: { 'user-agent': 'Mozilla/5.0 (PERCENTO source verifier)' } });
+  const res = await fetch(url, { redirect: 'follow', headers: { 'user-agent': 'Mozilla/5.0 (Eyeball source verifier)' } });
   if (!res.ok) throw new Error(`HTTP ${res.status}`);
   const type = res.headers.get('content-type') || '';
   const buf = Buffer.from(await res.arrayBuffer());

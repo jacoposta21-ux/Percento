@@ -1,4 +1,4 @@
-// PERCENTO app: routing, screens, side panel and the round engine shared by both modes.
+// Eyeball app: routing, screens, side panel and the round engine shared by both modes.
 import { ENTRIES, BUILD } from './data.js';
 import { CATEGORIES, CATEGORY_IDS, RULES } from './config.js';
 import { createPairGenerator, higherOf, mulberry32, hashString, pairKey, pickCards } from './pairs.js';
@@ -94,7 +94,7 @@ function mount(...children) {
 const playable = (pool, sameCategory = false) => pool.length >= 2 && createPairGenerator(pool, mulberry32(1), { sameCategory }).next() !== null;
 
 function calibrating() {
-  mount(h('h1', { class: 'screen-title' }, t('The Percentometer is calibrating')),
+  mount(h('h1', { class: 'screen-title' }, t('Eyeball is calibrating')),
     h('p', { class: 'lede' }, t('There are not enough verified statistics to play this yet. Every number has to be checked against its official source first.')),
     h('div', { class: 'actions' }, h('a', { class: 'btn btn-primary', href: '#/' }, t('Play Endless'))));
 }
@@ -196,7 +196,7 @@ function statCard(e, { side, ariaLabel, onPick, stamp = t('Higher') }) {
   return { wrap, pick, value, source, fill, show };
 }
 
-/** Counts every card up to its value together, with the Percentometer's swing. */
+/** Counts every card up to its value together, with the ruler's swing. */
 function countUp(cards, values, duration = 1500) {
   if (prefersReducedMotion()) { cards.forEach((c, i) => c.show(values[i])); return Promise.resolve(); }
   return new Promise((resolve) => {
@@ -249,7 +249,7 @@ function renderRound({
     return c.wrap;
   };
 
-  const feedback = h('p', { class: 'feedback', role: 'status', 'aria-live': 'polite' }, t('Pick a card. The Percentometer will reveal the truth.'));
+  const feedback = h('p', { class: 'feedback', role: 'status', 'aria-live': 'polite' }, t('Pick a card. Eyeball will reveal the truth.'));
   const next = h('button', { class: 'btn btn-primary continue', type: 'button', hidden: true, onclick: () => advance() }, continueLabel);
   const clock = timeLimit ? h('div', { class: 'round-timer', role: 'timer', 'aria-label': t('Time left') },
     h('span', { class: 'round-timer-bar', style: `--t:${timeLimit}ms` }), h('b', {}, String(Math.ceil(timeLimit / 1000)))) : null;
@@ -269,7 +269,7 @@ function renderRound({
     h('div', { class: 'reveal' }, dial.el, h('div', { class: 'reveal-side' }, feedback, next)),
     progress);
 
-  dial.describe(t('Percentometer, waiting for your pick'));
+  dial.describe(t('Eyeball, waiting for your pick'));
 
   let countdown = null;
   if (timeLimit) {
@@ -294,7 +294,7 @@ function renderRound({
     correct = id !== null && (higherMode ? cards[id].value > cards[id === 'a' ? 'b' : 'a'].value : id === target);
     audio.sfx(id ? 'tap' : 'timeout');
     onAnswer?.(correct);
-    // Ask what everybody else answered while the Percentometer swings
+    // Ask what everybody else answered while the ruler swings
     // (shared counters exist for "higher or lower" pairs only).
     const key = pairKey(pair.a, pair.b);
     const crowd = higherMode ? online.answerStats(key).catch(() => null) : Promise.resolve(null);
@@ -324,7 +324,7 @@ function renderRound({
     }
     dom[high].wrap.classList.add('higher');
     dom[high === 'a' ? 'b' : 'a'].wrap.classList.add('lower');
-    dial.describe(t('Percentometer: left card {a}, right card {b}', { a: formatValue(pair.a.value), b: formatValue(pair.b.value) }));
+    dial.describe(t('Eyeball: left card {a}, right card {b}', { a: formatValue(pair.a.value), b: formatValue(pair.b.value) }));
     feedback.className = `feedback ${correct ? 'ok' : 'ko'}`;
     audio.sfx(correct ? 'right' : 'wrong');
     within(crowd, 900).then((stats) => {
@@ -367,6 +367,7 @@ function home() {
   const cats = CATEGORY_IDS.filter((c) => categoryPool(c).length >= MIN_CATEGORY_CARDS);
   mount(
     h('section', { class: 'hero' },
+      h('img', { class: 'hero-mascot', src: 'assets/eyeball-512.png', alt: '', width: 190, height: 190 }),
       h('h1', { class: 'screen-title' }, t('Two numbers.'), ' ', h('span', {}, t('One is higher.'))),
       h('p', { class: 'lede' }, t('Real statistics about things that have nothing in common. Pick the bigger percentage and keep your streak alive.')),
       h('div', { class: 'actions' },
@@ -445,7 +446,7 @@ function endlessOver({ mode = 'pairs', cat, score, best, exhausted }) {
   const again = () => (mode === 'pairs' ? startEndless(cat) : startStreak(mode, cat));
   setKeys((ev) => { if (ev.key === 'Enter') { ev.preventDefault(); again(); } });
   const newBest = score > 0 && score >= best;
-  const exhaustedLine = mode === 'pairs' ? N('Every pair has been played. The Percentometer needs a nap.') : N('Every question has been played. The Percentometer needs a nap.');
+  const exhaustedLine = mode === 'pairs' ? N('Every pair has been played. Eyeball needs a nap.') : N('Every question has been played. Eyeball needs a nap.');
   audio.sfx(newBest ? 'win' : 'gameover');
   mount(
     h('p', { class: 'kicker' }, `${t(gameMode(mode).name)} · ${cat ? t('{category} only', { category: catLabel(cat) }) : t('Mixed')}`),
@@ -1043,7 +1044,7 @@ function startDailyGuess() {
 function dailyGuessResults(date, cards, state) {
   const score = state.answers.reduce((n, a) => n + a.points, 0);
   const grid = state.answers.map((a) => guessSquare(a.points)).join('');
-  const text = `PERCENTO Guess ${date}: ${score}/${cards.length * 100}\n${grid}\n${shareUrl()}#/daily/guess`;
+  const text = `Eyeball Guess ${date}: ${score}/${cards.length * 100}\n${grid}\n${shareUrl()}#/daily/guess`;
   const doShare = shareFlow(text);
   const otherDone = (load(dailyKey(date), null)?.answers?.length ?? 0) >= RULES.dailyPairs;
   mount(
@@ -1138,7 +1139,7 @@ function settings() {
           Object.entries(LANGS).map(([code, name]) => h('option', { value: code, selected: code === getLang() }, name)))),
       h('div', { class: 'setting' }, h('p', {}, t('Sound effects'), h('small', {}, t('Taps, ticks, right and wrong.'))), toggle(audio.soundEnabled, audio.setSound)),
       h('div', { class: 'setting' }, h('p', {}, t('Music'), h('small', {}, t('A soft loop while you play, faster in online games.'))), toggle(audio.musicEnabled, audio.setMusic)),
-      h('div', { class: 'setting' }, h('p', {}, t('Reduce motion'), h('small', {}, t('The Percentometer jumps straight to the answer.'))), motionBtn),
+      h('div', { class: 'setting' }, h('p', {}, t('Reduce motion'), h('small', {}, t('Eyeball jumps straight to the answer.'))), motionBtn),
       h('div', { class: 'setting' }, h('p', {}, t('Reset my records'), h('small', {}, t('Clears personal best and the local leaderboard.'))),
         h('button', { class: 'btn', type: 'button', onclick: () => {
           save(BEST_KEY, 0); save(RUNS_KEY, []); renderPanel(); toast('Records cleared.');
@@ -1169,7 +1170,7 @@ const session = {
 };
 
 function offlineNotice() {
-  return h('p', { class: 'note' }, t('Accounts are unavailable right now (no connection to the PERCENTO server). You can keep playing as a guest.'));
+  return h('p', { class: 'note' }, t('Accounts are unavailable right now (no connection to the Eyeball server). You can keep playing as a guest.'));
 }
 
 function field(label, attrs) {
@@ -1431,7 +1432,7 @@ async function room(code) {
   if (location.hash !== hash) return;
   if (!ok) return mount(h('h1', { class: 'screen-title' }, t('Room {code}', { code })), offlineNotice());
   const me = online.currentUser();
-  if (!me) return needAccount(hash, t('Join room {code}', { code }), t('Your friend invited you to a PERCENTO game. Pick a nickname to join.'));
+  if (!me) return needAccount(hash, t('Join room {code}', { code }), t('Your friend invited you to an Eyeball game. Pick a nickname to join.'));
 
   let data = await online.fetchRoom(code);
   if (location.hash !== hash) return;
@@ -1512,7 +1513,7 @@ async function room(code) {
         : `${t('{n} of {max} players.', { n, max: online.ROOM_SIZE })} ${guessMode ? t('{rounds} cards, {seconds} seconds each to set your percentage. Closest scores most.', { rounds: data.room.rounds, seconds: data.room.round_seconds }) : t('Same cards for everyone, 15 seconds each, last one standing wins.')}`),
       h('div', { class: 'actions' },
         h('button', { class: isPublic ? 'btn' : 'btn btn-primary', type: 'button', onclick: async () => {
-          const r = await shareResult(t('Join my PERCENTO game {code}: which percentage is higher? {link}', { code, link }));
+          const r = await shareResult(t('Join my Eyeball game {code}: which percentage is higher? {link}', { code, link }));
           if (r === 'copied') toast('Invite link copied!'); else if (r === 'failed') toast(t('Room code: {code}', { code }));
         } }, t('Invite friends')),
         isPublic ? null : isHost ? h('button', { class: 'btn', type: 'button', disabled: n < 2, onclick: async (ev) => {
@@ -1755,7 +1756,7 @@ for (const btn of document.querySelectorAll('[data-sound-toggle]')) {
 function translatePage() {
   for (const el of document.querySelectorAll('[data-i18n]')) el.textContent = t(el.dataset.i18n);
   for (const el of document.querySelectorAll('[data-i18n-label]')) el.setAttribute('aria-label', t(el.dataset.i18nLabel));
-  document.title = `PERCENTO: ${t(TAGLINE).replace(/\.$/, '').toLowerCase()}`;
+  document.title = `Eyeball: ${t(TAGLINE).replace(/\.$/, '').toLowerCase()}`;
 }
 
 audio.initAudio();

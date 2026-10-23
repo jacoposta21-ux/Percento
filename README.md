@@ -1,6 +1,8 @@
-# PERCENTO
+# Eyeball
 
-*Compare the incomparable.* A mobile-first higher-or-lower web game. Two cards, each holding a real, sourced percentage about topics that have nothing to do with each other. Pick the higher one; the **Percentometer** dial reveals both values with source and year.
+Live at https://eyeball.cloud. Formerly PERCENTO; browser storage keys keep the `percento:` prefix so players keep their records.
+
+*Compare the incomparable.* A mobile-first higher-or-lower web game. Two cards, each holding a real, sourced percentage about topics that have nothing to do with each other. Pick the higher one; the ruler reveals both values with source and year.
 
 - **Endless**: two new cards every round; a right answer moves on by itself, one wrong answer ends the run. Play **mixed** (cards from different categories) or **by category** (both cards from one of 13 topics; best streak per category).
 - **Online, last one standing**: up to 10 signed-in players get the same cards in the same order, 15 seconds per card; one mistake (or the clock) and you are out, whoever goes furthest wins. Live standings. **Find a game** matches strangers (a public game starts 20 s after a second player joins, at once with 10); **Room with friends** is private, optionally limited to one category, started by the host.
@@ -31,7 +33,7 @@ Project `percento` (eu-central-1). Schema, row level security and the room funct
 
 One-time settings in the Supabase dashboard (Authentication):
 
-1. **URL Configuration**: Site URL `https://percento-virid.vercel.app`, and add it to Redirect URLs. Without this, confirmation emails and Google sign-in send players to localhost.
+1. **URL Configuration**: Site URL `https://eyeball.cloud`, and add it (plus `https://percento-virid.vercel.app`) to Redirect URLs. Without this, confirmation emails and Google sign-in send players to localhost.
 2. **Email**: the built-in mailer only delivers to members of the Supabase team and a few emails per hour. Either set up custom SMTP (Authentication → Emails → SMTP, e.g. Resend or Brevo), or switch off "Confirm email" (Sign In / Providers → Email) so players are signed in immediately.
 3. **Guests online**: switch on "Allow anonymous sign-ins" (Authentication → Sign In / Providers). Guests pick a nickname and play online without email; they can later add an email and password on the Account page and keep their name and records. Until it is on, the guest button says guest play is not switched on yet. Supabase suggests turning on CAPTCHA protection once the game is public.
 4. **Google**: create an OAuth client in Google Cloud Console (Web application, redirect URI `https://tsbdkvgfdnalxgahnvnp.supabase.co/auth/v1/callback`), then paste its client ID and secret in Sign In / Providers → Google. Until then the Google button explains it is not switched on.
@@ -105,7 +107,7 @@ index.html, styles.css      app shell and styles (light + dark)
 src/app.js                  router, screens, round engine
 src/pairs.js                pairing rules + seeded PRNG (shared with Node tooling)
 src/daily.js                Rome date, DST-safe midnight, deterministic daily set
-src/dial.js                 Percentometer SVG + needle physics
+src/dial.js                 percentage ruler SVG + needle physics
 src/copy.js                 headlines, quips, end-screen lines
 src/share.js, storage.js    share/copy flow, safe localStorage
 src/online.js               accounts, saved progress, leaderboards, rooms (Supabase)

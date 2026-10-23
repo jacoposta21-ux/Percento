@@ -1,4 +1,4 @@
-// The Percentometer: a 0–100 ruler with one marker per card. Markers swing
+// The ruler: a 0–100 ruler with one marker per card. Markers swing
 // past the target, oscillate and settle; a callback receives the marker's
 // current reading on every frame so numbers and grids count in sync.
 
@@ -28,7 +28,7 @@ export function needlePosition(from, to, t) {
 }
 
 export function createDial() {
-  const svg = el('svg', { viewBox: `0 0 ${W} 64`, class: 'dial', role: 'img', 'aria-label': 'Percentometer' });
+  const svg = el('svg', { viewBox: `0 0 ${W} 64`, class: 'dial', role: 'img', 'aria-label': 'Percentage ruler' });
   svg.append(el('line', { x1: LEFT, y1: BASE, x2: RIGHT, y2: BASE, class: 'dial-track' }));
   for (let v = 0; v <= 100; v += 2) {
     const major = v % 10 === 0;

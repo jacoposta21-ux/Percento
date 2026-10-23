@@ -1,4 +1,4 @@
-/* PERCENTO — a statistics board game on a blue table.
+/* Eyeball — a statistics board game on a blue table.
    Cards are thick white cardboard with an ink outline; categories are the
    coloured wedges of a pie; every percentage is drawn as a slice of pie.
    Unbounded (wide, playful) for headlines and numbers, Rethink Sans for text. */
@@ -56,7 +56,7 @@ button, input, select { font: inherit; }
 .icon { width: 22px; height: 22px; flex: none; }
 .icon-big { width: 40px; height: 40px; }
 
-/* ---------- the pie (also the logo's "o") ---------- */
+/* ---------- the pie ---------- */
 .pie {
   --v: 0; --g: 0;
   display: block; flex: none; aspect-ratio: 1; border-radius: 50%;
@@ -78,11 +78,8 @@ button, input, select { font: inherit; }
   font-family: var(--display); font-weight: 800; font-size: 1.25rem; letter-spacing: -0.02em;
   text-decoration: none; display: inline-flex; align-items: center; min-height: 44px;
 }
-/* The % of the wordmark is a little pie at 62. */
-.logo-o {
-  display: inline-block; width: 0.95em; height: 0.95em; margin-left: 0.12em; border-radius: 50%; color: transparent; overflow: hidden;
-  border: 2px solid var(--ink); background: conic-gradient(var(--sun) 0 62%, var(--card) 0);
-}
+/* The mascot sits in front of the wordmark. */
+.logo-mark { width: 1.7em; height: 1.7em; margin-right: 0.3em; flex: none; }
 .sound-toggle {
   flex: none; width: 44px; height: 44px; display: grid; place-items: center; border-radius: 50%;
   background: var(--table-deep); border: 0; color: var(--chalk); cursor: pointer;
@@ -165,6 +162,7 @@ main:focus { outline: none; }
 
 /* ---------- home ---------- */
 .hero { padding: 4px 0 6px; max-width: 760px; }
+.hero-mascot { float: right; width: clamp(84px, 24vw, 190px); height: auto; margin: 0 0 8px 12px; transform: rotate(4deg); }
 .hero .screen-title { font-size: clamp(2.3rem, 9vw, 4.6rem); line-height: 1; }
 .hero .screen-title span { display: block; }
 .hero-meta { display: flex; flex-wrap: wrap; gap: 8px; margin: 0; }
@@ -262,7 +260,7 @@ main:focus { outline: none; }
 .answer.win small { color: var(--ink); }
 .answer.lose { font-family: var(--display); font-size: 1.25rem; }
 
-/* Percentometer: a ruler with one pin per card. */
+/* The ruler: one pin per card. */
 .reveal { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); gap: 18px; align-items: center; margin-top: 18px; }
 .reveal .dial { width: 100%; height: auto; display: block; }
 .reveal-side { min-width: 0; }

@@ -1,7 +1,7 @@
 {
   "name": "percento",
   "version": "1.0.0",
-  "description": "PERCENTO: compare the incomparable. A mobile-first higher/lower game with real, verified percentages.",
+  "description": "Eyeball: compare the incomparable. A mobile-first game with real, verified percentages.",
   "private": true,
   "type": "module",
   "scripts": {

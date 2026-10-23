@@ -194,7 +194,7 @@ async function playDaily(page, context, label, { reloadAt = 4 } = {}) {
   const grid = await page.textContent('.grid');
   check([...grid].filter((c) => c === '🟩' || c === '🟥').length === 10, `${label}: grid should have 10 squares`);
   const text = await page.textContent('.share-text');
-  check(/^PERCENTO Daily \d{4}-\d{2}-\d{2}: \d+\/10\n[🟩🟥]{10}\nhttp/u.test(text), `${label}: share text format: ${JSON.stringify(text)}`);
+  check(/^Eyeball Daily \d{4}-\d{2}-\d{2}: \d+\/10\n[🟩🟥]{10}\nhttp/u.test(text), `${label}: share text format: ${JSON.stringify(text)}`);
   await audit(page, `${label} daily results`);
   await page.click('text=Share result');
   await page.waitForSelector('.toast.show');
@@ -232,7 +232,7 @@ async function playDailyGuess(page, label) {
   }
   await page.waitForSelector('.share-text');
   const text = await page.textContent('.share-text');
-  check(/^PERCENTO Guess \d{4}-\d{2}-\d{2}: \d+\/500\n[🎯🟩🟨🟥]{5}\nhttp/u.test(text), `${label}: daily guess share text: ${JSON.stringify(text)}`);
+  check(/^Eyeball Guess \d{4}-\d{2}-\d{2}: \d+\/500\n[🎯🟩🟨🟥]{5}\nhttp/u.test(text), `${label}: daily guess share text: ${JSON.stringify(text)}`);
   await page.waitForSelector('.dist-bars');
   await audit(page, `${label} daily guess results`);
   await page.reload();

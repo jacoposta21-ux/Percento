@@ -21,6 +21,7 @@ cpSync(join(ROOT, 'index.html'), join(out, 'index.html'));
 cpSync(join(ROOT, 'styles.css'), join(out, 'styles.css'));
 cpSync(join(ROOT, 'privacy.html'), join(out, 'privacy.html'));
 cpSync(join(ROOT, 'vendor'), join(out, 'vendor'), { recursive: true });
+cpSync(join(ROOT, 'assets'), join(out, 'assets'), { recursive: true });
 for (const f of ['app.js', 'config.js', 'pairs.js', 'daily.js', 'dial.js', 'storage.js', 'share.js', 'copy.js', 'online.js', 'online-config.js', 'audio.js', 'icons.js', 'i18n.js', 'modes.js']) {
   cpSync(join(ROOT, 'src', f), join(out, 'src', f));
 }

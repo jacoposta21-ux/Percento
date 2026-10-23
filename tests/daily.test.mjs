@@ -81,7 +81,7 @@ test('countdown is exact on short and long days', () => {
 
 test('share text is Wordle-style', () => {
   const text = shareText({ date: '2026-11-05', answers: [true, true, false, true, true, true, false, true, true, true], url: 'https://example.org/#/daily' });
-  assert.equal(text, 'PERCENTO Daily 2026-11-05: 8/10\n🟩🟩🟥🟩🟩🟩🟥🟩🟩🟩\nhttps://example.org/#/daily');
+  assert.equal(text, 'Eyeball Daily 2026-11-05: 8/10\n🟩🟩🟥🟩🟩🟩🟥🟩🟩🟩\nhttps://example.org/#/daily');
 });
 
 test('streaks: alive until a day is missed, longest run remembered', () => {

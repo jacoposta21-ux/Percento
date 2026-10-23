@@ -16,7 +16,7 @@ export const HEADLINES = [
   'Your gut feeling, versus reality.',
   'One of these is bigger. Allegedly.',
   'Brought together by pure chaos.',
-  'The Percentometer is ready. Are you?',
+  'Eyeball is ready. Are you?',
   'Peer-reviewed, never peer-compared.',
   'An official statistic meets its nemesis.',
   'Context has left the building.',
@@ -36,7 +36,7 @@ export const HEADLINES = [
 
 export const RIGHT_QUIPS = [
   'Correct. Suspiciously correct.',
-  'Nailed it. The Percentometer is impressed.',
+  'Nailed it. Eyeball is impressed.',
   'Right! Have you been reading statistical yearbooks?',
   'Yes! Your intuition is officially calibrated.',
   'Correct. Somewhere a census taker smiles.',
@@ -59,7 +59,7 @@ export const WRONG_QUIPS = [
   'Nope. Reality is weirder than it looks.',
   'Close in spirit, far in percentage points.',
   'Wrong! Blame the universe, it made these numbers.',
-  'Missed it. The Percentometer remains unbothered.',
+  'Missed it. Eyeball remains unbothered.',
   'Not this time. Statistics: 1, intuition: 0.',
   'Wrong, and honestly, fair enough.',
   'The data disagrees. Respectfully.',
@@ -71,7 +71,7 @@ export const WRONG_QUIPS = [
 export const GAME_OVER_LINES = [
   { max: 0, lines: ['A bold start. Statistically, the only way is up.', 'Zero. Even the needle felt that.'] },
   { max: 2, lines: ['A warm-up round, clearly.', 'Respectable. For a Monday.'] },
-  { max: 5, lines: ['Solid. Your gut has a decent dataset.', 'Not bad. The Percentometer nods.'] },
+  { max: 5, lines: ['Solid. Your gut has a decent dataset.', 'Not bad. Eyeball nods.'] },
   { max: 9, lines: ['Impressive. You have opinions about yearbooks.', 'Strong run. Someone call a statistics office.'] },
   { max: 19, lines: ['Remarkable. Are you secretly a census?', 'Wow. The dial needs a lie-down.'] },
   { max: Infinity, lines: ['Legendary. You are now a measured phenomenon.', 'Unbelievable. Literally: please verify yourself.'] },
@@ -79,7 +79,7 @@ export const GAME_OVER_LINES = [
 
 export const DAILY_END_LINES = [
   { max: 3, lines: ["Today's numbers won. Tomorrow is a new dataset."] },
-  { max: 6, lines: ['Not bad. The Percentometer gives you a polite thumbs-up.'] },
+  { max: 6, lines: ['Not bad. Eyeball gives you a polite thumbs-up.'] },
   { max: 9, lines: ['Great day. Your intuition is statistically sound.'] },
   { max: 10, lines: ['Perfect ten. Please report to the nearest statistics office.'] },
 ];

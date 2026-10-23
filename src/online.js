@@ -84,7 +84,7 @@ const fail = (error) => {
   if (/Email not confirmed/i.test(m)) return t('Confirm your email first: check your inbox for our link.');
   if (/already registered/i.test(m)) return t('This email already has an account. Sign in instead.');
   if (/rate limit/i.test(m)) return t('Too many emails sent. Try again in a few minutes.');
-  if (/not authorized/i.test(m)) return t('We cannot send confirmation emails to this address yet. Try Google, or ask the PERCENTO team.');
+  if (/not authorized/i.test(m)) return t('We cannot send confirmation emails to this address yet. Try Google, or ask the Eyeball team.');
   return m;
 };
 
