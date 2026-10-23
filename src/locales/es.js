@@ -410,5 +410,12 @@ export default {
   "← Left": "← Izquierda",
   "⏱ Time is up! 15 seconds per card.": "⏱ ¡Se acabó el tiempo! 15 segundos por carta.",
   "⏱ Time is up! Measuring…": "⏱ ¡Se acabó el tiempo! Midiendo…",
-  "🏆 You win!": "🏆 ¡Has ganado!"
+  "🏆 You win!": "🏆 ¡Has ganado!",
+  "How do you want to play?": "¿Cómo quieres jugar?",
+  "Single player": "Un jugador",
+  "Multiplayer": "Multijugador",
+  "Four games at your own pace, mixed or one topic at a time.": "Cuatro juegos a tu ritmo, mezclados o un tema cada vez.",
+  "Up to 10 players, the same cards, live. Strangers or friends.": "Hasta 10 jugadores, las mismas cartas, en directo. Desconocidos o amigos.",
+  "The same cards for everyone, new every day.": "Las mismas cartas para todos, nuevas cada día.",
+  "Who with": "Con quién",
 };

@@ -109,7 +109,7 @@ main > * { max-width: 1120px; }
 /* On a phone the panel follows main, so main no longer needs room for the nav. */
 .has-panel main { padding-bottom: 32px; }
 main:focus { outline: none; }
-.panel { padding: 0 16px 104px; display: grid; gap: 16px; align-content: start; }
+.panel { padding: 0 16px 104px; gap: 16px; align-content: start; }
 
 @media (min-width: 900px) {
   .layout { grid-template-columns: 236px minmax(0, 1fr); }
@@ -123,6 +123,7 @@ main:focus { outline: none; }
   .nav a:hover { background: var(--table); }
   .nav a.active { color: var(--ink); background: var(--card); }
   .side-links { display: flex; gap: 6px; margin-top: auto; }
+  .sidebar { grid-row: 1 / span 2; }
   .side-links a { display: inline-flex; align-items: center; min-height: 44px; padding: 0 8px; color: var(--chalk-dim); font-size: 0.88rem; }
   main, .has-panel main { padding: 32px 40px 48px; }
   .panel { grid-column: 2; padding: 0 40px 48px; max-width: 1200px; }
@@ -557,4 +558,77 @@ select.input {
   .target { gap: 10px; padding: 6px 14px 6px 8px; }
   .target .pie { width: 40px; }
   .target span:last-child { font-size: 0.82rem; }
+}
+
+/* ---------- home: single player, multiplayer, daily ---------- */
+.visually-hidden { position: absolute; width: 1px; height: 1px; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.choices { display: grid; grid-template-columns: 1fr; gap: 16px; margin-top: 28px; }
+.choice {
+  display: grid; gap: 6px; align-content: start; padding: 16px 18px 20px;
+  background: var(--card); color: var(--ink); text-decoration: none; border-radius: 20px; border: 2.5px solid var(--ink);
+  box-shadow: var(--lift); transition: transform 0.1s ease, box-shadow 0.1s ease;
+}
+.choice:hover { transform: translateY(-2px); box-shadow: 0 7px 0 var(--ink); }
+.choice:active { transform: translateY(3px); box-shadow: 0 2px 0 var(--ink); }
+.choice strong { font-family: var(--display); font-weight: 800; font-size: clamp(1.35rem, 5vw, 1.8rem); letter-spacing: -0.02em; line-height: 1.1; margin-top: 6px; }
+.choice > span:not(.mode-visual) { color: var(--ink-soft); font-size: 1rem; line-height: 1.4; }
+.choice .mode-visual { height: 112px; }
+.choice .mode-visual .pie { width: 58px; }
+.choice-multi .mode-visual { gap: 0; }
+.choice-multi .mode-visual .pie { width: 50px; margin-left: -12px; }
+.choice-multi .mode-visual .pie:first-child { margin-left: 0; }
+/* The daily choice is lighter: it sits under the two ways to play. */
+.choice-daily { background: var(--table-deep); color: var(--chalk); border-color: var(--ink); }
+.choice-daily strong { font-size: clamp(1.15rem, 4vw, 1.4rem); }
+.choice-daily > span:not(.mode-visual) { color: var(--chalk-dim); }
+.choice-daily .mode-visual { height: 56px; background: var(--table); }
+.choice-status { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; margin-top: 6px; color: var(--chalk-dim); font-size: 0.92rem; font-weight: 600; }
+.choice-status span { display: inline-flex; align-items: center; gap: 6px; }
+/* A ring per daily, filled once it is done today. */
+.choice-status span::before { content: ""; width: 12px; height: 12px; border-radius: 50%; border: 2px solid var(--chalk-dim); }
+.choice-status .done { color: var(--chalk); }
+.choice-status .done::before { background: var(--right); border-color: var(--right); }
+.choice-status .streak-chip { min-height: 32px; }
+.mini-dots { display: flex; gap: 6px; }
+.mini-dots span { width: 14px; height: 14px; border-radius: 50%; background: var(--table-deep); border: 2px solid var(--ink); }
+.mini-dots span.ok { background: var(--right); }
+/* On a phone the three choices fit the first screen: picture left, words right. */
+@media (max-width: 639px) {
+  .hero-meta { display: none; }
+  .choices { margin-top: 20px; gap: 14px; }
+  .choice { grid-template-columns: 104px minmax(0, 1fr); column-gap: 14px; align-items: center; padding: 12px 14px 12px 12px; }
+  .choice .mode-visual { grid-row: 1 / span 3; height: 100%; min-height: 76px; margin: 0; }
+  .choice strong { margin-top: 0; font-size: 1.25rem; }
+  .choice > span:not(.mode-visual) { font-size: 0.92rem; }
+  .choice .mode-visual .pie { width: 32px; }
+  .choice-multi .mode-visual .pie { width: 26px; margin-left: -9px; }
+  .choice-multi .mode-visual .pie:first-child { margin-left: 0; }
+  .mini-dots { display: grid; grid-template-columns: repeat(5, 12px); gap: 5px; }
+  .mini-dots span { width: 12px; height: 12px; }
+}
+@media (min-width: 640px) {
+  .choices { grid-template-columns: 1fr 1fr; gap: 22px; }
+  .choice-daily { grid-column: 1 / -1; grid-template-columns: auto minmax(0, 1fr); column-gap: 22px; align-items: center; }
+  .choice-daily .mode-visual { grid-row: 1 / span 3; margin: 0; padding: 0 22px; }
+  .choice-daily strong { margin-top: 0; }
+}
+
+/* ---------- single player and multiplayer screens ---------- */
+.page-head { margin-bottom: 4px; }
+.modes-section:first-of-type { margin-top: 26px; }
+button.mode-tile { width: 100%; font: inherit; text-align: left; cursor: pointer; }
+.mode-tile[aria-pressed="true"] { box-shadow: var(--lift), 0 0 0 4px var(--sun); }
+.mode-tile[aria-pressed="false"] { background: var(--card-shade); }
+.online-head { margin-top: 34px; }
+/* On a phone a game tile is one row: picture left, words right. */
+@media (max-width: 559px) {
+  .mode-tile { grid-template-columns: 96px minmax(0, 1fr); column-gap: 14px; align-items: center; padding: 12px 14px 12px 12px; }
+  .mode-tile .mode-visual { grid-row: 1 / span 3; height: 100%; min-height: 72px; margin: 0; gap: 4px; }
+  .mode-tile strong { margin-top: 0; }
+  .mode-tile .mode-visual .pie { width: 26px; }
+  .mode-odd .mode-visual .pie { width: 18px; }
+  .mode-odd .mode-visual .pie:nth-child(3) { width: 24px; }
+  .mode-tile .mini-slider { width: 40px; }
+  .mode-tile .mini-target { font-size: 0.72rem; padding: 1px 6px; }
+  .mode-tile .mini-card { width: 16px; height: 22px; }
 }

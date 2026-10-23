@@ -353,18 +353,55 @@ function home() {
   setKeys(null);
   const best = load(BEST_KEY, 0) || 0;
   const cats = CATEGORY_IDS.filter((c) => categoryPool(c).length >= MIN_CATEGORY_CARDS);
+  const date = romeDate();
+  const dailyDone = [
+    [t('Higher or lower'), (load(dailyKey(date), null)?.answers?.length ?? 0) >= RULES.dailyPairs],
+    [t('Closest guess'), (load(dailyGuessKey(date), null)?.answers?.length ?? 0) >= DAILY_GUESS_CARDS],
+  ];
+  const days = streak().current;
   mount(
     h('section', { class: 'hero' },
       h('img', { class: 'hero-mascot', src: 'assets/eyeball-512.png', alt: '', width: 190, height: 190 }),
       h('h1', { class: 'screen-title' }, t('Two numbers.'), ' ', h('span', {}, t('One is higher.'))),
       h('p', { class: 'lede' }, t('Real statistics about things that have nothing in common. Pick the bigger percentage and keep your streak alive.')),
-      h('div', { class: 'actions' },
-        h('a', { class: 'btn btn-primary btn-big', href: '#/endless' }, t('Play mixed')),
-        h('a', { class: 'btn', href: '#/online' }, icon('globe'), t('Play online')),
-        h('a', { class: 'btn', href: '#/daily' }, t('Daily challenge'))),
       h('p', { class: 'hero-meta' },
-        streak().current ? h('a', { class: 'streak-chip', href: '#/daily' }, `🔥 ${t('{n}-day streak', { n: streak().current })}`) : null,
         h('span', {}, [best ? t('Best streak {n}', { n: best }) : null, t('{n} statistics', { n: ENTRIES.length }), t('{n} categories', { n: cats.length })].filter(Boolean).join(' · ')))),
+    h('section', { class: 'choices', 'aria-labelledby': 'choices-title' },
+      h('h2', { id: 'choices-title', class: 'visually-hidden' }, t('How do you want to play?')),
+      h('a', { class: 'choice choice-solo', href: '#/solo' },
+        choiceVisual('solo'),
+        h('strong', {}, t('Single player')),
+        h('span', {}, t('Four games at your own pace, mixed or one topic at a time.'))),
+      h('a', { class: 'choice choice-multi', href: '#/online' },
+        choiceVisual('multi'),
+        h('strong', {}, t('Multiplayer')),
+        h('span', {}, t('Up to 10 players, the same cards, live. Strangers or friends.'))),
+      h('a', { class: 'choice choice-daily', href: '#/daily' },
+        choiceVisual('daily'),
+        h('strong', {}, t('Daily challenge')),
+        h('span', {}, t('The same cards for everyone, new every day.')),
+        h('small', { class: 'choice-status' },
+          days ? h('b', { class: 'streak-chip' }, `🔥 ${t('{n}-day streak', { n: days })}`) : null,
+          dailyDone.map(([label, done]) => h('span', { class: done ? 'done' : '' }, label, done ? ' ✓' : ''))))));
+}
+
+/** The pictures on the three home choices, drawn with the game's pies. */
+function choiceVisual(kind) {
+  const pie = (v, c) => h('span', { class: 'pie', style: `--v:${v};--c:${c}` });
+  const C = CATEGORIES;
+  if (kind === 'solo') return h('span', { class: 'mode-visual' }, pie(35, C.space.color), h('i', {}, '?'), pie(70, C.food.color));
+  if (kind === 'multi') return h('span', { class: 'mode-visual' }, [[62, C.sport], [48, C.tech], [80, C.health], [30, C.history], [55, C.nature]].map(([v, c]) => pie(v, c.color)));
+  return h('span', { class: 'mode-visual' }, h('span', { class: 'mini-dots' }, Array.from({ length: 10 }, (_, k) => h('span', { class: k < 7 ? 'ok' : '' }))));
+}
+
+/** Single player: the four games, mixed or one category at a time. */
+function solo() {
+  setKeys(null);
+  const cats = CATEGORY_IDS.filter((c) => categoryPool(c).length >= MIN_CATEGORY_CARDS);
+  mount(
+    h('header', { class: 'page-head' },
+      h('h1', { class: 'screen-title' }, t('Single player')),
+      h('p', { class: 'context' }, t('Four games at your own pace, mixed or one topic at a time.'))),
     modesSection(),
     cats.length ? categorySection(cats) : null);
 }
@@ -447,7 +484,7 @@ function endlessOver({ mode = 'pairs', cat, score, best, exhausted }) {
     storageAvailable() ? null : h('p', { class: 'note' }, t('Your browser blocks storage, so your scores last only until you close this tab.')),
     h('div', { class: 'actions' },
       h('button', { class: 'btn btn-primary', type: 'button', onclick: again }, t('Play again')),
-      h('a', { class: 'btn', href: '#/' }, cat ? t('Other categories') : t('Other games')),
+      h('a', { class: 'btn', href: '#/solo' }, cat ? t('Other categories') : t('Other games')),
       h('a', { class: 'btn', href: '#/online' }, t('Play online'))),
     ranked ? h('section', { class: 'box' }, h('h2', {}, t('Your best runs')), leaderboardList(5, myIndex)) : null);
 }
@@ -883,7 +920,7 @@ function startDaily() {
   if (pairs.length < RULES.dailyPairs) {
     mount(dailyTabs('pairs'), h('h1', { class: 'screen-title' }, t("Today's challenge is warming up")),
       h('p', { class: 'lede' }, t('New statistics join the Daily Challenge the day after they are added, so everyone gets the same set. Come back after midnight (Rome time).')),
-      h('div', { class: 'actions' }, h('a', { class: 'btn btn-primary', href: '#/' }, t('Play Endless meanwhile'))));
+      h('div', { class: 'actions' }, h('a', { class: 'btn btn-primary', href: '#/endless' }, t('Play Endless meanwhile'))));
     return;
   }
   const state = load(dailyKey(date), null) || { answers: [] };
@@ -967,7 +1004,7 @@ function dailyResults(date, pairs, answers) {
     h('pre', { class: 'share-text', 'aria-label': t('Share text') }, text),
     h('div', { class: 'actions' },
       h('button', { class: 'btn btn-primary', type: 'button', onclick: doShare }, t('Share result')),
-      otherDone ? h('a', { class: 'btn', href: '#/' }, t('Play Endless')) : h('a', { class: 'btn', href: '#/daily/guess' }, t("Today's Closest guess"))),
+      otherDone ? h('a', { class: 'btn', href: '#/endless' }, t('Play Endless')) : h('a', { class: 'btn', href: '#/daily/guess' }, t("Today's Closest guess"))),
     nextDailyCountdown(date, startDaily),
     distributionBox({ date, game: 'pairs', score, state, stateKey: dailyKey(date) }),
     h('section', { class: 'box', style: 'margin-top:16px' }, h('h2', {}, t("Today's pairs")),
@@ -1076,7 +1113,7 @@ function leaderboard() {
         ? h('ol', { class: 'board board-plain' }, history.slice(0, 14).map(([d, sc]) => h('li', {},
           h('span', { class: 'who' }, d), h('span', { class: 'score' }, `${sc}/10`))))
         : h('p', { class: 'board-empty' }, t('No Daily Challenge played yet.'))),
-    h('div', { class: 'actions' }, h('a', { class: 'btn btn-primary', href: '#/' }, t('Play Endless')), h('a', { class: 'btn', href: '#/daily' }, t('Daily Challenge'))));
+    h('div', { class: 'actions' }, h('a', { class: 'btn btn-primary', href: '#/endless' }, t('Play Endless')), h('a', { class: 'btn', href: '#/daily' }, t('Daily Challenge'))));
   online.init().then(async (ok) => {
     const me = online.currentUser()?.username;
     const top = ok ? await online.topPlayers(10).catch(() => null) : null;
@@ -1354,12 +1391,12 @@ const ROOM_TIME_MS = 15000;
 
 async function friends() {
   setKeys(null);
-  mount(h('h1', { class: 'screen-title' }, t('Play online')), h('p', { class: 'muted' }, t('Loading…')));
+  mount(h('h1', { class: 'screen-title' }, t('Multiplayer')), h('p', { class: 'muted' }, t('Loading…')));
   const ok = await online.init();
   if (location.hash !== '#/online') return;
-  if (!ok) return mount(h('h1', { class: 'screen-title' }, t('Play online')), offlineNotice());
+  if (!ok) return mount(h('h1', { class: 'screen-title' }, t('Multiplayer')), offlineNotice());
   if (!online.currentUser()) {
-    return needAccount('#/online', t('Play online'), t('Pick a nickname so the others know who is who.'));
+    return needAccount('#/online', t('Multiplayer'), t('Pick a nickname so the others know who is who.'));
   }
   const message = h('p', { class: 'form-message', role: 'alert' });
   const [codeField, code] = field(t('Room code'), { name: 'code', autocomplete: 'off', maxlength: 6, placeholder: 'ABC123', style: 'text-transform:uppercase' });
@@ -1374,26 +1411,27 @@ async function friends() {
   };
   const MODE_KEY = 'percento:onlineMode';
   const MODES = {
-    standing: [t('Last one standing'), t('Up to 10 players get the same pairs in the same order. 15 seconds per pair. One mistake and you are out: whoever goes furthest wins.')],
-    guess: [t('Closest guess'), t('One card at a time, the same for everyone. 15 seconds to set the percentage you think it is. 10 cards; the closest guesses score most.')],
+    standing: { visual: 'pairs', name: t('Last one standing'), desc: t('Up to 10 players get the same pairs in the same order. 15 seconds per pair. One mistake and you are out: whoever goes furthest wins.') },
+    guess: { visual: 'guess', name: t('Closest guess'), desc: t('One card at a time, the same for everyone. 15 seconds to set the percentage you think it is. 10 cards; the closest guesses score most.') },
   };
   let mode = MODES[load(MODE_KEY, 'standing')] ? load(MODE_KEY, 'standing') : 'standing';
-  const title = h('h1', { class: 'screen-title' });
-  const lede = h('p', { class: 'lede' });
-  const modeButtons = Object.entries(MODES).map(([id, [label]]) => h('button', { class: 'seg', type: 'button', 'data-mode': id, onclick: () => setMode(id) }, label));
+  const modeButtons = Object.entries(MODES).map(([id, m]) => h('li', {},
+    h('button', { class: 'mode-tile', type: 'button', 'data-mode': id, onclick: () => setMode(id) },
+      modeVisual(m.visual), h('strong', {}, m.name), h('span', {}, m.desc))));
   const setMode = (id) => {
     mode = id;
     save(MODE_KEY, id);
-    title.textContent = MODES[id][0];
-    lede.textContent = MODES[id][1];
-    for (const b of modeButtons) b.setAttribute('aria-pressed', String(b.dataset.mode === id));
+    for (const b of modeButtons) { const btn = b.firstChild; btn.setAttribute('aria-pressed', String(btn.dataset.mode === id)); }
   };
   setMode(mode);
   mount(
-    h('p', { class: 'context' }, t('Online')),
-    title,
-    h('div', { class: 'segmented', role: 'group', 'aria-label': t('Game mode') }, modeButtons),
-    lede,
+    h('header', { class: 'page-head' },
+      h('h1', { class: 'screen-title' }, t('Multiplayer')),
+      h('p', { class: 'context' }, t('Up to 10 players, the same cards, live. Strangers or friends.'))),
+    h('section', { class: 'modes-section' },
+      h('div', { class: 'section-head' }, h('h2', {}, t('Choose a game'))),
+      h('ul', { class: 'mode-grid', role: 'group', 'aria-label': t('Game mode') }, modeButtons)),
+    h('div', { class: 'section-head online-head' }, h('h2', {}, t('Who with'))),
     h('div', { class: 'online-grid' },
       h('section', { class: 'box box-feature' },
         icon('globe', 'icon icon-big'),
@@ -1685,7 +1723,7 @@ async function room(code) {
           const res = data.room.is_public ? await online.quickMatch('standing') : await online.createRoom(data.room.category, 'standing');
           if (res.error) toast(res.error); else location.hash = `#/room/${res.code}`;
         } }, data.room.is_public ? t('Find another game') : t('New room')),
-        h('a', { class: 'btn', href: '#/' }, t('Play solo'))));
+        h('a', { class: 'btn', href: '#/solo' }, t('Play solo'))));
   }
 
   render();
@@ -1693,7 +1731,7 @@ async function room(code) {
 
 // ---------- router ----------
 const ROUTES = {
-  '': ['play', home], '#/': ['play', home], '#/endless': ['play', () => startEndless()], '#/guess': ['play', () => startGuess()],
+  '': ['play', home], '#/': ['play', home], '#/solo': ['play', solo], '#/endless': ['play', () => startEndless()], '#/guess': ['play', () => startGuess()],
   '#/match': ['play', () => startStreak('match')], '#/odd': ['play', () => startStreak('odd')], '#/friends': ['online', () => { location.hash = '#/online'; }],
   '#/daily': ['daily', startDaily], '#/daily/guess': ['daily', startDailyGuess], '#/leaderboard': ['leaderboard', leaderboard],
   '#/sources': ['sources', () => sources()], '#/settings': ['account', settings], '#/review': ['sources', review],

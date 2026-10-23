@@ -264,10 +264,15 @@ async function main() {
         const page = await context.newPage();
         watch(page);
         await page.goto(BASE);
-        await page.waitForSelector('.cat-tile');
+        await page.waitForSelector('.choice');
         await audit(page, `${label} home`);
         await page.screenshot({ path: join(SHOTS, `${label}-home.png`), fullPage: true });
-        check((await page.$$('.cat-tile')).length === 13, `${label}: every category is playable from home`);
+        check(JSON.stringify(await page.$$eval('.choice', (els) => els.map((e) => e.getAttribute('href')))) === '["#/solo","#/online","#/daily"]',
+          `${label}: home offers single player, multiplayer and the daily challenge`);
+        await page.click('.choice-solo');
+        await page.waitForSelector('.cat-tile');
+        await audit(page, `${label} single player`);
+        check((await page.$$('.cat-tile')).length === 13, `${label}: every category is playable from single player`);
         await page.click('[data-sound-toggle]');
         check((await page.getAttribute('[data-sound-toggle]', 'aria-pressed')) === 'true', `${label}: sound toggle mutes`);
         await page.click('[data-sound-toggle]');
@@ -319,7 +324,7 @@ async function main() {
       const context = await newContext({ viewport: { width: 380, height: 820 } });
       const page = await context.newPage();
       watch(page);
-      await page.goto(`${BASE}#/`);
+      await page.goto(`${BASE}#/solo`);
       await page.click('.cat-section .seg:has-text("Closest guess")');
       check((await page.getAttribute('.cat-tile >> nth=0', 'href')).startsWith('#/guess/'), 'home: category tiles switch to closest guess');
       await page.goto(`${BASE}#/guess`);
@@ -351,9 +356,9 @@ async function main() {
       const context = await newContext({ viewport: { width: w, height: hgt } });
       const page = await context.newPage();
       watch(page);
-      await page.goto(`${BASE}#/`);
+      await page.goto(`${BASE}#/solo`);
       await page.waitForSelector('.mode-tile');
-      check((await page.$$('.mode-tile')).length === 4, `${name}: four games on home`);
+      check((await page.$$('.mode-tile')).length === 4, `${name}: four games in single player`);
       check((await page.$$('.cat-section .seg')).length === 4, `${name}: category switch offers all four games`);
       await page.click('.cat-section .seg:has-text("Match the card")');
       check((await page.getAttribute('.cat-tile >> nth=0', 'href')).startsWith('#/match/'), `${name}: category tiles switch to match the card`);
@@ -421,7 +426,7 @@ async function main() {
       const page = await context.newPage();
       watch(page);
       await page.goto(`${BASE}#/`);
-      await page.waitForSelector('.cat-tile');
+      await page.waitForSelector('.choice');
       check((await page.getAttribute('html', 'lang')) === lang, `${lang}: language picked from the browser`);
       check((await page.textContent('.nav [data-route="play"] span')) === dict.Play, `${lang}: nav translated`);
       check((await page.textContent('.hero .screen-title span')) === dict['One is higher.'], `${lang}: home translated`);
@@ -463,7 +468,7 @@ async function main() {
         await page.waitForFunction(() => document.documentElement.lang === 'fr');
         check(true, '');
         await page.goto(`${BASE}#/`);
-        await page.waitForSelector('.cat-tile');
+        await page.waitForSelector('.choice');
         check((await page.textContent('.nav [data-route="play"] span')) !== dict.Play, 'settings: language switch to French');
       }
       await context.close();
@@ -599,7 +604,7 @@ async function main() {
       // Closest guess with a friend: same card, the guesses meet on a ruler,
       // a guess that is not locked in is sent when the clock runs out.
       await p1.goto(`${BASE}#/online`);
-      await p1.click('.seg:has-text("Closest guess")');
+      await p1.click('.mode-tile:has-text("Closest guess")');
       await p1.click('main button:has-text("Create a room")');
       await p1.waitForSelector('text=Closest guess');
       const guessRoom = p1.url().split('#/room/')[1];
@@ -658,7 +663,7 @@ async function main() {
       // Sign out, wrong password, Google not enabled, then back in.
       await p1.goto(`${BASE}#/account`);
       await p1.click('text=Sign out');
-      await p1.waitForSelector('.cat-tile');
+      await p1.waitForSelector('.choice');
       await p1.waitForFunction(() => document.querySelector('[data-account-label]').textContent === 'Sign in', null, { timeout: 3000 })
         .then(() => check(true, ''), () => check(false, 'account: signed out'));
       await p1.goto(`${BASE}#/account`);
@@ -688,7 +693,7 @@ async function main() {
       await page.goto(`${BASE}#/account`);
       await page.waitForSelector('text=Accounts are unavailable');
       await page.goto(`${BASE}#/`);
-      await page.waitForSelector('.cat-tile');
+      await page.waitForSelector('.choice');
       check(Boolean(await page.$('text=(this device)')), 'offline: leaderboard falls back to this device');
       await context.close();
     }
