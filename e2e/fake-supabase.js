@@ -127,9 +127,10 @@
     if (name === 'server_time') return { data: new Date().toISOString(), error: null };
     if (name === 'quick_match') {
       const mode = args?.room_mode || 'standing';
-      let r = db.rooms.find((x) => x.is_public && x.status === 'lobby' && x.mode === mode && db.room_players.filter((p) => p.room_id === x.id).length < 10);
+      const category = args?.room_category ?? null;
+      let r = db.rooms.find((x) => x.is_public && x.status === 'lobby' && x.mode === mode && x.category === category && db.room_players.filter((p) => p.room_id === x.id).length < 10);
       if (!r) {
-        r = { id: `room-${db.seq++}`, code: newCode(), host_id: me, seed: Math.floor(Math.random() * 2 ** 31), status: 'lobby', is_public: true, starts_at: null, category: null, ...roomDefaults(mode) };
+        r = { id: `room-${db.seq++}`, code: newCode(), host_id: me, seed: Math.floor(Math.random() * 2 ** 31), status: 'lobby', is_public: true, starts_at: null, category, ...roomDefaults(mode) };
         db.rooms.push(r);
       }
       if (!db.room_players.some((p) => p.room_id === r.id && p.user_id === me)) {

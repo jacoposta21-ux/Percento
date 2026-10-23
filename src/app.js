@@ -141,15 +141,9 @@ async function worldBoard(box, limit) {
 }
 
 function renderPanel() {
-  const board = h('section', { class: 'box' }, h('h2', {}, t('Leaderboard')), leaderboardList(5));
-  panel.replaceChildren(
-    board,
-    h('section', { class: 'box friends' },
-      icon('globe', 'icon icon-big'),
-      h('h2', {}, t('Play online')),
-      h('p', { class: 'muted' }, t('Strangers or friends, up to 10 players. Last one standing, or closest guess over 10 cards.')),
-      h('a', { class: 'btn btn-primary', href: '#/online' }, t('Find a game'))));
-  online.init().then(() => worldBoard(board, 5));
+  const board = h('section', { class: 'box' }, h('h2', {}, t('Leaderboard')), leaderboardList(10));
+  panel.replaceChildren(board);
+  online.init().then(() => worldBoard(board, 10));
 }
 
 // ---------- what everybody answered ----------
@@ -363,20 +357,41 @@ const categoryPool = (cat) => ENTRIES.filter((e) => e.category === cat);
 
 function home() {
   setKeys(null);
-  const best = load(BEST_KEY, 0) || 0;
   const cats = CATEGORY_IDS.filter((c) => categoryPool(c).length >= MIN_CATEGORY_CARDS);
+  const pie = (v, c) => h('span', { class: 'pie', style: `--v:${v};--c:${c}` });
+  const days = streak().current;
   mount(
     h('section', { class: 'hero' },
       h('img', { class: 'hero-mascot', src: 'assets/eyeball-512.png', alt: '', width: 190, height: 190 }),
       h('h1', { class: 'screen-title' }, t('Two numbers.'), ' ', h('span', {}, t('One is higher.'))),
-      h('p', { class: 'lede' }, t('Real statistics about things that have nothing in common. Pick the bigger percentage and keep your streak alive.')),
-      h('div', { class: 'actions' },
-        h('a', { class: 'btn btn-primary btn-big', href: '#/endless' }, t('Play mixed')),
-        h('a', { class: 'btn', href: '#/online' }, icon('globe'), t('Play online')),
-        h('a', { class: 'btn', href: '#/daily' }, t('Daily challenge'))),
+      h('p', { class: 'lede' }, t('Real statistics about things that have nothing in common. Play alone, or live against friends and strangers.')),
       h('p', { class: 'hero-meta' },
-        streak().current ? h('a', { class: 'streak-chip', href: '#/daily' }, `🔥 ${t('{n}-day streak', { n: streak().current })}`) : null,
-        h('span', {}, t('Best streak {n}', { n: best })), h('span', {}, t('{n} statistics', { n: ENTRIES.length })), h('span', {}, t('{n} categories', { n: cats.length })))),
+        h('span', {}, t('{n} statistics', { n: ENTRIES.length })), h('span', {}, t('{n} categories', { n: cats.length })), h('span', {}, t('4 games')))),
+    h('nav', { class: 'home-choices', 'aria-label': t('How to play') },
+      h('a', { class: 'home-choice choice-solo', href: '#/solo' },
+        h('span', { class: 'choice-visual', 'aria-hidden': 'true' }, pie(62, CATEGORIES.food.color)),
+        h('strong', {}, t('Single player')),
+        h('span', {}, t('Four games and every category, at your own pace. Beat your personal bests.')),
+        h('small', {}, t('Best streak {n}', { n: load(BEST_KEY, 0) || 0 }))),
+      h('a', { class: 'home-choice choice-multi', href: '#/online' },
+        h('span', { class: 'choice-visual', 'aria-hidden': 'true' }, pie(35, CATEGORIES.space.color), pie(70, CATEGORIES.sport.color), pie(50, CATEGORIES.nature.color)),
+        h('strong', {}, t('Multiplayer')),
+        h('span', {}, t('The same four games live, with friends or strangers. Up to 10 players.')),
+        h('small', {}, t('Online'))),
+      h('a', { class: 'home-daily', href: '#/daily' },
+        h('span', { class: 'daily-date', 'aria-hidden': 'true' }, String(Number(romeDate().slice(8, 10)))),
+        h('span', { class: 'home-daily-text' }, h('strong', {}, t('Daily challenge')),
+          h('span', {}, t('The same cards for everyone today. New ones tomorrow.'))),
+        days ? h('span', { class: 'streak-chip' }, `🔥 ${t('{n}-day streak', { n: days })}`) : h('span', { class: 'home-daily-go', 'aria-hidden': 'true' }, '→'))));
+}
+
+/** Single player: the four games, mixed or by category. */
+function solo() {
+  setKeys(null);
+  const cats = CATEGORY_IDS.filter((c) => categoryPool(c).length >= MIN_CATEGORY_CARDS);
+  mount(
+    h('h1', { class: 'screen-title' }, t('Single player')),
+    h('p', { class: 'lede' }, t('Four games, mixed or by category. Your best scores stay on this device.')),
     modesSection(),
     cats.length ? categorySection(cats) : null);
 }
@@ -457,7 +472,7 @@ function endlessOver({ mode = 'pairs', cat, score, best, exhausted }) {
     storageAvailable() ? null : h('p', { class: 'note' }, t('Your browser blocks storage, so your scores last only until you close this tab.')),
     h('div', { class: 'actions' },
       h('button', { class: 'btn btn-primary', type: 'button', onclick: again }, t('Play again')),
-      h('a', { class: 'btn', href: '#/' }, cat ? t('Other categories') : t('Other games')),
+      h('a', { class: 'btn', href: '#/solo' }, cat ? t('Other categories') : t('Other games')),
       h('a', { class: 'btn', href: '#/online' }, t('Play online'))),
     ranked ? h('section', { class: 'box' }, h('h2', {}, t('Your best runs')), leaderboardList(5, myIndex)) : null);
 }
@@ -482,7 +497,7 @@ const ODD_LABELS = ['A', 'B', 'C', 'D'];
 const ODD_NEXT_MS = 2800; // a right answer leaves time to read the explanation
 
 /** Four statistics: three close together, one away. Pick the outsider. */
-function renderOdd({ q, headline, pill, progress, onContinue }) {
+function renderOdd({ q, headline, pill, progress, onAnswer, onContinue, continueLabel = t('Continue'), timeLimit = 0 }) {
   let phase = 'ask';
   let correct = false;
   const values = q.cards.map((e) => e.value);
@@ -495,29 +510,50 @@ function renderOdd({ q, headline, pill, progress, onContinue }) {
   const feedback = h('p', { class: 'feedback', role: 'status', 'aria-live': 'polite' }, t('Three of these are close together. Which one is not?'));
   const explain = h('p', { class: 'odd-why', hidden: true });
   const ruler = h('div', { class: 'guess-ruler odd-ruler', hidden: true, 'aria-hidden': 'true' });
-  const next = h('button', { class: 'btn btn-primary continue', type: 'button', hidden: true, onclick: () => advance() }, t('Continue'));
+  const next = h('button', { class: 'btn btn-primary continue', type: 'button', hidden: true, onclick: () => advance() }, continueLabel);
+  const clock = timeLimit ? h('div', { class: 'round-timer', role: 'timer', 'aria-label': t('Time left') },
+    h('span', { class: 'round-timer-bar', style: `--t:${timeLimit}ms` }), h('b', {}, String(Math.ceil(timeLimit / 1000)))) : null;
 
   mount(
     h('header', { class: 'round-head' },
       h('div', {}, h('p', { class: 'kicker' }, headline), h('h1', { class: 'screen-title' }, t('Find the odd one out')),
         h('p', { class: 'sub' }, t('Tap the statistic whose percentage is far from the other three.'))),
       pill ? h('div', { class: 'pill' }, icon('bolt', 'icon bolt'), h('span', {}, h('b', {}, String(pill.value)), h('small', {}, pill.label))) : null),
+    clock,
     h('div', { class: 'odd-grid' }, cards.map((c) => c.wrap)),
     h('div', { class: 'odd-reveal' }, feedback, explain, ruler, next),
     progress);
 
+  let countdown = null;
+  if (timeLimit) {
+    const deadline = Date.now() + timeLimit;
+    countdown = setInterval(() => {
+      const left = deadline - Date.now();
+      const secs = Math.max(0, Math.ceil(left / 1000));
+      if (secs <= 5 && secs > 0 && clock.querySelector('b').textContent !== String(secs)) audio.sfx('hurry');
+      clock.querySelector('b').textContent = String(secs);
+      clock.classList.toggle('hurry', left <= 5000);
+      if (left <= 0) choose(null);
+    }, 200);
+    cleanup.push(() => clearInterval(countdown));
+  }
+
+  // i is null when the clock runs out.
   async function choose(i) {
     if (phase !== 'ask') return;
     phase = 'reveal';
+    clearInterval(countdown);
+    clock?.classList.add('stopped');
     correct = i === q.odd;
-    audio.sfx('tap');
+    audio.sfx(i === null ? 'timeout' : 'tap');
+    onAnswer?.(correct);
     for (const c of cards) c.pick.disabled = true;
-    cards[i].wrap.classList.add('chosen');
+    if (i !== null) cards[i].wrap.classList.add('chosen');
     feedback.textContent = t('Measuring…');
     await countUp(cards, values);
     cards.forEach((c, k) => c.wrap.classList.add(k === q.odd ? 'higher' : 'lower'));
     feedback.className = `feedback ${correct ? 'ok' : 'ko'}`;
-    feedback.textContent = `${correct ? '✓' : '✗'} ${t(pickFrom(correct ? RIGHT_QUIPS : WRONG_QUIPS))}`;
+    feedback.textContent = i === null ? t('⏱ Time is up! 15 seconds per card.') : `${correct ? '✓' : '✗'} ${t(pickFrom(correct ? RIGHT_QUIPS : WRONG_QUIPS))}`;
     audio.sfx(correct ? 'right' : 'wrong');
     // Why: the outsider's distance from the group, and all four on one ruler.
     const away = Math.round(q.distance * 10) / 10;
@@ -596,16 +632,21 @@ function startStreak(mode, cat = null) {
 // ---------- the four games ----------
 // One list drives the home "choose a game" tiles, the category switch and the routes.
 const GAME_MODES = [
-  { id: 'pairs', route: 'endless', name: N('Higher or lower'), desc: N('Two statistics. Tap the higher percentage.'),
+  { id: 'pairs', route: 'endless', online: 'standing', name: N('Higher or lower'), desc: N('Two statistics. Tap the higher percentage.'),
+    rules: N('Up to 10 players get the same pairs in the same order. 15 seconds per pair. One mistake and you are out: whoever goes furthest wins.'),
     catNote: N('Every pair from one topic. Harder than it looks.'), best: (cat) => (cat ? catBestKey(cat) : BEST_KEY) },
-  { id: 'guess', route: 'guess', name: N('Closest guess'), desc: N('One statistic. Slide to the percentage you think it is.'),
+  { id: 'guess', route: 'guess', online: 'guess', name: N('Closest guess'), desc: N('One statistic. Slide to the percentage you think it is.'),
+    rules: N('One card at a time, the same for everyone. 15 seconds to set the percentage you think it is. 10 cards; the closest guesses score most.'),
     catNote: N('Ten cards from one topic. Guess each percentage.'), best: (cat) => guessBestKey(cat) },
-  { id: 'match', route: 'match', name: N('Match the card'), desc: N('One percentage, two statistics. Find the one it belongs to.'),
+  { id: 'match', route: 'match', online: 'match', name: N('Match the card'), desc: N('One percentage, two statistics. Find the one it belongs to.'),
+    rules: N('Up to 10 players get the same questions in the same order. 15 seconds to find the card. One mistake and you are out: whoever goes furthest wins.'),
     catNote: N('One percentage, two statistics from one topic.'), best: (cat) => streakBestKey('match', cat) },
-  { id: 'odd', route: 'odd', name: N('Odd one out'), desc: N('Four statistics, three close together. Spot the one that is not.'),
+  { id: 'odd', route: 'odd', online: 'odd', name: N('Odd one out'), desc: N('Four statistics, three close together. Spot the one that is not.'),
+    rules: N('Up to 10 players get the same four cards in the same order. 15 seconds to spot the outsider. One mistake and you are out: whoever goes furthest wins.'),
     catNote: N('Four statistics from one topic. Spot the outsider.'), best: (cat) => streakBestKey('odd', cat) },
 ];
 const gameMode = (id) => GAME_MODES.find((m) => m.id === id || m.route === id);
+const onlineGame = (roomMode) => GAME_MODES.find((m) => m.online === roomMode) ?? GAME_MODES[0];
 
 /** A small picture of each game, drawn with the game's own pies. */
 function modeVisual(id) {
@@ -1361,60 +1402,74 @@ function needAccount(hash, title, why) {
 
 // ---------- friends: rooms ----------
 const ROOM_TIME_MS = 15000;
+// Last-one-standing games in rooms: how each builds its questions and draws a round.
+const ROOM_GAMES = {
+  standing: { make: (pool, rng, opts) => createPairGenerator(pool, rng, opts), render: (pair, opts) => renderRound({ pair, ...opts }) },
+  match: { make: (pool, rng, opts) => createMatchGenerator(pool, rng, opts), render: (q, opts) => renderMatch({ q, ...opts }) },
+  odd: { make: (pool, rng, opts) => createOddGenerator(pool, rng, opts), render: (q, opts) => renderOdd({ q, ...opts }) },
+};
 
 async function friends() {
   setKeys(null);
-  mount(h('h1', { class: 'screen-title' }, t('Play online')), h('p', { class: 'muted' }, t('Loading…')));
+  mount(h('h1', { class: 'screen-title' }, t('Multiplayer')), h('p', { class: 'muted' }, t('Loading…')));
   const ok = await online.init();
   if (location.hash !== '#/online') return;
-  if (!ok) return mount(h('h1', { class: 'screen-title' }, t('Play online')), offlineNotice());
+  if (!ok) return mount(h('h1', { class: 'screen-title' }, t('Multiplayer')), offlineNotice());
   if (!online.currentUser()) {
-    return needAccount('#/online', t('Play online'), t('Pick a nickname so the others know who is who.'));
+    return needAccount('#/online', t('Multiplayer'), t('Pick a nickname so the others know who is who.'));
   }
   const message = h('p', { class: 'form-message', role: 'alert' });
   const [codeField, code] = field(t('Room code'), { name: 'code', autocomplete: 'off', maxlength: 6, placeholder: 'ABC123', style: 'text-transform:uppercase' });
-  const category = h('select', { class: 'input', name: 'category' },
-    h('option', { value: '' }, t('All categories, mixed')),
-    CATEGORY_IDS.filter((c) => categoryPool(c).length >= MIN_CATEGORY_CARDS).map((c) => h('option', { value: c }, CATEGORIES[c].label)));
   const busy = async (btn, action) => {
     btn.disabled = true;
     const res = await action();
     if (res.error) { message.textContent = res.error; btn.disabled = false; return; }
     location.hash = `#/room/${res.code}`;
   };
+  // The game and the cards are chosen once and used by all three ways to play.
   const MODE_KEY = 'percento:onlineMode';
-  const MODES = {
-    standing: [t('Last one standing'), t('Up to 10 players get the same pairs in the same order. 15 seconds per pair. One mistake and you are out: whoever goes furthest wins.')],
-    guess: [t('Closest guess'), t('One card at a time, the same for everyone. 15 seconds to set the percentage you think it is. 10 cards; the closest guesses score most.')],
-  };
-  let mode = MODES[load(MODE_KEY, 'standing')] ? load(MODE_KEY, 'standing') : 'standing';
-  const title = h('h1', { class: 'screen-title' });
-  const lede = h('p', { class: 'lede' });
-  const modeButtons = Object.entries(MODES).map(([id, [label]]) => h('button', { class: 'seg', type: 'button', 'data-mode': id, onclick: () => setMode(id) }, label));
+  const CAT_KEY = 'percento:onlineCategory';
+  const cats = CATEGORY_IDS.filter((c) => categoryPool(c).length >= MIN_CATEGORY_CARDS);
+  let mode = GAME_MODES.some((m) => m.online === load(MODE_KEY, 'standing')) ? load(MODE_KEY, 'standing') : 'standing';
+  let cat = cats.includes(load(CAT_KEY, '')) ? load(CAT_KEY, '') : '';
+  const rules = h('p', { class: 'muted mode-rules' });
+  const modeButtons = GAME_MODES.map((m) => h('button', { class: `mode-tile mode-${m.id}`, type: 'button', 'data-mode': m.online, onclick: () => setMode(m.online) },
+    modeVisual(m.id), h('strong', {}, t(m.name)), h('span', {}, t(m.desc))));
+  const catButtons = ['', ...cats].map((c) => h('button', { class: 'cat-chip', type: 'button', 'data-cat': c, style: c ? `--c:${CATEGORIES[c].color}` : '', onclick: () => setCat(c) },
+    c ? icon(c) : icon('all'), c ? catLabel(c) : t('All categories, mixed')));
   const setMode = (id) => {
     mode = id;
     save(MODE_KEY, id);
-    title.textContent = MODES[id][0];
-    lede.textContent = MODES[id][1];
+    rules.textContent = t(onlineGame(id).rules);
     for (const b of modeButtons) b.setAttribute('aria-pressed', String(b.dataset.mode === id));
   };
+  const setCat = (c) => {
+    cat = c;
+    save(CAT_KEY, c);
+    for (const b of catButtons) b.setAttribute('aria-pressed', String(b.dataset.cat === c));
+  };
   setMode(mode);
+  setCat(cat);
   mount(
-    h('p', { class: 'kicker' }, t('Online')),
-    title,
-    h('div', { class: 'segmented', role: 'group', 'aria-label': t('Game mode') }, modeButtons),
-    lede,
+    h('h1', { class: 'screen-title' }, t('Multiplayer')),
+    h('p', { class: 'lede' }, t('Pick a game and the cards, then play live with strangers or friends. Everyone gets the same questions.')),
+    h('section', { class: 'modes-section' },
+      h('div', { class: 'section-head' }, h('h2', {}, t('Choose a game'))),
+      h('div', { class: 'mode-grid', role: 'group', 'aria-label': t('Game mode') }, modeButtons),
+      rules),
+    h('section', { class: 'cat-section' },
+      h('div', { class: 'section-head' }, h('h2', {}, t('Cards from'))),
+      h('div', { class: 'cat-chips', role: 'group', 'aria-label': t('Cards from') }, catButtons)),
     h('div', { class: 'online-grid' },
       h('section', { class: 'box box-feature' },
         icon('globe', 'icon icon-big'),
         h('h2', {}, t('Play with strangers')),
         h('p', { class: 'muted' }, t('Jump into the next public game. It starts 20 seconds after a second player joins, or at once with 10.')),
-        h('button', { class: 'btn btn-primary btn-big', type: 'button', onclick: (ev) => busy(ev.currentTarget, () => online.quickMatch(mode)) }, t('Find a game'))),
+        h('button', { class: 'btn btn-primary btn-big', type: 'button', onclick: (ev) => busy(ev.currentTarget, () => online.quickMatch(mode, cat || null)) }, t('Find a game'))),
       h('section', { class: 'box form' },
         h('h2', {}, t('Room with friends')),
         h('p', { class: 'muted' }, t('Create a private room, send the link, start when everybody is in.')),
-        h('label', { class: 'field' }, h('span', {}, t('Cards from')), category),
-        h('button', { class: 'btn', type: 'button', onclick: (ev) => busy(ev.currentTarget, () => online.createRoom(category.value || null, mode)) }, t('Create a room'))),
+        h('button', { class: 'btn', type: 'button', onclick: (ev) => busy(ev.currentTarget, () => online.createRoom(cat || null, mode)) }, t('Create a room'))),
       h('form', { class: 'box form', onsubmit: (ev) => {
         ev.preventDefault();
         const c = code.value.trim().toUpperCase();
@@ -1506,7 +1561,7 @@ async function room(code) {
     const cat = data.room.category ? CATEGORIES[data.room.category]?.label : null;
     const guessMode = data.room.mode === 'guess';
     mount(
-      h('p', { class: 'kicker' }, isPublic ? t('Public game') : t('Private room'), ` · ${t(guessMode ? 'Closest guess' : 'Last one standing')}`, cat ? ` · ${t('{category} only', { category: cat })}` : ''),
+      h('p', { class: 'kicker' }, isPublic ? t('Public game') : t('Private room'), ` · ${t(onlineGame(data.room.mode).name)}`, cat ? ` · ${t('{category} only', { category: cat })}` : ''),
       h('h1', { class: 'screen-title' }, isPublic ? t('Finding players…') : t('Room {code}', { code })),
       h('p', { class: 'lede' }, isPublic
         ? (n < 2 ? t('Waiting for at least one more player. The game starts 20 seconds after the second player joins, or at once with 10.') : h('span', {}, ...tx('Game starts in {time}. {n} of {max} players.', { time: countdown }, { n, max: online.ROOM_SIZE })))
@@ -1534,16 +1589,17 @@ async function room(code) {
     clearInterval(tick);
     audio.sfx('start');
     const cat = data.room.category && categoryPool(data.room.category).length >= MIN_CATEGORY_CARDS ? data.room.category : null;
-    const gen = createPairGenerator(cat ? categoryPool(cat) : ENTRIES, mulberry32(Number(data.room.seed)), { sameCategory: Boolean(cat) });
+    const game = ROOM_GAMES[data.room.mode] ?? ROOM_GAMES.standing;
+    // Everyone builds the same generator from the room's seed, so the questions match.
+    const gen = game.make(cat ? categoryPool(cat) : ENTRIES, mulberry32(Number(data.room.seed)), { sameCategory: Boolean(cat) });
     let score = mine().score;
-    // Resume after a reload: skip the pairs already answered.
+    // Resume after a reload: skip the questions already answered.
     for (let i = 0; i < score; i++) gen.next();
     const round = () => {
-      const pair = gen.next();
-      if (!pair) { pending = online.reportScore(code, score, false); leave(); return; }
+      const q = gen.next();
+      if (!q) { pending = online.reportScore(code, score, false); leave(); return; }
       standingsBox = h('div', { class: 'box room-live' }, standings(true));
-      renderRound({
-        pair,
+      game.render(q, {
         headline: `${t('Room {code}', { code })} · ${t('last one standing wins')}`,
         pill: { value: score, label: t('Your score') },
         progress: standingsBox,
@@ -1644,10 +1700,10 @@ async function room(code) {
         h('section', { class: 'box' }, h('h2', {}, t('Final standings')), table(r.rounds - 1)),
         h('div', { class: 'actions' },
           h('button', { class: 'btn btn-primary', type: 'button', onclick: async () => {
-            const res = r.is_public ? await online.quickMatch('guess') : await online.createRoom(r.category, 'guess');
+            const res = r.is_public ? await online.quickMatch('guess', r.category) : await online.createRoom(r.category, 'guess');
             if (res.error) toast(res.error); else location.hash = `#/room/${res.code}`;
           } }, r.is_public ? t('Find another game') : t('New room')),
-          h('a', { class: 'btn', href: '#/guess' }, t('Practise solo'))));
+          h('a', { class: 'btn', href: '#/solo' }, t('Practise solo'))));
     };
 
     const ready = h('span', { class: 'countdown' });
@@ -1693,10 +1749,10 @@ async function room(code) {
       h('section', { class: 'box' }, h('h2', {}, t('Standings')), standings(false)),
       h('div', { class: 'actions' },
         h('button', { class: 'btn btn-primary', type: 'button', onclick: async () => {
-          const res = data.room.is_public ? await online.quickMatch('standing') : await online.createRoom(data.room.category, 'standing');
+          const res = data.room.is_public ? await online.quickMatch(data.room.mode, data.room.category) : await online.createRoom(data.room.category, data.room.mode);
           if (res.error) toast(res.error); else location.hash = `#/room/${res.code}`;
         } }, data.room.is_public ? t('Find another game') : t('New room')),
-        h('a', { class: 'btn', href: '#/' }, t('Play solo'))));
+        h('a', { class: 'btn', href: '#/solo' }, t('Play solo'))));
   }
 
   render();
@@ -1705,7 +1761,7 @@ async function room(code) {
 // ---------- router ----------
 const ROUTES = {
   '': ['play', home], '#/': ['play', home], '#/endless': ['play', () => startEndless()], '#/guess': ['play', () => startGuess()],
-  '#/match': ['play', () => startStreak('match')], '#/odd': ['play', () => startStreak('odd')], '#/friends': ['online', () => { location.hash = '#/online'; }],
+  '#/solo': ['play', solo], '#/match': ['play', () => startStreak('match')], '#/odd': ['play', () => startStreak('odd')], '#/friends': ['online', () => { location.hash = '#/online'; }],
   '#/daily': ['daily', startDaily], '#/daily/guess': ['daily', startDailyGuess], '#/leaderboard': ['leaderboard', leaderboard],
   '#/sources': ['sources', () => sources()], '#/settings': ['account', settings], '#/review': ['sources', review],
   '#/account': ['account', () => account()], '#/account/new': ['account', () => account('signup')], '#/online': ['online', friends],

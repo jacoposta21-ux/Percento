@@ -192,15 +192,15 @@ export async function dailyBoard(day, limit = 10) {
 }
 
 // ---------- friend rooms ----------
-/** mode: 'standing' (last one standing) or 'guess' (closest guess). */
+/** mode: 'standing' (higher or lower), 'match', 'odd' (last one standing) or 'guess' (closest guess). */
 export async function createRoom(category = null, mode = 'standing') {
   const { data, error } = await client.rpc('create_room', { room_category: category, room_mode: mode });
   return error ? { error: fail(error) } : { code: data };
 }
 
-/** Joins the next public game of `mode` with strangers (or opens one). */
-export async function quickMatch(mode = 'standing') {
-  const { data, error } = await client.rpc('quick_match', { room_mode: mode });
+/** Joins the next public game of `mode` (and category, null = mixed) with strangers, or opens one. */
+export async function quickMatch(mode = 'standing', category = null) {
+  const { data, error } = await client.rpc('quick_match', { room_mode: mode, room_category: category });
   return error ? { error: fail(error) } : { code: data };
 }
 
