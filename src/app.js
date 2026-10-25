@@ -741,7 +741,8 @@ function modesSection() {
 // One card per round; set the percentage you think it is. 100 points for a
 // bull's-eye, 3 fewer for every point off. Solo here, online in room().
 const GUESS_ROUNDS = 10;
-const GUESS_TIME_MS = 15000;
+// The daily challenges: 10 seconds per card for everyone.
+const DAILY_TIME_MS = 10000;
 const guessPoints = (guess, value) => Math.max(0, Math.round(100 - 3 * Math.abs(guess - value)));
 const guessBestKey = (cat) => (cat ? `percento:guessBest:${cat}` : 'percento:guessBest');
 
@@ -1035,6 +1036,7 @@ function startDaily() {
       pill: { value: state.answers.filter(Boolean).length, label: t('Correct today') },
       progress: h('div', { class: 'progress' }, h('span', { class: 'status' }, `${t('Daily {date}', { date })} · ${t('Pair {i} of {n}', { i: i + 1, n: pairs.length })}`), dots(i)),
       continueLabel: i === pairs.length - 1 ? t('See results') : t('Next pair'),
+      timeLimit: DAILY_TIME_MS,
       onAnswer: (correct) => {
         state.answers[i] = correct;
         save(dailyKey(date), state);
@@ -1123,7 +1125,7 @@ function startDailyGuess() {
       headline: `${t('Daily closest guess')} · ${t('card {i} of {n}', { i: i + 1, n: cards.length })}`,
       pill: { value: total(), label: t('Points today') },
       progress: h('div', { class: 'progress' }, h('span', { class: 'status' }, `${t('Daily {date}', { date })} · ${t('Card {i} of {n}', { i: i + 1, n: cards.length })}`), dots(i)),
-      deadline: Date.now() + GUESS_TIME_MS,
+      deadline: Date.now() + DAILY_TIME_MS,
       onLock: (guess, touched) => {
         const points = touched ? guessPoints(guess, entry.value) : 0;
         state.answers[i] = { guess: touched ? guess : null, points };
