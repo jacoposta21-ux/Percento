@@ -358,10 +358,13 @@ async function main() {
       const page = await context.newPage();
       watch(page);
       await page.goto(`${BASE}#/solo`);
-      await page.waitForSelector('.game-settings');
+      await page.waitForSelector('.settings-menu');
+      check(!(await page.isVisible('.settings-pop')), 'settings: tucked away in a drop-down');
+      await page.click('.settings-menu summary');
       await audit(page, 'game settings');
-      await page.click('.game-settings .seg:has-text("No limit")');
-      await page.click('.game-settings .seg:text-is("3")');
+      await page.click('.settings-pop .seg:has-text("No limit")');
+      await page.click('.settings-pop .seg:text-is("3")');
+      check((await page.textContent('.settings-current')).includes('3♥'), 'settings: the button shows the choice');
       // Three lives: the run goes on after a wrong answer and stops after the third.
       await page.goto(`${BASE}#/endless`);
       await page.waitForSelector('.card-pick');
@@ -386,7 +389,8 @@ async function main() {
       check(((await page.evaluate(() => localStorage.getItem('percento:runs'))) || '[]') === '[]', 'settings: untimed run kept off the device board');
       // A 10-second clock, also in Closest guess.
       await page.goto(`${BASE}#/solo`);
-      await page.click('.game-settings .seg:has-text("10s")');
+      await page.click('.settings-menu summary');
+      await page.click('.settings-pop .seg:has-text("10s")');
       await page.goto(`${BASE}#/odd`);
       await page.waitForSelector('.odd-grid');
       await page.waitForSelector('.round-timer');
@@ -657,8 +661,9 @@ async function main() {
       check((await p1.$$('.cat-chip')).length === 14, 'multiplayer: mixed plus every category');
       await p1.click('.mode-tile:has-text("Odd one out")');
       await p1.click('.cat-chip:has-text("Space")');
-      await p1.click('.box .seg:has-text("20s")');
-      await p1.click('.box .seg:text-is("3")');
+      await p1.click('.box .settings-menu summary');
+      await p1.click('.settings-pop .seg:has-text("20s")');
+      await p1.click('.settings-pop .seg:text-is("3")');
       await audit(p1, 'multiplayer choices');
       await p1.click('main button:has-text("Create a room")');
       await p1.waitForSelector('.kicker:has-text("Odd one out")');

@@ -603,10 +603,7 @@ button.mode-tile { font: inherit; text-align: left; cursor: pointer; width: 100%
   button.mode-tile > span:not(.mode-visual) { display: none; }
 }
 
-/* ---------- game settings: time per question, lives ---------- */
-.game-settings { display: grid; gap: 14px; margin-top: 18px; max-width: 760px; }
-.game-settings h2 { margin: 0; }
-.game-settings .muted { margin: 0; }
+/* ---------- setting rows: time per question, lives ---------- */
 .setting-choice { display: grid; gap: 6px; }
 .setting-choice[hidden] { display: none; }
 .setting-choice p { margin: 0; font-weight: 700; font-size: 0.92rem; }
@@ -614,3 +611,26 @@ button.mode-tile { font: inherit; text-align: left; cursor: pointer; width: 100%
 .setting-choice .segmented { margin: 0; justify-self: start; max-width: 100%; }
 .box .setting-choice .segmented { background: var(--table); }
 .setting-choice .seg { padding: 6px 12px; min-width: 44px; justify-content: center; }
+
+/* ---------- settings drop-down (single player, room with friends) ---------- */
+.screen-head, .box-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px 14px; flex-wrap: wrap; }
+.screen-head .screen-title, .box-head h2 { margin-bottom: 0; }
+.settings-menu { position: relative; margin-left: auto; }
+.settings-menu summary {
+  display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 14px; list-style: none; cursor: pointer;
+  border-radius: 999px; background: var(--table-deep); border: 2px solid var(--table-line); color: var(--chalk); font-weight: 700; font-size: 0.9rem;
+}
+.settings-menu summary::-webkit-details-marker { display: none; }
+.settings-menu summary:hover, .settings-menu[open] summary { border-color: var(--chalk-dim); }
+.settings-menu summary:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
+.settings-current { color: var(--sun); font-variant-numeric: tabular-nums; }
+.settings-pop {
+  position: absolute; right: 0; top: calc(100% + 8px); z-index: 25; display: grid; gap: 14px;
+  width: max-content; max-width: min(340px, calc(100vw - 32px)); padding: 16px;
+  background: var(--table-deep); color: var(--chalk); border: 2.5px solid var(--ink); border-radius: 18px; box-shadow: var(--lift);
+}
+.settings-pop .muted { margin: 0; font-size: 0.85rem; max-width: 30ch; }
+.settings-pop .segmented { background: var(--table); }
+.settings-pop { max-width: min(380px, calc(100vw - 32px)); }
+.settings-pop .segmented { border-radius: 16px; flex-wrap: nowrap; }
+.settings-pop .seg { padding: 6px 9px; }

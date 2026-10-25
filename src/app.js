@@ -390,9 +390,8 @@ function solo() {
   setKeys(null);
   const cats = CATEGORY_IDS.filter((c) => categoryPool(c).length >= MIN_CATEGORY_CARDS);
   mount(
-    h('h1', { class: 'screen-title' }, t('Single player')),
+    h('div', { class: 'screen-head' }, h('h1', { class: 'screen-title' }, t('Single player')), soloSettingsMenu()),
     h('p', { class: 'lede' }, t('Four games, mixed or by category. Your best scores stay on this device.')),
-    soloSettingsBox(),
     modesSection(),
     cats.length ? categorySection(cats) : null);
 }
@@ -445,13 +444,33 @@ function choiceRow({ label, options, value, format, onChange }) {
   return h('div', { class: 'setting-choice' }, h('p', {}, label), h('div', { class: 'segmented', role: 'group', 'aria-label': label }, buttons));
 }
 
-function soloSettingsBox() {
-  const { time, lives } = soloSettings();
-  return h('section', { class: 'box game-settings' },
-    h('h2', {}, t('Game settings')),
-    choiceRow({ label: t('Time per question'), options: [0, ...TIME_OPTIONS], value: time, format: formatSeconds, onChange: (v) => save(SOLO_TIME_KEY, v) }),
-    choiceRow({ label: t('Lives'), options: LIVES_OPTIONS, value: lives, format: String, onChange: (v) => save(SOLO_LIVES_KEY, v) }),
-    h('p', { class: 'muted' }, t('Lives do not apply to Closest guess. Games without a time limit do not count for the leaderboard.')));
+/**
+ * Settings tucked into a small drop-down: the button shows the current choice
+ * (e.g. "15s · 1♥") and opens a panel with the rows. update() refreshes it.
+ */
+function settingsMenu(rows, summary, note = null) {
+  const current = h('span', { class: 'settings-current' });
+  const menu = h('details', { class: 'settings-menu' },
+    h('summary', {}, h('span', { 'aria-hidden': 'true' }, '⚙'), h('span', {}, t('Settings')), current),
+    h('div', { class: 'settings-pop' }, ...rows, note ? h('p', { class: 'muted' }, note) : null));
+  const update = () => { current.textContent = summary(); };
+  update();
+  // Close on a click elsewhere or Escape, like any drop-down.
+  const away = (ev) => { if (menu.open && !menu.contains(ev.target)) menu.open = false; };
+  const esc = (ev) => { if (ev.key === 'Escape' && menu.open) { menu.open = false; menu.querySelector('summary').focus(); } };
+  document.addEventListener('click', away);
+  document.addEventListener('keydown', esc);
+  cleanup.push(() => { document.removeEventListener('click', away); document.removeEventListener('keydown', esc); });
+  return { menu, update };
+}
+
+function soloSettingsMenu() {
+  const summary = () => { const { time, lives } = soloSettings(); return `${formatSeconds(time)} · ${lives}♥`; };
+  const { menu, update } = settingsMenu([
+    choiceRow({ label: t('Time per question'), options: [0, ...TIME_OPTIONS], value: soloSettings().time, format: formatSeconds, onChange: (v) => { save(SOLO_TIME_KEY, v); update(); } }),
+    choiceRow({ label: t('Lives'), options: LIVES_OPTIONS, value: soloSettings().lives, format: String, onChange: (v) => { save(SOLO_LIVES_KEY, v); update(); } }),
+  ], summary, t('Lives do not apply to Closest guess. Games without a time limit do not count for the leaderboard.'));
+  return menu;
 }
 
 // ---------- endless ----------
@@ -1490,7 +1509,11 @@ async function friends() {
   const ROOM_LIVES_KEY = 'percento:roomLives';
   let seconds = TIME_OPTIONS.includes(load(ROOM_TIME_KEY, 15)) ? load(ROOM_TIME_KEY, 15) : 15;
   let lives = LIVES_OPTIONS.includes(load(ROOM_LIVES_KEY, 1)) ? load(ROOM_LIVES_KEY, 1) : 1;
-  const livesRow = choiceRow({ label: t('Lives'), options: LIVES_OPTIONS, value: lives, format: String, onChange: (v) => { lives = v; save(ROOM_LIVES_KEY, v); } });
+  const livesRow = choiceRow({ label: t('Lives'), options: LIVES_OPTIONS, value: lives, format: String, onChange: (v) => { lives = v; save(ROOM_LIVES_KEY, v); roomMenu.update(); } });
+  const roomMenu = settingsMenu([
+    choiceRow({ label: t('Time per question'), options: TIME_OPTIONS, value: seconds, format: formatSeconds, onChange: (v) => { seconds = v; save(ROOM_TIME_KEY, v); roomMenu.update(); } }),
+    livesRow,
+  ], () => (mode === 'guess' ? formatSeconds(seconds) : `${formatSeconds(seconds)} · ${lives}♥`));
   const modeButtons = GAME_MODES.map((m) => h('button', { class: `mode-tile mode-${m.id}`, type: 'button', 'data-mode': m.online, onclick: () => setMode(m.online) },
     modeVisual(m.id), h('strong', {}, t(m.name)), h('span', {}, t(m.desc))));
   const catButtons = ['', ...cats].map((c) => h('button', { class: 'cat-chip', type: 'button', 'data-cat': c, style: c ? `--c:${CATEGORIES[c].color}` : '', onclick: () => setCat(c) },
@@ -1500,6 +1523,7 @@ async function friends() {
     save(MODE_KEY, id);
     rules.textContent = t(onlineGame(id).rules);
     livesRow.hidden = id === 'guess';
+    roomMenu.update();
     for (const b of modeButtons) b.setAttribute('aria-pressed', String(b.dataset.mode === id));
   };
   const setCat = (c) => {
@@ -1527,10 +1551,8 @@ async function friends() {
         h('p', { class: 'muted' }, t('Public games: 15 seconds per question, 1 life.')),
         h('button', { class: 'btn btn-primary btn-big', type: 'button', onclick: (ev) => busy(ev.currentTarget, () => online.quickMatch(mode, cat || null)) }, t('Find a game'))),
       h('section', { class: 'box form' },
-        h('h2', {}, t('Room with friends')),
+        h('div', { class: 'box-head' }, h('h2', {}, t('Room with friends')), roomMenu.menu),
         h('p', { class: 'muted' }, t('Create a private room, send the link, start when everybody is in.')),
-        choiceRow({ label: t('Time per question'), options: TIME_OPTIONS, value: seconds, format: formatSeconds, onChange: (v) => { seconds = v; save(ROOM_TIME_KEY, v); } }),
-        livesRow,
         h('button', { class: 'btn', type: 'button', onclick: (ev) => busy(ev.currentTarget, () => online.createRoom(cat || null, mode, { seconds, lives: mode === 'guess' ? 1 : lives })) }, t('Create a room'))),
       h('form', { class: 'box form', onsubmit: (ev) => {
         ev.preventDefault();
