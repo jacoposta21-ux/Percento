@@ -740,12 +740,19 @@ async function main() {
       check((await p1.textContent('main')).includes('Final standings'), 'guess room: final standings');
       await p1.screenshot({ path: join(SHOTS, 'guess-room-results.png'), fullPage: true });
 
-      // Solo runs count on the world board once signed in.
+      // The world board sums the daily challenges: 7 right pairs (70) + 250 guess points / 5 (50).
       await playEndless(p1, 'signed-in');
+      await p1.evaluate((day) => {
+        const db = JSON.parse(localStorage.getItem('fake-supabase-db'));
+        const anna = db.profiles.find((p) => p.username === 'Anna_1').id;
+        db.daily_results.push({ user_id: anna, day, answers: [true, true, true, true, true, true, true, false, false, false], score: 7, guess_points: 250, guess_cards: 5 });
+        localStorage.setItem('fake-supabase-db', JSON.stringify(db));
+      }, romeDate());
       await p1.goto(`${BASE}#/leaderboard`);
       await p1.waitForSelector('.board li.me');
       check((await p1.textContent('main')).includes('World leaderboard'), 'leaderboard: world board shown');
-      check((await p1.textContent('.board li.me')).includes('Anna_1'), 'leaderboard: my run is on the world board');
+      const myRow = await p1.textContent('.board li.me');
+      check(myRow.includes('Anna_1') && myRow.includes('120'), `leaderboard: daily challenges summed on the world board (${myRow})`);
 
       // Sign out, wrong password, Google not enabled, then back in.
       await p1.goto(`${BASE}#/account`);
@@ -768,6 +775,13 @@ async function main() {
       await p1.waitForSelector('.stat-row');
       check(Number(await p1.textContent('.stat-row p:nth-child(2) b')) >= 1, 'account: endless games saved to the account');
       await audit(p1, 'profile');
+      // Deleting the account asks once more, then removes it and signs out.
+      await p1.click('button:has-text("Delete my account")');
+      await audit(p1, 'delete account');
+      await p1.click('button:has-text("Delete for good")');
+      await p1.waitForFunction(() => document.querySelector('[data-account-label]').textContent === 'Sign in', null, { timeout: 5000 })
+        .then(() => check(true, ''), () => check(false, 'account: deleted and signed out'));
+      check(await p1.evaluate(() => !JSON.parse(localStorage.getItem('fake-supabase-db')).profiles.some((p) => p.username === 'Anna_1')), 'account: profile removed');
       await context.close();
     }
 

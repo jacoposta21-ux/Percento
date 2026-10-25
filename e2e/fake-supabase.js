@@ -32,6 +32,17 @@
       }
       return [...best.values()];
     }
+    if (table === 'daily_leaderboard') {
+      // Same sum as the server: 10 per right pair, Closest guess points / 5.
+      const sum = new Map();
+      for (const d of db.daily_results) {
+        const name = db.profiles.find((p) => p.id === d.user_id)?.username ?? '?';
+        const cur = sum.get(name) || { username: name, points: 0, days: 0 };
+        const right = (d.answers || []).filter(Boolean).length;
+        sum.set(name, { username: name, points: cur.points + right * 10 + Math.round((d.guess_points || 0) / 5), days: cur.days + 1 });
+      }
+      return [...sum.values()];
+    }
     if (table === 'room_guesses') {
       // Row level security: your own guesses, everyone's once the round's clock stops.
       const me = uid();
@@ -69,7 +80,7 @@
       }
       if (this.op === 'upsert') {
         const i = db.daily_results.findIndex((d) => d.user_id === this.row.user_id && d.day === this.row.day);
-        if (i >= 0) db.daily_results[i] = this.row; else db.daily_results.push(this.row);
+        if (i >= 0) db.daily_results[i] = { ...db.daily_results[i], ...this.row }; else db.daily_results.push({ answers: [], score: 0, guess_points: 0, guess_cards: 0, ...this.row });
         write(db);
         return { data: null, error: null };
       }
@@ -128,6 +139,13 @@
       if (r.starts_at && Date.parse(r.starts_at) <= Date.now() && n >= 2) startNow(r);
     };
     if (name === 'server_time') return { data: new Date().toISOString(), error: null };
+    if (name === 'delete_my_account') {
+      for (const t of ['runs', 'daily_results', 'room_players', 'room_guesses']) db[t] = db[t].filter((r) => r.user_id !== me);
+      db.profiles = db.profiles.filter((p) => p.id !== me);
+      db.users = db.users.filter((u) => u.id !== me);
+      touch();
+      return { data: null, error: null };
+    }
     if (name === 'quick_match') {
       const mode = args?.room_mode || 'standing';
       const category = args?.room_category ?? null;

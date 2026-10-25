@@ -639,3 +639,5 @@ button.mode-tile { font: inherit; text-align: left; cursor: pointer; width: 100%
 .box-head .settings-menu[open] summary { margin-left: auto; display: flex; width: max-content; }
 .box .settings-pop { position: static; margin-top: 10px; width: auto; max-width: none; box-shadow: none; border-width: 2px; background: var(--table); }
 .box .settings-pop .segmented { background: var(--table-deep); }
+.btn-danger { background: var(--wrong); color: var(--ink); }
+.board-note { margin: -4px 0 8px; font-size: 0.85rem; }

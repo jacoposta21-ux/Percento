@@ -137,7 +137,8 @@ async function worldBoard(box, limit) {
     return;
   }
   box.replaceChildren(h('h2', {}, t('World leaderboard')),
-    boardList(rows.map((r) => ({ username: r.username, score: r.best })), online.currentUser()?.username));
+    h('p', { class: 'muted board-note' }, t('Daily challenges, summed.')),
+    boardList(rows.map((r) => ({ username: r.username, score: r.points })), online.currentUser()?.username));
 }
 
 function renderPanel() {
@@ -469,7 +470,7 @@ function soloSettingsMenu() {
   const { menu, update } = settingsMenu([
     choiceRow({ label: t('Time per question'), options: [0, ...TIME_OPTIONS], value: soloSettings().time, format: formatSeconds, onChange: (v) => { save(SOLO_TIME_KEY, v); update(); } }),
     choiceRow({ label: t('Lives'), options: LIVES_OPTIONS, value: soloSettings().lives, format: String, onChange: (v) => { save(SOLO_LIVES_KEY, v); update(); } }),
-  ], summary, t('Lives do not apply to Closest guess. Games without a time limit do not count for the leaderboard.'));
+  ], summary, t('Lives do not apply to Closest guess. Only the daily challenges count for the world leaderboard.'));
   return menu;
 }
 
@@ -531,7 +532,6 @@ function endlessOver({ mode = 'pairs', cat, score, best, exhausted, timed = fals
     h('p', { class: 'lede' }, t(exhausted ? exhaustedLine : pickByScore(GAME_OVER_LINES, score, Math.floor(Math.random() * 2)))),
     h('p', { class: 'muted' }, newBest ? t('New personal best: {n}!', { n: best }) : t('Personal best: {n}', { n: best })),
     storageAvailable() ? null : h('p', { class: 'note' }, t('Your browser blocks storage, so your scores last only until you close this tab.')),
-    mode === 'pairs' && !cat && !timed ? h('p', { class: 'muted' }, t('Games without a time limit do not count for the leaderboard.')) : null,
     h('div', { class: 'actions' },
       h('button', { class: 'btn btn-primary', type: 'button', onclick: again }, t('Play again')),
       h('a', { class: 'btn', href: '#/solo' }, cat ? t('Other categories') : t('Other games')),
@@ -1130,6 +1130,7 @@ function startDailyGuess() {
         const points = touched ? guessPoints(guess, entry.value) : 0;
         state.answers[i] = { guess: touched ? guess : null, points };
         save(dailyGuessKey(date), state);
+        online.saveDailyGuess(date, state.answers.length, total()).catch(() => {});
         if (state.answers.length === cards.length) {
           const history = load(DAILY_GUESS_HISTORY_KEY, {}) || {};
           history[date] = total();
@@ -1191,8 +1192,9 @@ function leaderboard() {
   mount(
     h('h1', { class: 'screen-title' }, t('Leaderboard')),
     h('p', { class: 'lede' }, online.currentUser()
-      ? t('Playing as {name}. Your scores count on the world board.', { name: online.currentUser().username })
+      ? t('Playing as {name}. Your daily challenges count on the world board.', { name: online.currentUser().username })
       : h('span', {}, ...tx('Guests only appear on this device. {link} to join the world board.', { link: h('a', { href: '#/account' }, t('Create an account')) }))),
+    h('p', { class: 'muted' }, t('The world board adds up the daily challenges, the same cards for everyone: 10 points for each right pair, plus your Closest guess points divided by 5. Up to 200 points a day.')),
     world, daily,
     h('section', { class: 'box', style: 'margin-top:16px' }, h('h2', {}, t('This device: best Endless runs')), leaderboardList(10)),
     h('section', { class: 'box', style: 'margin-top:16px' }, h('h2', {}, t('This device: Daily history')),
@@ -1206,7 +1208,7 @@ function leaderboard() {
     const top = ok ? await online.topPlayers(10).catch(() => null) : null;
     const day = ok ? await online.dailyBoard(today).catch(() => null) : null;
     const offline = h('p', { class: 'board-empty' }, t('The world board is offline right now. Your games still count on this device.'));
-    world.replaceChildren(world.firstChild, top ? boardList(top.map((r) => ({ username: r.username, score: r.best, note: t('{n} runs', { n: r.runs }) })), me) : offline);
+    world.replaceChildren(world.firstChild, top ? boardList(top.map((r) => ({ username: r.username, score: r.points, note: t('{n} days', { n: r.days }) })), me) : offline);
     daily.replaceChildren(daily.firstChild, day ? boardList(day.map((r) => ({ username: r.username, score: `${r.score}/10` })), me) : offline.cloneNode(true));
   });
 }
@@ -1402,6 +1404,7 @@ async function profileScreen(me) {
         toast('Signed out. Playing offline as a guest.');
         location.hash = '#/';
       } }, me.guest ? t('Leave guest mode') : t('Sign out'))),
+    deleteAccountBox(),
     settingsLink());
   const data = await online.myStats().catch(() => null);
   if (!stats.isConnected) return;
@@ -1415,6 +1418,26 @@ async function profileScreen(me) {
     data.daily.length ? h('ol', { class: 'board' }, data.daily.map((d) => h('li', {},
       h('span', { class: 'rank' }, '📅'), h('span', {}, ''), h('span', { class: 'who' }, d.day),
       h('span', { class: 'score' }, `${d.score}/${d.answers.length}`)))) : h('p', { class: 'board-empty' }, t('No Daily Challenge saved yet.')));
+}
+
+/** Deleting the account asks once more on the page itself, then removes everything. */
+function deleteAccountBox() {
+  const message = h('p', { class: 'form-message', role: 'alert' });
+  const confirmRow = h('div', { class: 'actions', hidden: true },
+    h('button', { class: 'btn btn-danger', type: 'button', onclick: async (ev) => {
+      ev.currentTarget.disabled = true;
+      const res = await online.deleteAccount();
+      if (res.error) { message.textContent = res.error; ev.currentTarget.disabled = false; return; }
+      updateAccountLink();
+      toast(t('Your account and its records are deleted.'));
+      location.hash = '#/';
+    } }, t('Delete for good')),
+    h('button', { class: 'btn', type: 'button', onclick: () => { confirmRow.hidden = true; ask.hidden = false; } }, t('Keep my account')));
+  const ask = h('button', { class: 'btn', type: 'button', onclick: () => { ask.hidden = true; confirmRow.hidden = false; } }, t('Delete my account'));
+  return h('section', { class: 'box', style: 'margin-top:16px' },
+    h('h2', {}, t('Delete my account')),
+    h('p', { class: 'muted' }, t('This removes your name, your records and your daily challenges from Eyeball. It cannot be undone.')),
+    ask, confirmRow, message);
 }
 
 function upgradeForm() {

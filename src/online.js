@@ -173,6 +173,23 @@ export async function saveDaily(day, answers) {
   await client.from('daily_results').upsert({ user_id: user.id, day, answers, score: answers.filter(Boolean).length, updated_at: new Date().toISOString() });
 }
 
+/** Daily closest guess progress: cards played so far and their points (the server only lets both grow). */
+export async function saveDailyGuess(day, cards, points) {
+  if (!currentUser()) return;
+  await client.from('daily_results').upsert({ user_id: user.id, day, guess_cards: cards, guess_points: points, updated_at: new Date().toISOString() });
+}
+
+/** Deletes the account and everything saved with it, then signs out here. */
+export async function deleteAccount() {
+  const { error } = await client.rpc('delete_my_account');
+  if (error) return { error: fail(error) };
+  await client.auth.signOut().catch(() => {});
+  user = null;
+  profile = null;
+  for (const fn of listeners) fn();
+  return {};
+}
+
 export async function loadDaily(day) {
   if (!currentUser()) return null;
   const { data } = await client.from('daily_results').select('answers').eq('user_id', user.id).eq('day', day).maybeSingle();
@@ -180,8 +197,9 @@ export async function loadDaily(day) {
 }
 
 // ---------- leaderboards ----------
+/** World leaderboard: the daily challenges summed per player ({ username, points, days }). */
 export async function topPlayers(limit = 10) {
-  const { data, error } = await client.from('leaderboard').select('username, best, runs').order('best', { ascending: false }).limit(limit);
+  const { data, error } = await client.from('daily_leaderboard').select('username, points, days').order('points', { ascending: false }).limit(limit);
   return error ? null : data;
 }
 
