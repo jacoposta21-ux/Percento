@@ -634,3 +634,8 @@ button.mode-tile { font: inherit; text-align: left; cursor: pointer; width: 100%
 .settings-pop { max-width: min(380px, calc(100vw - 32px)); }
 .settings-pop .segmented { border-radius: 16px; flex-wrap: nowrap; }
 .settings-pop .seg { padding: 6px 9px; }
+/* Inside a box the menu opens in place, so it never covers the box's own button. */
+.box-head .settings-menu[open] { flex-basis: 100%; }
+.box-head .settings-menu[open] summary { margin-left: auto; display: flex; width: max-content; }
+.box .settings-pop { position: static; margin-top: 10px; width: auto; max-width: none; box-shadow: none; border-width: 2px; background: var(--table); }
+.box .settings-pop .segmented { background: var(--table-deep); }
