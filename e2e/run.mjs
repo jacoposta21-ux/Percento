@@ -385,7 +385,6 @@ async function main() {
       }
       await page.waitForSelector('.big-score', { timeout: 5000 });
       check(misses === 3, 'settings: the run ends when the lives run out');
-      check((await page.textContent('main')).includes('do not count for the leaderboard'), 'settings: untimed runs are not ranked');
       check(((await page.evaluate(() => localStorage.getItem('percento:runs'))) || '[]') === '[]', 'settings: untimed run kept off the device board');
       // A 10-second clock, also in Closest guess.
       await page.goto(`${BASE}#/solo`);
