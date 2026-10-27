@@ -33,13 +33,26 @@ export function inviteLink(code) {
   try { return sdk?.game?.inviteLink?.({ roomId: code }) ?? ''; } catch { return ''; }
 }
 
-/** CrazyGames' own invite button, shown while the room can still be joined. */
-export function showInvite(code) {
-  try { sdk?.game?.showInviteButton?.({ roomId: code }); } catch { /* optional */ }
+/**
+ * Tells CrazyGames which room the player is in and whether friends can still
+ * join it (their invite button and friends list follow this).
+ */
+export function room(code, joinable) {
+  try { sdk?.game?.updateRoom?.({ roomId: code, isJoinable: joinable, inviteParams: { roomId: code } }); } catch { /* optional */ }
 }
 
-export function hideInvite() {
-  try { sdk?.game?.hideInviteButton?.(); } catch { /* optional */ }
+export function leftRoom() {
+  try { sdk?.game?.leftRoom?.(); } catch { /* optional */ }
+}
+
+/** Calls fn(roomCode) when the player accepts an invite while the game is already open. */
+export function onJoinRoom(fn) {
+  try { sdk?.game?.addJoinRoomListener?.((params) => { if (params?.roomId) fn(String(params.roomId)); }); } catch { /* optional */ }
+}
+
+/** The loading screen: CrazyGames measures load time between these two calls. */
+export function loading(on) {
+  try { if (on) sdk?.game?.loadingStart?.(); else sdk?.game?.loadingStop?.(); } catch { /* optional */ }
 }
 
 let playing = null;

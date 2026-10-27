@@ -1673,6 +1673,7 @@ async function room(code) {
   online.heartbeat(code).catch(() => {});
   let tick = null;
   cleanup.push(() => {
+    portal.leftRoom();
     clearInterval(beat);
     clearInterval(tick);
     if (data.room.status === 'lobby') online.leaveRoom(code).catch(() => {});
@@ -1696,7 +1697,7 @@ async function room(code) {
     const isPublic = data.room.is_public;
     const isHost = data.room.host_id === me.id;
     const link = PORTAL ? portal.inviteLink(code) : `${shareUrl()}#/room/${code}`;
-    if (PORTAL) portal.showInvite(code);
+    if (PORTAL) portal.room(code, true);
     const n = data.players.length;
     const countdown = h('span', { class: 'countdown' });
     const updateCountdown = () => {
@@ -1734,7 +1735,7 @@ async function room(code) {
 
   function play() {
     view = 'playing';
-    portal.hideInvite();
+    portal.room(code, false);
     clearInterval(tick);
     audio.sfx('start');
     const cat = data.room.category && categoryPool(data.room.category).length >= MIN_CATEGORY_CARDS ? data.room.category : null;
@@ -1769,7 +1770,7 @@ async function room(code) {
   // ---- closest guess, online: rounds follow the server clock ----
   async function guessGame() {
     view = 'guess';
-    portal.hideInvite();
+    portal.room(code, false);
     clearInterval(tick);
     const r = data.room;
     const offset = await online.serverOffset().catch(() => 0);
@@ -1887,7 +1888,7 @@ async function room(code) {
 
   let fanfare = false;
   function results() {
-    portal.hideInvite();
+    portal.room(code, false);
     const status = data.room.status;
     const top = ranking();
     const winners = status === 'finished' ? top.filter((p) => p.score === top[0].score) : [];
@@ -1976,6 +1977,9 @@ await initI18n();
 translatePage();
 updateSoundButton();
 if (PORTAL && await portal.init()) {
+  portal.loading(true);
+  // Accepting an invite while the game is open goes straight to that room.
+  portal.onJoinRoom((code) => { if (/^[A-Za-z0-9]{6}$/.test(code)) location.hash = `#/room/${code.toUpperCase()}`; });
   // CrazyGames' mute button wins over ours while it is on.
   let before = null;
   portal.onMute((muted) => {
@@ -1989,6 +1993,7 @@ if (PORTAL && await portal.init()) {
 }
 window.addEventListener('hashchange', route);
 route();
+portal.loading(false);
 // Online features load in the background; the game never waits for them.
 online.onAuthChange(() => {
   updateAccountLink();
