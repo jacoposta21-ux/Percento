@@ -2124,10 +2124,12 @@ function translatePage() {
 
 audio.initAudio();
 // The language loads first (a small file), then the first screen appears.
-await initI18n();
+// On CrazyGames the game speaks the language of the player's CrazyGames site.
+const portalReady = PORTAL && await portal.init();
+await initI18n(portalReady ? portal.locale() : null);
 translatePage();
 updateSoundButton();
-if (PORTAL && await portal.init()) {
+if (portalReady) {
   portal.loading(true);
   // Accepting an invite while the game is open goes straight to that room.
   portal.onJoinRoom((code) => { if (/^[A-Za-z0-9]{6}$/.test(code)) location.hash = `#/room/${code.toUpperCase()}`; });

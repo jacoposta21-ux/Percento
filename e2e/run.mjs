@@ -733,8 +733,11 @@ async function main() {
       await setGuess(p1, 30);
       await p1.click('.lock');
       await setGuess(p2, 70);
-      await p1.waitForSelector('.guess-ruler:not([hidden]) .pin:has-text("Bob")', { timeout: 10000 });
-      await p2.waitForSelector('.guess-ruler:not([hidden]) .pin:has-text("Anna_1")', { timeout: 10000 });
+      // Both at once: the reveal lasts only a few seconds here.
+      await Promise.all([
+        p1.waitForSelector('.guess-ruler:not([hidden]) .pin:has-text("Bob")', { timeout: 10000 }),
+        p2.waitForSelector('.guess-ruler:not([hidden]) .pin:has-text("Anna_1")', { timeout: 10000 }),
+      ]);
       check((await p2.textContent('.guess-ruler')).includes('70%'), 'guess room: an unlocked guess is sent when time runs out');
       check(/closest/i.test(await p1.textContent('.guess-status')), 'guess room: the closest player is announced');
       await audit(p1, 'guess room reveal');

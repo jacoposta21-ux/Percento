@@ -810,7 +810,6 @@ html.fit main .box[style] { margin-top: 10px !important; }
   html.fit .round-head .screen-title { font-size: clamp(1.05rem, 3.2vh, 1.5rem); }
 }
 @media (max-height: 560px) {
-  html.fit .hero-mascot, html.fit .choice-visual, html.fit .mode-tile .mode-visual { display: none; }
   html.fit .hero .lede, html.fit .hero-meta { display: none; }
   html.fit main > .lede { display: none; }
 }
@@ -921,3 +920,30 @@ html.fit .marathon-board .board li { padding-block: 4px; }
   .marathon-over { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 24px; align-items: start; }
 }
 @media (max-width: 699px) { html.fit .odd-grid .card .pie { height: clamp(26px, 6vh, 56px); } }
+
+/* Fit mode, short frames (CrazyGames on a laptop, browser zoom): the
+   pictures shrink instead of disappearing, the menu tightens, and the
+   small links sit on one line under it. */
+@media (max-height: 560px) {
+  html.fit .hero-mascot { width: 52px; margin-bottom: 0; }
+  html.fit .choice-visual { height: 38px; border-radius: 10px; }
+  html.fit .choice-visual .pie { width: 26px; }
+  html.fit .mode-tile .mode-visual { display: flex; height: 30px; }
+  html.fit .mode-tile .mode-visual .pie { width: 18px; }
+  html.fit .mode-tile .mini-target { font-size: 0.68rem; padding: 1px 6px; }
+  html.fit .mode-tile .mini-card { width: 12px; height: 16px; }
+  html.fit .mode-tile .mini-slider { width: 36px; height: 8px; }
+  html.fit .home-daily .daily-date { width: 38px; height: 42px; font-size: 1rem; border-top-width: 7px; }
+  html.fit .odd-grid .card .pie { height: 26px; }
+  html.fit .odd-grid .card-value { font-size: 1.3rem; }
+  html.fit .odd-grid .card-text { font-size: 0.85rem; }
+}
+@media (min-width: 900px) {
+  html.fit .side-links { flex-direction: row; flex-wrap: wrap; gap: 0 10px; padding: 0 0 0 6px; }
+  html.fit .side-links a { min-height: 24px; padding: 0; font-size: 0.78rem; }
+}
+@media (min-width: 900px) and (max-height: 560px) {
+  html.fit .sidebar { gap: 8px; padding-block: 10px; }
+  html.fit .nav { gap: 2px; }
+  html.fit .nav a { min-height: 34px; }
+}

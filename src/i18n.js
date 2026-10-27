@@ -11,11 +11,12 @@ let lang = 'en';
 let dict = {};
 let cards = {};
 
-/** Saved choice, else the first browser language we speak, else English. */
-export function detectLang() {
+/** Saved choice, else the preferred locale or the first browser language we speak, else English. */
+export function detectLang(preferred = null) {
   const saved = load(KEY, null);
   if (saved && LANGS[saved]) return saved;
-  const wanted = typeof navigator === 'undefined' ? [] : (navigator.languages?.length ? navigator.languages : [navigator.language]);
+  const browser = typeof navigator === 'undefined' ? [] : (navigator.languages?.length ? navigator.languages : [navigator.language]);
+  const wanted = preferred ? [preferred, ...browser] : browser;
   for (const l of wanted) {
     const code = String(l || '').slice(0, 2).toLowerCase();
     if (LANGS[code]) return code;
@@ -24,8 +25,9 @@ export function detectLang() {
 }
 
 /** Loads the language's strings and card texts. Never throws: English is the fallback. */
-export async function initI18n() {
-  lang = detectLang();
+/** preferred: a locale such as "it-IT" that wins over the browser's (the player's own choice still wins). */
+export async function initI18n(preferred = null) {
+  lang = detectLang(preferred);
   if (lang !== 'en') {
     try {
       [dict, cards] = await Promise.all([

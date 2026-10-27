@@ -63,6 +63,11 @@ export function gameplay(on) {
   try { if (on) sdk.game.gameplayStart(); else sdk.game.gameplayStop(); } catch { /* optional */ }
 }
 
+/** The language CrazyGames shows the player (e.g. "it-IT"), or null. */
+export function locale() {
+  try { return sdk?.user?.systemInfo?.locale ?? null; } catch { return null; }
+}
+
 /** The signed-in CrazyGames player's name, or null for a CrazyGames guest. */
 export async function username() {
   try { return (await sdk?.user?.getUser?.())?.username ?? null; } catch { return null; }
