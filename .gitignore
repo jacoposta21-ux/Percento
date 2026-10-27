@@ -2,3 +2,6 @@ node_modules/
 dist/
 e2e/screenshots/
 dist-prod/
+dist-crazygames/
+dist-shot/
+crazygames/*.zip

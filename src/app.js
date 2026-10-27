@@ -64,7 +64,10 @@ function tx(text, nodes, vars = {}) {
   out.push(str.slice(last));
   return out;
 }
-const shareUrl = () => `${location.origin}${location.pathname}`;
+// The CrazyGames build plays inside their portal: no outside sign-in and no
+// links back to the web version (their rules); online play is guest-only.
+const PORTAL = BUILD.target === 'crazygames';
+const shareUrl = () => (PORTAL ? '' : `${location.origin}${location.pathname}`);
 
 function toast(message) {
   const region = document.getElementById('toast');
@@ -1077,7 +1080,7 @@ function nextDailyCountdown(date, onNewDay) {
 function dailyResults(date, pairs, answers) {
   const score = answers.filter(Boolean).length;
   const state = load(dailyKey(date), null) || { answers };
-  const text = shareText({ date, answers, url: `${shareUrl()}#/daily` });
+  const text = shareText({ date, answers, url: PORTAL ? '' : `${shareUrl()}#/daily` }).trim();
   const doShare = shareFlow(text);
   const otherDone = (load(dailyGuessKey(date), null)?.answers?.length ?? 0) >= DAILY_GUESS_CARDS;
   mount(
@@ -1159,7 +1162,7 @@ function startDailyGuess() {
 function dailyGuessResults(date, cards, state) {
   const score = state.answers.reduce((n, a) => n + a.points, 0);
   const grid = state.answers.map((a) => guessSquare(a.points)).join('');
-  const text = `Eyeball Guess ${date}: ${score}/${cards.length * 100}\n${grid}\n${shareUrl()}#/daily/guess`;
+  const text = `Eyeball Guess ${date}: ${score}/${cards.length * 100}\n${grid}\n${PORTAL ? '' : `${shareUrl()}#/daily/guess`}`.trim();
   const doShare = shareFlow(text);
   const otherDone = (load(dailyKey(date), null)?.answers?.length ?? 0) >= RULES.dailyPairs;
   mount(
@@ -1193,7 +1196,7 @@ function leaderboard() {
     h('h1', { class: 'screen-title' }, t('Leaderboard')),
     h('p', { class: 'lede' }, online.currentUser()
       ? t('Playing as {name}. Your daily challenges count on the world board.', { name: online.currentUser().username })
-      : h('span', {}, ...tx('Guests only appear on this device. {link} to join the world board.', { link: h('a', { href: '#/account' }, t('Create an account')) }))),
+      : PORTAL ? null : h('span', {}, ...tx('Guests only appear on this device. {link} to join the world board.', { link: h('a', { href: '#/account' }, t('Create an account')) }))),
     h('p', { class: 'muted' }, t('The world board adds up the daily challenges, the same cards for everyone: 10 points for each right pair, plus your Closest guess points divided by 5. Up to 200 points a day.')),
     world, daily,
     h('section', { class: 'box', style: 'margin-top:16px' }, h('h2', {}, t('This device: best Endless runs')), leaderboardList(10)),
@@ -1302,6 +1305,7 @@ async function account(tab = 'signin') {
   const me = online.currentUser();
   if (!ok) return mount(h('h1', { class: 'screen-title' }, t('Account')), offlineNotice(), settingsLink());
   if (me) return profileScreen(me);
+  if (PORTAL) return needAccount('#/account', t('Account'), t('Pick a nickname so the others know who is who.'));
 
   const message = h('p', { class: 'form-message', role: 'alert' });
   const busy = (form, on) => form.querySelectorAll('button, input').forEach((el) => { el.disabled = on; });
@@ -1383,10 +1387,10 @@ async function profileScreen(me) {
   mount(
     h('p', { class: 'kicker' }, me.guest ? t('Playing online as a guest') : t('Signed in')),
     h('h1', { class: 'screen-title' }, `Hi, ${me.username}!`),
-    h('p', { class: 'lede' }, me.guest
+    PORTAL ? null : h('p', { class: 'lede' }, me.guest
       ? t('Your games are saved on this browser only. Add an email and password to keep them on every device; your name and records stay.')
       : t('Your Endless runs and Daily Challenges are saved to your account.')),
-    me.guest ? upgradeForm() : null,
+    me.guest && !PORTAL ? upgradeForm() : null,
     stats,
     h('form', { class: 'box form', style: 'margin-top:16px', onsubmit: async (ev) => {
       ev.preventDefault();
@@ -1466,7 +1470,7 @@ function upgradeForm() {
 
 function updateAccountLink() {
   const me = online.currentUser();
-  for (const el of document.querySelectorAll('[data-account-label]')) el.textContent = me ? me.username : t('Sign in');
+  for (const el of document.querySelectorAll('[data-account-label]')) el.textContent = me ? me.username : PORTAL ? t('Account') : t('Sign in');
 }
 
 /** Online without an account: pick a nickname and play as a guest, or sign in. Then back to `hash`. */
@@ -1489,8 +1493,8 @@ function needAccount(hash, title, why) {
   nickField, message, h('button', { class: 'btn btn-primary btn-big', type: 'submit' }, t('Play as guest')));
   mount(h('h1', { class: 'screen-title' }, title), h('p', { class: 'lede' }, why),
     form,
-    h('p', { class: 'muted' }, t('Have an account, or want one to keep your records everywhere?')),
-    h('div', { class: 'actions' },
+    PORTAL ? null : h('p', { class: 'muted' }, t('Have an account, or want one to keep your records everywhere?')),
+    PORTAL ? null : h('div', { class: 'actions' },
       h('a', { class: 'btn', href: '#/account' }, t('Sign in')),
       h('a', { class: 'btn', href: '#/account/new' }, t('Create account'))));
   nick.focus({ preventScroll: true });
@@ -1658,7 +1662,7 @@ async function room(code) {
     view = 'lobby';
     const isPublic = data.room.is_public;
     const isHost = data.room.host_id === me.id;
-    const link = `${shareUrl()}#/room/${code}`;
+    const link = PORTAL ? '' : `${shareUrl()}#/room/${code}`;
     const n = data.players.length;
     const countdown = h('span', { class: 'countdown' });
     const updateCountdown = () => {

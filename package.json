@@ -8,6 +8,7 @@
     "validate": "node scripts/validate.mjs --mode=production",
     "validate:dev": "node scripts/validate.mjs --mode=dev",
     "build": "node scripts/validate.mjs --mode=production && node scripts/build.mjs --mode=production",
+    "build:crazygames": "node scripts/validate.mjs --mode=production && node scripts/build.mjs --mode=production --target=crazygames --out=dist-crazygames && cd dist-crazygames && zip -qr ../crazygames/eyeball-crazygames.zip .",
     "build:dev": "node scripts/validate.mjs --mode=dev && node scripts/build.mjs --mode=dev",
     "serve": "node scripts/serve.mjs",
     "dev": "npm run build:dev && node scripts/serve.mjs",
