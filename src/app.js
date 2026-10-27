@@ -29,6 +29,7 @@ const TITLE = 'Which percentage is higher?';
 const dailyKey = (date) => `percento:daily3:${date}`;
 // Pause on a right answer before the next pair appears by itself.
 const AUTO_NEXT_MS = 1600;
+const WRONG_NEXT_MS = 3500; // a miss leaves a little longer to look at the numbers
 const app = document.getElementById('app');
 const panel = document.getElementById('panel');
 let cleanup = [];
@@ -88,6 +89,7 @@ function setKeys(handler) {
 function mount(...children) {
   const nodes = children.flat(Infinity).filter((c) => c !== null && c !== undefined && c !== false);
   if (BUILD.mode === 'dev') nodes.unshift(h('p', { class: 'dev-banner' }, t('Test build with unverified statistics.'), ' ', h('a', { href: '#/review' }, t('Review mode'))));
+  for (const b of document.querySelectorAll('.verdict-banner')) b.remove();
   app.replaceChildren(...nodes);
   // CrazyGames wants to know when a round is being played (rounds have a .round-head).
   if (PORTAL) portal.gameplay(Boolean(app.querySelector('.round-head')));
@@ -95,6 +97,20 @@ function mount(...children) {
   heading?.setAttribute('tabindex', '-1');
   heading?.focus({ preventScroll: true });
   window.scrollTo(0, 0);
+}
+
+/**
+ * After a miss: a banner slides in at the top and the game moves on by itself;
+ * the Continue button only skips the wait.
+ */
+function wrongVerdict(text, next, advance) {
+  document.body.append(h('div', { class: 'verdict-banner', role: 'status' },
+    h('b', {}, `✗ ${t('Wrong answer')}`), h('span', {}, text),
+    h('span', { class: 'auto-next', style: `--t:${WRONG_NEXT_MS}ms`, 'aria-hidden': 'true' })));
+  next.hidden = false;
+  next.focus({ preventScroll: true });
+  const timer = setTimeout(advance, WRONG_NEXT_MS);
+  cleanup.push(() => clearTimeout(timer));
 }
 
 const playable = (pool, sameCategory = false) => pool.length >= 2 && createPairGenerator(pool, mulberry32(1), { sameCategory }).next() !== null;
@@ -340,8 +356,7 @@ function renderRound({
       const timer = setTimeout(advance, AUTO_NEXT_MS);
       cleanup.push(() => clearTimeout(timer));
     } else {
-      next.hidden = false;
-      next.focus({ preventScroll: true });
+      wrongVerdict(feedback.textContent, next, advance);
     }
   }
 
@@ -643,8 +658,7 @@ function renderOdd({ q, headline, pill, progress, onAnswer, onContinue, continue
       const timer = setTimeout(advance, ODD_NEXT_MS);
       cleanup.push(() => clearTimeout(timer));
     } else {
-      next.hidden = false;
-      next.focus({ preventScroll: true });
+      wrongVerdict(feedback.textContent, next, advance);
     }
   }
 

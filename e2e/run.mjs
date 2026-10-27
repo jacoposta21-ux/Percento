@@ -101,17 +101,23 @@ async function waitReveal(page) {
   return Boolean(await page.$('.feedback.ok'));
 }
 
-// A right answer must move on by itself; a wrong one must wait for the button.
+// Skips the wait after a miss if the button is still there (the game also moves on by itself).
+const skip = async (page) => { await page.click('.continue:not([hidden])', { timeout: 2000 }).catch(() => {}); };
+
+// A right answer moves on by itself; so does a wrong one, after a banner (Enter skips the wait).
 async function afterVerdict(page, label, correct, { keyboard = false, last = false } = {}) {
   if (correct) {
     check(await page.isHidden('.continue'), `${label}: no Continue button after a right answer`);
     if (!last) await page.waitForSelector('.card-pick:not([disabled])', { timeout: 5000 });
     return;
   }
-  await page.waitForSelector('.continue:not([hidden])', { timeout: 3000 });
-  await page.waitForTimeout(1900);
-  check(await page.isVisible('.continue'), `${label}: wrong answer should wait for the button`);
-  if (keyboard) await page.keyboard.press('Enter'); else await page.click('.continue');
+  if (keyboard) {
+    if (await page.isVisible('.verdict-banner')) check((await page.textContent('.verdict-banner')).includes('Wrong answer'), `${label}: a banner tells you it was wrong`);
+    if (await page.isVisible('.continue')) await page.keyboard.press('Enter');
+    return;
+  }
+  await page.waitForSelector('.verdict-banner', { state: 'detached', timeout: 8000 })
+    .then(() => check(true, ''), () => check(false, `${label}: after a miss the game moves on without a click`));
 }
 
 async function setGuess(page, value) {
@@ -377,7 +383,8 @@ async function main() {
         const ok = await waitReveal(page);
         if (ok) { await page.waitForSelector('.card-pick:not([disabled])', { timeout: 5000 }).catch(() => {}); continue; }
         misses++;
-        await page.click('.continue');
+        check(await page.isVisible('.verdict-banner'), 'settings: a banner after a miss');
+        await page.waitForSelector('.verdict-banner', { state: 'detached', timeout: 8000 });
         if (misses < 3) {
           await page.waitForSelector('.card-pick:not([disabled])', { timeout: 5000 });
           check((await page.textContent('.pill small')).includes('♥'.repeat(3 - misses) + '♡'.repeat(misses)), `settings: ${3 - misses} hearts left`);
@@ -462,7 +469,7 @@ async function main() {
         check((await page.$$('.odd-ruler .pin')).length === 4, `${name}: all four values on the ruler`);
         if (route === '#/odd') { await audit(page, `${name} odd reveal`); await page.screenshot({ path: join(SHOTS, `${name}-odd-reveal.png`), fullPage: true }); }
         if (ok) await page.waitForSelector('.odd-grid .card-pick:not([disabled])', { timeout: 6000 });
-        else { await page.click('.continue'); await page.waitForSelector('.big-score'); }
+        else { await skip(page); await page.waitForSelector('.big-score'); }
       }
       await context.close();
     }
@@ -610,8 +617,7 @@ async function main() {
       // Bob lets the clock run out (counts as wrong); Anna plays until a mistake.
       const bob = (async () => {
         await p2.waitForSelector('text=Time is up', { timeout: 20000 });
-        await p2.waitForSelector('.continue:not([hidden])', { timeout: 5000 });
-        await p2.click('.continue');
+        await skip(p2);
         await p2.waitForSelector('.room-board');
         const t2 = await p2.textContent('.screen-title');
         check(/You are out!|wins!|tie/.test(t2), `room: out after the clock runs out (${t2})`);
@@ -625,7 +631,7 @@ async function main() {
           annaScore++;
           await p1.waitForSelector('.card-pick:not([disabled])', { timeout: 5000 });
         }
-        await p1.click('.continue');
+        await skip(p1);
         return annaScore;
       })();
       const [, annaScore] = await Promise.all([bob, anna]);
@@ -681,7 +687,7 @@ async function main() {
       await audit(p1, 'odd room round');
       await p1.click('.odd-grid .card:nth-child(1) .card-pick');
       if (!(await waitReveal(p1))) {
-        await p1.click('.continue:has-text("Continue")');
+        await skip(p1);
         await p1.waitForSelector('.odd-grid .card-pick:not([disabled])', { timeout: 5000 });
         check((await p1.textContent('.pill small')).includes('♥♥♡'), 'odd room: a mistake costs one life, the game goes on');
       }

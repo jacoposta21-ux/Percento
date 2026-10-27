@@ -358,6 +358,7 @@ export default {
   "Which statistic is it?": "Quale statistica è?",
   "World leaderboard": "Classifica mondiale",
   "Wow. The dial needs a lie-down.": "Wow. Il quadrante ha bisogno di sdraiarsi.",
+  "Wrong answer": "Risposta sbagliata",
   "Wrong email or password.": "Email o password sbagliate.",
   "Wrong! A completely reasonable mistake.": "Sbagliato! Un errore del tutto comprensibile.",
   "Wrong! Blame the universe, it made these numbers.": "Sbagliato! Prenditela con l'universo, i numeri li ha fatti lui.",
