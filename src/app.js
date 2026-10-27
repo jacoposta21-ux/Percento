@@ -105,7 +105,7 @@ function mount(...children) {
  */
 function wrongVerdict(text, next, advance) {
   document.body.append(h('div', { class: 'verdict-banner', role: 'status' },
-    h('b', {}, `✗ ${t('Wrong answer')}`), h('span', {}, text),
+    h('b', {}, `✗ ${t('Wrong answer')}`), h('span', {}, text.replace(/^[✗⏱]\s*/u, '')),
     h('span', { class: 'auto-next', style: `--t:${WRONG_NEXT_MS}ms`, 'aria-hidden': 'true' })));
   next.hidden = false;
   next.focus({ preventScroll: true });
