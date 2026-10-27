@@ -23,13 +23,15 @@ mkdirSync(join(out, 'src'), { recursive: true });
 cpSync(join(ROOT, 'index.html'), join(out, 'index.html'));
 if (target === 'crazygames') {
   const html = readFileSync(join(out, 'index.html'), 'utf8');
-  writeFileSync(join(out, 'index.html'), html.replace(/\s*<!-- Vercel Web Analytics[\s\S]*?<\/script>/, ''));
+  writeFileSync(join(out, 'index.html'), html
+    .replace(/\s*<!-- Vercel Web Analytics[\s\S]*?<\/script>/, '')
+    .replace('<link rel="stylesheet" href="styles.css">', '<link rel="stylesheet" href="styles.css">\n  <script src="https://sdk.crazygames.com/crazygames-sdk-v3.js"></script>'));
 }
 cpSync(join(ROOT, 'styles.css'), join(out, 'styles.css'));
 cpSync(join(ROOT, 'privacy.html'), join(out, 'privacy.html'));
 cpSync(join(ROOT, 'vendor'), join(out, 'vendor'), { recursive: true });
 cpSync(join(ROOT, 'assets'), join(out, 'assets'), { recursive: true });
-for (const f of ['app.js', 'config.js', 'pairs.js', 'daily.js', 'dial.js', 'storage.js', 'share.js', 'copy.js', 'online.js', 'online-config.js', 'audio.js', 'icons.js', 'i18n.js', 'modes.js']) {
+for (const f of ['app.js', 'config.js', 'pairs.js', 'daily.js', 'dial.js', 'storage.js', 'share.js', 'copy.js', 'online.js', 'online-config.js', 'audio.js', 'icons.js', 'i18n.js', 'modes.js', 'portal.js']) {
   cpSync(join(ROOT, 'src', f), join(out, 'src', f));
 }
 const build = { mode, target, builtOn: new Date().toISOString().slice(0, 10), count: entries.length };

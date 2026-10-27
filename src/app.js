@@ -10,6 +10,7 @@ import { createMatchGenerator, createOddGenerator } from './modes.js';
 import { icon } from './icons.js';
 import * as audio from './audio.js';
 import * as online from './online.js';
+import * as portal from './portal.js';
 import { t, cardText, cardDetail, formatPercent, getLang, LANGS, setLang, initI18n } from './i18n.js';
 import { load, save, storageAvailable } from './storage.js';
 import { shareResult, shareText } from './share.js';
@@ -88,6 +89,8 @@ function mount(...children) {
   const nodes = children.flat(Infinity).filter((c) => c !== null && c !== undefined && c !== false);
   if (BUILD.mode === 'dev') nodes.unshift(h('p', { class: 'dev-banner' }, t('Test build with unverified statistics.'), ' ', h('a', { href: '#/review' }, t('Review mode'))));
   app.replaceChildren(...nodes);
+  // CrazyGames wants to know when a round is being played (rounds have a .round-head).
+  if (PORTAL) portal.gameplay(Boolean(app.querySelector('.round-head')));
   const heading = app.querySelector('.screen-title');
   heading?.setAttribute('tabindex', '-1');
   heading?.focus({ preventScroll: true });
@@ -1476,6 +1479,17 @@ function updateAccountLink() {
 /** Online without an account: pick a nickname and play as a guest, or sign in. Then back to `hash`. */
 function needAccount(hash, title, why) {
   session.set(RETURN_KEY, hash);
+  if (PORTAL && !needAccount.auto) {
+    // CrazyGames players go straight in: their CrazyGames name, or a random one for guests.
+    needAccount.auto = true;
+    mount(h('h1', { class: 'screen-title' }, title), h('p', { class: 'muted' }, t('Loading…')));
+    portalNickname().then((name) => online.signInAsGuest(name)).then((res) => {
+      if (res.error) return needAccount(hash, title, why);
+      session.remove(RETURN_KEY);
+      if (location.hash === hash) route(); else location.hash = hash;
+    });
+    return;
+  }
   const message = h('p', { class: 'form-message', role: 'alert' });
   const [nickField, nick] = field(t('Your nickname'), { name: 'nickname', autocomplete: 'nickname', maxlength: 20, placeholder: t('e.g. Jacopo_21') });
   const form = h('form', { class: 'box box-feature form guest-form', novalidate: true, onsubmit: async (ev) => {
@@ -1498,6 +1512,25 @@ function needAccount(hash, title, why) {
       h('a', { class: 'btn', href: '#/account' }, t('Sign in')),
       h('a', { class: 'btn', href: '#/account/new' }, t('Create account'))));
   nick.focus({ preventScroll: true });
+}
+
+/** A valid nickname from the CrazyGames account, or Player1234 for their guests. */
+async function portalNickname() {
+  const raw = (await portal.username()) || '';
+  const clean = raw.replace(/[^A-Za-z0-9_]+/g, '_').replace(/^_+|_+$/g, '').slice(0, 20);
+  return clean.length >= 3 ? clean : `Player${Math.floor(1000 + Math.random() * 9000)}`;
+}
+
+/** CrazyGames "instant multiplayer": open a private lobby at once and show the invite button. */
+async function instantRoom() {
+  mount(h('h1', { class: 'screen-title' }, t('Multiplayer')), h('p', { class: 'muted' }, t('Loading…')));
+  const ok = await online.init();
+  if (location.hash !== '#/instant') return;
+  if (!ok) return mount(h('h1', { class: 'screen-title' }, t('Multiplayer')), offlineNotice());
+  if (!online.currentUser()) return needAccount('#/instant', t('Multiplayer'), t('Pick a nickname so the others know who is who.'));
+  const mode = GAME_MODES.some((m) => m.online === load('percento:onlineMode', 'standing')) ? load('percento:onlineMode', 'standing') : 'standing';
+  const res = await online.createRoom(null, mode);
+  location.hash = res.error ? '#/online' : `#/room/${res.code}`;
 }
 
 // ---------- friends: rooms ----------
@@ -1662,7 +1695,8 @@ async function room(code) {
     view = 'lobby';
     const isPublic = data.room.is_public;
     const isHost = data.room.host_id === me.id;
-    const link = PORTAL ? '' : `${shareUrl()}#/room/${code}`;
+    const link = PORTAL ? portal.inviteLink(code) : `${shareUrl()}#/room/${code}`;
+    if (PORTAL) portal.showInvite(code);
     const n = data.players.length;
     const countdown = h('span', { class: 'countdown' });
     const updateCountdown = () => {
@@ -1700,6 +1734,7 @@ async function room(code) {
 
   function play() {
     view = 'playing';
+    portal.hideInvite();
     clearInterval(tick);
     audio.sfx('start');
     const cat = data.room.category && categoryPool(data.room.category).length >= MIN_CATEGORY_CARDS ? data.room.category : null;
@@ -1734,6 +1769,7 @@ async function room(code) {
   // ---- closest guess, online: rounds follow the server clock ----
   async function guessGame() {
     view = 'guess';
+    portal.hideInvite();
     clearInterval(tick);
     const r = data.room;
     const offset = await online.serverOffset().catch(() => 0);
@@ -1851,6 +1887,7 @@ async function room(code) {
 
   let fanfare = false;
   function results() {
+    portal.hideInvite();
     const status = data.room.status;
     const top = ranking();
     const winners = status === 'finished' ? top.filter((p) => p.score === top[0].score) : [];
@@ -1879,7 +1916,7 @@ async function room(code) {
 // ---------- router ----------
 const ROUTES = {
   '': ['play', home], '#/': ['play', home], '#/endless': ['play', () => startEndless()], '#/guess': ['play', () => startGuess()],
-  '#/solo': ['play', solo], '#/match': ['play', () => startStreak('match')], '#/odd': ['play', () => startStreak('odd')], '#/friends': ['online', () => { location.hash = '#/online'; }],
+  '#/solo': ['play', solo], '#/instant': ['online', instantRoom], '#/match': ['play', () => startStreak('match')], '#/odd': ['play', () => startStreak('odd')], '#/friends': ['online', () => { location.hash = '#/online'; }],
   '#/daily': ['daily', startDaily], '#/daily/guess': ['daily', startDailyGuess], '#/leaderboard': ['leaderboard', leaderboard],
   '#/sources': ['sources', () => sources()], '#/settings': ['account', settings], '#/review': ['sources', review],
   '#/account': ['account', () => account()], '#/account/new': ['account', () => account('signup')], '#/online': ['online', friends],
@@ -1938,6 +1975,18 @@ audio.initAudio();
 await initI18n();
 translatePage();
 updateSoundButton();
+if (PORTAL && await portal.init()) {
+  // CrazyGames' mute button wins over ours while it is on.
+  let before = null;
+  portal.onMute((muted) => {
+    if (muted && before === null) { before = [audio.soundEnabled(), audio.musicEnabled()]; audio.setSound(false); audio.setMusic(false); }
+    else if (!muted && before !== null) { audio.setSound(before[0]); audio.setMusic(before[1]); before = null; }
+    updateSoundButton();
+  });
+  const invited = portal.inviteParam('roomId');
+  if (invited && /^[A-Za-z0-9]{6}$/.test(invited)) location.hash = `#/room/${invited.toUpperCase()}`;
+  else if (portal.instantMultiplayer()) location.hash = '#/instant';
+}
 window.addEventListener('hashchange', route);
 route();
 // Online features load in the background; the game never waits for them.
