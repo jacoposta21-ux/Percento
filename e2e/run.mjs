@@ -840,7 +840,7 @@ async function main() {
       const { ENTRIES: CG } = await import(join(ROOT, 'dist-cg-test', 'src', 'data.js'));
       const valueOf = (text) => CG.find((e) => e.text === text)?.value;
       const context = await newContext({ viewport: { width: 1240, height: 650 } });
-      await context.route('https://sdk.crazygames.com/**', (r) => r.abort());
+      await context.route('https://sdk.crazygames.com/**', (r) => r.fulfill({ contentType: 'text/javascript', body: '' }));
       const page = await context.newPage();
       watch(page);
       const url = `http://127.0.0.1:${PORT + 2}/`;
