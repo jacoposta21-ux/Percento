@@ -954,3 +954,18 @@ html.fit .marathon-board .board li { padding-block: 4px; }
 html.fit .home-links { margin-top: auto; padding-top: 8px; }
 html.fit .home-links a { min-height: 44px; font-size: 0.8rem; }
 @media (min-width: 900px) { .home-links { display: none; } }
+/* Phones: the pie and the number share a narrow card; both scale with the
+   width, and a long number wraps under the pie rather than being cut off. */
+@media (max-width: 699px) {
+  html.fit .duel .card-pick { container-type: inline-size; }
+  html.fit .duel .card .pie { height: auto; width: clamp(32px, 26cqi, 90px); }
+  html.fit .duel .card-text { font-size: clamp(0.82rem, min(2.7vh, 4.1vw), 1.2rem); }
+  html.fit .duel .card-top { margin-bottom: 2px; }
+  html.fit .duel .card-value { font-size: clamp(1.1rem, 17cqi, 2.6rem); white-space: nowrap; }
+  html.fit .duel .card-foot { justify-content: space-between; gap: 6px; }
+}
+@media (max-width: 699px) {
+  /* The cards need the height; the source stays in Sources. */
+  html.fit .duel .card-source { display: none; }
+}
+@media (max-width: 699px) and (max-height: 700px) { html.fit .reveal .crowd { display: none; } }
