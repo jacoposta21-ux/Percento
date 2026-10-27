@@ -206,6 +206,22 @@
       touch();
       return { data: room.id, error: null };
     }
+    if (name === 'rematch_room') {
+      if (!players.some((p) => p.user_id === me)) return err('Not in this room');
+      if (room.is_public) return err('Public games have no rematch');
+      if (!room.next_code) {
+        const r = { ...room, id: `room-${db.seq++}`, code: newCode(), host_id: me, seed: Math.floor(Math.random() * 2 ** 31), status: 'lobby', started_at: null, starts_at: null, next_code: null };
+        db.rooms.push(r);
+        room.next_code = r.code;
+      }
+      const next = db.rooms.find((r) => r.code === room.next_code);
+      if (!db.room_players.some((p) => p.room_id === next.id && p.user_id === me)) {
+        if (next.status !== 'lobby') return err('This game has already started');
+        db.room_players.push({ room_id: next.id, user_id: me, username: profile.username, score: 0, alive: true, joined_at: new Date().toISOString() });
+      }
+      touch();
+      return { data: next.code, error: null };
+    }
     if (name === 'start_room') {
       if (room.host_id !== me || room.status !== 'lobby' || room.is_public) return err('Only the host can start this room');
       startNow(room);

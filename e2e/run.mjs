@@ -654,6 +654,15 @@ async function main() {
       await audit(p1, 'room results');
       await p1.screenshot({ path: join(SHOTS, 'room-results.png'), fullPage: true });
 
+      // Friends stay together: "Play again" opens one new lobby and the others follow.
+      const oldRoom = p1.url();
+      await p1.click('main button:has-text("Play again")');
+      await p1.waitForFunction((old) => location.href !== old && /#\/room\//.test(location.hash), oldRoom);
+      await p2.waitForFunction((target) => location.hash === target, new URL(p1.url()).hash, { timeout: 8000 })
+        .then(() => check(true, ''), () => check(false, 'rematch: the other player follows into the new lobby'));
+      await p1.waitForSelector('.room-board li:nth-child(2)', { timeout: 8000 })
+        .then(() => check(true, ''), () => check(false, 'rematch: both players are in the new lobby'));
+
       // Strangers: two players looking for a public game land in the same one,
       // and it starts by itself once a second player is in.
       await p1.goto(`${BASE}#/online`);

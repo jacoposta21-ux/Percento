@@ -947,3 +947,10 @@ html.fit .marathon-board .board li { padding-block: 4px; }
   html.fit .nav { gap: 2px; }
   html.fit .nav a { min-height: 34px; }
 }
+
+/* Settings, sources and privacy at the foot of the home screen, for phones. */
+.home-links { display: flex; justify-content: center; gap: 4px 16px; flex-wrap: wrap; margin: 16px 0 0; }
+.home-links a { display: inline-flex; align-items: center; min-height: 44px; color: var(--chalk-dim); font-size: 0.88rem; }
+html.fit .home-links { margin-top: auto; padding-top: 8px; }
+html.fit .home-links a { min-height: 32px; font-size: 0.8rem; }
+@media (min-width: 900px) { .home-links { display: none; } }

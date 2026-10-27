@@ -287,11 +287,17 @@ export async function reportScore(code, score, alive, misses = 0) {
 }
 
 export async function fetchRoom(code) {
-  const { data: room } = await client.from('rooms').select('id, code, host_id, seed, status, started_at, starts_at, is_public, category, mode, round_seconds, reveal_seconds, rounds, lives').eq('code', code).maybeSingle();
+  const { data: room } = await client.from('rooms').select('id, code, host_id, seed, status, started_at, starts_at, is_public, category, mode, round_seconds, reveal_seconds, rounds, lives, next_code').eq('code', code).maybeSingle();
   if (!room) return null;
   const { data: players } = await client.from('room_players').select('user_id, username, score, alive, misses, finished_at, joined_at')
     .eq('room_id', room.id).order('joined_at');
   return { room, players: players || [] };
+}
+
+/** "Play again" after a private game: everyone who asks lands in the same new lobby. */
+export async function rematch(code) {
+  const { data, error } = await client.rpc('rematch_room', { room_code: code });
+  return error ? { error: fail(error) } : { code: data };
 }
 
 /** Calls onChange whenever the room or its players change. Returns an unsubscribe function. */

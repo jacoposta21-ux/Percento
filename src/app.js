@@ -405,7 +405,9 @@ function home() {
         h('span', { class: 'daily-date', 'aria-hidden': 'true' }, String(Number(romeDate().slice(8, 10)))),
         h('span', { class: 'home-daily-text' }, h('strong', {}, PORTAL ? t('Daily marathon') : t('Daily challenge')),
           h('span', {}, PORTAL ? t('The same pairs for everyone today. One mistake and it is over.') : t('The same cards for everyone today. New ones tomorrow.'))),
-        days ? h('span', { class: 'streak-chip' }, `🔥 ${t('{n}-day streak', { n: days })}`) : h('span', { class: 'home-daily-go', 'aria-hidden': 'true' }, '→'))));
+        days ? h('span', { class: 'streak-chip' }, `🔥 ${t('{n}-day streak', { n: days })}`) : h('span', { class: 'home-daily-go', 'aria-hidden': 'true' }, '→'))),
+    // On phones the sidebar (and its links) is not there.
+    h('p', { class: 'home-links' }, h('a', { href: '#/settings' }, t('Settings')), h('a', { href: '#/sources' }, t('Sources')), h('a', { href: 'privacy.html' }, t('Privacy'))));
 }
 
 /** Single player: the four games, mixed or by category. */
@@ -1995,11 +1997,12 @@ async function room(code) {
         h('p', { class: 'big-score' }, h('span', {}, String(ranking.find((row) => row.id === me.id)?.pts ?? 0)), h('small', {}, t('of {n} points', { n: r.rounds * 100 }))),
         h('section', { class: 'box' }, h('h2', {}, t('Final standings')), table(r.rounds - 1)),
         h('div', { class: 'actions' },
-          h('button', { class: 'btn btn-primary', type: 'button', onclick: async () => {
-            const res = r.is_public ? await online.quickMatch('guess', r.category) : await online.createRoom(r.category, 'guess', { seconds: r.round_seconds, lives: 1 });
+          r.is_public ? h('button', { class: 'btn btn-primary', type: 'button', onclick: async () => {
+            const res = await online.quickMatch('guess', r.category);
             if (res.error) toast(res.error); else location.hash = `#/room/${res.code}`;
-          } }, r.is_public ? t('Find another game') : t('New room')),
+          } }, t('Find another game')) : playAgainButton(),
           h('a', { class: 'btn', href: '#/solo' }, t('Practise solo'))));
+      if (!r.is_public) followRematch();
     };
 
     const ready = h('span', { class: 'countdown' });
@@ -2045,12 +2048,36 @@ async function room(code) {
       h('p', { class: 'lede' }, status === 'finished' ? t('Game over for everyone.') : t('The others are still playing. Watch the standings live.')),
       h('section', { class: 'box' }, h('h2', {}, t('Standings')), standings(false)),
       h('div', { class: 'actions' },
-        h('button', { class: 'btn btn-primary', type: 'button', onclick: async () => {
-          const res = data.room.is_public ? await online.quickMatch(data.room.mode, data.room.category)
-            : await online.createRoom(data.room.category, data.room.mode, { seconds: data.room.round_seconds || 15, lives: data.room.lives || 1 });
+        data.room.is_public ? h('button', { class: 'btn btn-primary', type: 'button', onclick: async () => {
+          const res = await online.quickMatch(data.room.mode, data.room.category);
           if (res.error) toast(res.error); else location.hash = `#/room/${res.code}`;
-        } }, data.room.is_public ? t('Find another game') : t('New room')),
+        } }, t('Find another game')) : status === 'finished' ? playAgainButton() : null,
         h('a', { class: 'btn', href: '#/solo' }, t('Play solo'))));
+    if (status === 'finished' && !data.room.is_public) followRematch();
+  }
+
+  // Friends stay together: "Play again" opens one new lobby for the whole
+  // room, and whoever is still on this screen follows into it.
+  function playAgainButton() {
+    return h('button', { class: 'btn btn-primary', type: 'button', onclick: async (ev) => {
+      ev.currentTarget.disabled = true;
+      const res = await online.rematch(code);
+      if (res.error) { toast(res.error); ev.currentTarget.disabled = false; } else location.hash = `#/room/${res.code}`;
+    } }, t('Play again'));
+  }
+  let following = false;
+  function followRematch() {
+    if (following) return;
+    following = true;
+    const timer = setInterval(async () => {
+      const fresh = await online.fetchRoom(code).catch(() => null);
+      if (fresh?.room.next_code && location.hash === hash) {
+        clearInterval(timer);
+        toast(t('A new game is starting in this room. Joining…'));
+        location.hash = `#/room/${fresh.room.next_code}`;
+      }
+    }, 2000);
+    cleanup.push(() => clearInterval(timer));
   }
 
   render();
