@@ -950,7 +950,7 @@ html.fit .marathon-board .board li { padding-block: 4px; }
 
 /* Settings, sources and privacy at the foot of the home screen, for phones. */
 .home-links { display: flex; justify-content: center; gap: 4px 16px; flex-wrap: wrap; margin: 16px 0 0; }
-.home-links a { display: inline-flex; align-items: center; min-height: 44px; color: var(--chalk-dim); font-size: 0.88rem; }
+.home-links a { display: inline-flex; align-items: center; justify-content: center; min-width: 44px; min-height: 44px; color: var(--chalk-dim); font-size: 0.88rem; }
 html.fit .home-links { margin-top: auto; padding-top: 8px; }
-html.fit .home-links a { min-height: 32px; font-size: 0.8rem; }
+html.fit .home-links a { min-height: 44px; font-size: 0.8rem; }
 @media (min-width: 900px) { .home-links { display: none; } }
