@@ -1,7 +1,9 @@
 // Spanish interface strings. Keys are the English text (see src/i18n.js).
 export default {
   "(this device)": "(este dispositivo)",
+  "10 pairs, the same for everyone today. 10 seconds each. You get one go.": "10 parejas, las mismas para todos hoy. 10 segundos cada una. Solo tienes un intento.",
   "4 games": "4 juegos",
+  "5 cards, the same for everyone today. 10 seconds each to set the percentage. You get one go.": "5 cartas, las mismas para todos hoy. 10 segundos cada una para fijar el porcentaje. Solo tienes un intento.",
   "A bold start. Statistically, the only way is up.": "Un comienzo atrevido. Estadísticamente, solo puedes mejorar.",
   "A comparison no statistician would approve.": "Una comparación que ningún estadístico aprobaría.",
   "A duel nobody trained for.": "Un duelo para el que nadie entrenó.",
@@ -149,6 +151,7 @@ export default {
   "Legendary. You are now a measured phenomenon.": "Legendario. Ahora eres un fenómeno medido.",
   "Let the numbers sort it out.": "Que lo decidan los números.",
   "Lives": "Vidas",
+  "Lives do not apply to Closest guess.": "Las vidas no se aplican a Más cerca.",
   "Lives do not apply to Closest guess. Only the daily challenges count for the world leaderboard.": "Las vidas no se aplican a Más cerca. Para la clasificación mundial solo cuentan los retos diarios.",
   "Loading…": "Cargando…",
   "Lock in": "Confirmar",
@@ -299,6 +302,7 @@ export default {
   "Spot on. Frame this moment.": "Exacto. Enmarca este momento.",
   "Spreadsheets from two different planets.": "Hojas de cálculo de dos planetas distintos.",
   "Standings": "Clasificación",
+  "Start": "Empezar",
   "Start (needs 2 players)": "Empezar (mín. 2 jugadores)",
   "Start the game": "Empezar partida",
   "Streak · best {n}": "Racha · mejor {n}",

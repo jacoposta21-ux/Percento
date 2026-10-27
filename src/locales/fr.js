@@ -1,7 +1,9 @@
 // French interface strings. Keys are the English text (see src/i18n.js).
 export default {
   "(this device)": "(cet appareil)",
+  "10 pairs, the same for everyone today. 10 seconds each. You get one go.": "10 duos, les mêmes pour tous aujourd’hui. 10 secondes chacun. Un seul essai.",
   "4 games": "4 jeux",
+  "5 cards, the same for everyone today. 10 seconds each to set the percentage. You get one go.": "5 cartes, les mêmes pour tous aujourd’hui. 10 secondes chacune pour régler le pourcentage. Un seul essai.",
   "A bold start. Statistically, the only way is up.": "Début audacieux. Statistiquement, ça ne peut que monter.",
   "A comparison no statistician would approve.": "Une comparaison qu'aucun statisticien n'approuverait.",
   "A duel nobody trained for.": "Un duel auquel personne ne s'est entraîné.",
@@ -149,6 +151,7 @@ export default {
   "Legendary. You are now a measured phenomenon.": "Légendaire. Tu es désormais un phénomène mesuré.",
   "Let the numbers sort it out.": "Laisse les chiffres trancher.",
   "Lives": "Vies",
+  "Lives do not apply to Closest guess.": "Les vies ne s’appliquent pas à Au plus près.",
   "Lives do not apply to Closest guess. Only the daily challenges count for the world leaderboard.": "Les vies ne s’appliquent pas à Au plus près. Seuls les défis du jour comptent pour le classement mondial.",
   "Loading…": "Chargement…",
   "Lock in": "Valider",
@@ -299,6 +302,7 @@ export default {
   "Spot on. Frame this moment.": "Pile poil. Encadre ce moment.",
   "Spreadsheets from two different planets.": "Des tableurs venus de deux planètes différentes.",
   "Standings": "Classement",
+  "Start": "Commencer",
   "Start (needs 2 players)": "Lancer (2 joueurs min.)",
   "Start the game": "Lancer la partie",
   "Streak · best {n}": "Série · record {n}",

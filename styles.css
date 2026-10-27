@@ -866,3 +866,27 @@ html.fit .box:has(.btn-danger) h2 { margin-bottom: 4px; }
   html.fit main:has(.stat-row) .board-empty { font-size: 0.8rem; }
 }
 @media (max-width: 899px) { html.fit .stat-row ~ .board, html.fit .stat-row ~ .board-empty { display: none; } }
+
+/* Fit mode, third pass: keep the game's look. Cards carry their category
+   colour and a big pie; the menus keep their small pictures. */
+html.fit .nav { grid-template-columns: repeat(4, 1fr); }
+html.fit .card-pick { background: linear-gradient(to bottom, var(--card) 45%, color-mix(in srgb, var(--c) 18%, var(--card))); }
+html.fit .card.lower .card-pick { background: var(--card-shade); }
+html.fit .duel .card .pie { height: clamp(48px, 17vh, 150px); }
+html.fit .odd-grid .card .pie { height: clamp(36px, 11vh, 100px); }
+html.fit .guess-card .pie { display: block; height: clamp(48px, 14vh, 130px); }
+html.fit .card-foot { align-items: flex-end; }
+html.fit .card-value { font-size: clamp(1.5rem, 7vh, 3rem); }
+@media (max-width: 699px) {
+  html.fit .mode-tile .mode-visual { display: flex; height: 34px; }
+  html.fit .mode-tile .mode-visual .pie { width: 20px; }
+  html.fit .mode-tile .mini-target { font-size: 0.7rem; padding: 1px 6px; }
+  html.fit .mode-tile .mini-card { width: 14px; height: 18px; }
+  html.fit .mode-tile .mini-slider { width: 40px; height: 9px; }
+}
+@media (max-width: 899px) { html.fit .guess-card .pie { display: block; height: clamp(40px, 9vh, 80px); } html.fit .guess-card .card-foot { justify-content: space-between; } }
+/* The daily's start screen. */
+.daily-intro { display: flex; align-items: center; gap: 16px; margin: 12px 0 4px; }
+.daily-intro .lede { margin: 0; }
+.daily-intro .daily-date, html.fit .daily-intro .daily-date { flex: none; color: var(--ink); width: 64px; height: 68px; font-size: 1.7rem; }
+@media (max-width: 899px) { html.fit .guess-status[data-hint] { display: none; } }

@@ -1,7 +1,9 @@
 // German interface strings. Keys are the English text (see src/i18n.js).
 export default {
   "(this device)": "(dieses Gerät)",
+  "10 pairs, the same for everyone today. 10 seconds each. You get one go.": "10 Paare, heute für alle gleich. Je 10 Sekunden. Du hast einen Versuch.",
   "4 games": "4 Spiele",
+  "5 cards, the same for everyone today. 10 seconds each to set the percentage. You get one go.": "5 Karten, heute für alle gleich. Je 10 Sekunden, um den Prozentwert einzustellen. Du hast einen Versuch.",
   "A bold start. Statistically, the only way is up.": "Mutiger Start. Statistisch geht's nur noch bergauf.",
   "A comparison no statistician would approve.": "Ein Vergleich, den keine Statistikerin absegnen würde.",
   "A duel nobody trained for.": "Ein Duell, für das niemand trainiert hat.",
@@ -149,6 +151,7 @@ export default {
   "Legendary. You are now a measured phenomenon.": "Legendär. Du bist jetzt ein messbares Phänomen.",
   "Let the numbers sort it out.": "Sollen die Zahlen das klären.",
   "Lives": "Leben",
+  "Lives do not apply to Closest guess.": "Leben gelten nicht für Nah dran.",
   "Lives do not apply to Closest guess. Only the daily challenges count for the world leaderboard.": "Leben gelten nicht für Nah dran. Für die Weltrangliste zählen nur die Tages-Challenges.",
   "Loading…": "Lädt…",
   "Lock in": "Fixieren",
@@ -299,6 +302,7 @@ export default {
   "Spot on. Frame this moment.": "Punktlandung. Rahm dir diesen Moment ein.",
   "Spreadsheets from two different planets.": "Tabellen von zwei verschiedenen Planeten.",
   "Standings": "Stand",
+  "Start": "Start",
   "Start (needs 2 players)": "Start (ab 2 Spielern)",
   "Start the game": "Spiel starten",
   "Streak · best {n}": "Serie · Rekord {n}",

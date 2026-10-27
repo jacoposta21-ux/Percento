@@ -123,7 +123,7 @@ function calibrating() {
 
 // ---------- local leaderboard ----------
 function recordRun(score) {
-  online.recordRun(score).catch(() => {});
+  if (!PORTAL) online.recordRun(score).catch(() => {});
   const runs = load(RUNS_KEY, []) || [];
   runs.push({ score, date: new Date().toISOString().slice(0, 10) });
   runs.sort((a, b) => b.score - a.score);
@@ -413,9 +413,9 @@ function solo() {
   const cats = CATEGORY_IDS.filter((c) => categoryPool(c).length >= MIN_CATEGORY_CARDS);
   mount(
     h('div', { class: 'screen-head' }, h('h1', { class: 'screen-title' }, t('Single player')), soloSettingsMenu()),
-    h('p', { class: 'lede' }, t('Four games, mixed or by category. Your best scores stay on this device.')),
+    PORTAL ? null : h('p', { class: 'lede' }, t('Four games, mixed or by category. Your best scores stay on this device.')),
     modesSection(),
-    cats.length ? categorySection(cats) : null);
+    cats.length && !PORTAL ? categorySection(cats) : null);
 }
 
 // Category tiles, for any of the four games.
@@ -491,7 +491,7 @@ function soloSettingsMenu() {
   const { menu, update } = settingsMenu([
     choiceRow({ label: t('Time per question'), options: [0, ...TIME_OPTIONS], value: soloSettings().time, format: formatSeconds, onChange: (v) => { save(SOLO_TIME_KEY, v); update(); } }),
     choiceRow({ label: t('Lives'), options: LIVES_OPTIONS, value: soloSettings().lives, format: String, onChange: (v) => { save(SOLO_LIVES_KEY, v); update(); } }),
-  ], summary, t('Lives do not apply to Closest guess. Only the daily challenges count for the world leaderboard.'));
+  ], summary, PORTAL ? t('Lives do not apply to Closest guess.') : t('Lives do not apply to Closest guess. Only the daily challenges count for the world leaderboard.'));
   return menu;
 }
 
@@ -797,7 +797,7 @@ function renderGuess({ entry, headline, pill, progress, deadline = null, seconds
   slider.addEventListener('input', () => set(Number(slider.value)));
   const nudge = (d) => h('button', { class: 'btn nudge', type: 'button', 'aria-label': t(d > 0 ? 'Up one point' : 'Down one point'), onclick: () => !locked && set(guess + d) }, d > 0 ? '+' : '−');
   const lockBtn = h('button', { class: 'btn btn-primary lock', type: 'button', onclick: () => lock() }, t('Lock in'));
-  const status = h('p', { class: 'guess-status', role: 'status', 'aria-live': 'polite' }, t('Drag to set your percentage, then lock it in.'));
+  const status = h('p', { class: 'guess-status', role: 'status', 'aria-live': 'polite', 'data-hint': '' }, t('Drag to set your percentage, then lock it in.'));
   const clockB = h('b', {}, '15');
   // No deadline: solo play without a time limit, so no clock and no auto-lock.
   const clock = deadline ? h('div', { class: 'round-timer', role: 'timer', 'aria-label': t('Time left') },
@@ -846,6 +846,7 @@ function renderGuess({ entry, headline, pill, progress, deadline = null, seconds
     slider.disabled = true;
     for (const b of controls.querySelectorAll('button')) b.disabled = true;
     audio.sfx(auto ? 'timeout' : 'tap');
+    status.removeAttribute('data-hint');
     status.textContent = touched ? t('Locked in at {guess}. Waiting for the reveal…', { guess: formatPercent(guess) }) : t('Time is up: no guess this round.');
     crowd = online.answerStats(entry.id).catch(() => null);
     onLock?.(guess, touched);
@@ -880,6 +881,7 @@ function renderGuess({ entry, headline, pill, progress, deadline = null, seconds
         h('span', { class: `pin truth${edge(truth)}`, style: `left:${truth}%` }, h('b', {}, formatValue(truth))),
         ...pins.filter((p) => p.guess !== null).map((p, k) => h('span', { class: `pin${p.me ? ' me' : ''}${k % 2 ? ' low' : ''}${edge(p.guess)}`, style: `left:${p.guess}%` },
           h('b', {}, p.name), h('small', {}, formatPercent(p.guess)))));
+      status.removeAttribute('data-hint');
       status.textContent = message;
       status.classList.add('done');
       const line = guessCrowdLine(await within(crowd, 900));
@@ -1020,6 +1022,21 @@ function distributionBox({ date, game, score, state, stateKey }) {
   return box;
 }
 
+/** Before a daily starts: what it is, then Start (a daily is played once, so no accidental starts). */
+function dailyIntro(game, start) {
+  setKeys((ev) => { if (ev.key === 'Enter') { ev.preventDefault(); start(); } });
+  mount(
+    dailyTabs(game),
+    h('p', { class: 'kicker' }, t('Daily challenge')),
+    h('h1', { class: 'screen-title' }, game === 'pairs' ? t('Higher or lower') : t('Closest guess')),
+    h('div', { class: 'daily-intro' },
+      h('span', { class: 'daily-date', 'aria-hidden': 'true' }, String(Number(romeDate().slice(8, 10)))),
+      h('p', { class: 'lede' }, game === 'pairs'
+        ? t('10 pairs, the same for everyone today. 10 seconds each. You get one go.')
+        : t('5 cards, the same for everyone today. 10 seconds each to set the percentage. You get one go.'))),
+    h('div', { class: 'actions' }, h('button', { class: 'btn btn-primary btn-big', type: 'button', onclick: start }, t('Start'))));
+}
+
 function startDaily() {
   const date = romeDate();
   const pairs = dailyPairs(ENTRIES, date);
@@ -1060,7 +1077,7 @@ function startDaily() {
       onAnswer: (correct) => {
         state.answers[i] = correct;
         save(dailyKey(date), state);
-        online.saveDaily(date, state.answers).catch(() => {});
+        if (!PORTAL) online.saveDaily(date, state.answers).catch(() => {});
         if (state.answers.length === pairs.length) {
           const history = load(DAILY_HISTORY_KEY, {}) || {};
           history[date] = state.answers.filter(Boolean).length;
@@ -1070,7 +1087,7 @@ function startDaily() {
       onContinue: () => round(i + 1),
     });
   };
-  round(state.answers.length);
+  if (state.answers.length) round(state.answers.length); else dailyIntro('pairs', () => round(0));
 }
 
 function shareFlow(text) {
@@ -1150,7 +1167,7 @@ function startDailyGuess() {
         const points = touched ? guessPoints(guess, entry.value) : 0;
         state.answers[i] = { guess: touched ? guess : null, points };
         save(dailyGuessKey(date), state);
-        online.saveDailyGuess(date, state.answers.length, total()).catch(() => {});
+        if (!PORTAL) online.saveDailyGuess(date, state.answers.length, total()).catch(() => {});
         if (state.answers.length === cards.length) {
           const history = load(DAILY_GUESS_HISTORY_KEY, {}) || {};
           history[date] = total();
@@ -1173,7 +1190,7 @@ function startDailyGuess() {
       },
     });
   };
-  round(state.answers.length);
+  if (state.answers.length) round(state.answers.length); else dailyIntro('guess', () => round(0));
 }
 
 function dailyGuessResults(date, cards, state) {
@@ -1577,7 +1594,7 @@ async function friends() {
   const CAT_KEY = 'percento:onlineCategory';
   const cats = CATEGORY_IDS.filter((c) => categoryPool(c).length >= MIN_CATEGORY_CARDS);
   let mode = GAME_MODES.some((m) => m.online === load(MODE_KEY, 'standing')) ? load(MODE_KEY, 'standing') : 'standing';
-  let cat = cats.includes(load(CAT_KEY, '')) ? load(CAT_KEY, '') : '';
+  let cat = !PORTAL && cats.includes(load(CAT_KEY, '')) ? load(CAT_KEY, '') : '';
   const rules = h('p', { class: 'muted mode-rules' });
   // Private rooms: the host picks the clock and, except in Closest guess, the lives.
   // Public games always use 15 seconds and 1 life.
@@ -1616,7 +1633,7 @@ async function friends() {
       h('div', { class: 'section-head' }, h('h2', {}, t('Choose a game'))),
       h('div', { class: 'mode-grid', role: 'group', 'aria-label': t('Game mode') }, modeButtons),
       rules),
-    h('section', { class: 'cat-section' },
+    PORTAL ? null : h('section', { class: 'cat-section' },
       h('div', { class: 'section-head' }, h('h2', {}, t('Cards from'))),
       h('div', { class: 'cat-chips', role: 'group', 'aria-label': t('Cards from') }, catButtons)),
     h('div', { class: 'online-grid' },
@@ -1961,7 +1978,11 @@ function route() {
 
 if (load(MOTION_KEY, false)) document.documentElement.classList.add('reduce-motion');
 // The CrazyGames frame: everything fits on one screen, no page scrolling.
-if (PORTAL) document.documentElement.classList.add('fit');
+// There is no world leaderboard there (nothing is saved to our server).
+if (PORTAL) {
+  document.documentElement.classList.add('fit');
+  document.querySelector('.nav [data-route="leaderboard"]')?.remove();
+}
 
 // One button mutes or unmutes everything; Settings has the separate switches.
 function updateSoundButton() {

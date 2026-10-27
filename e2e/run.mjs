@@ -164,8 +164,16 @@ async function playEndless(page, label, { keyboard = false } = {}) {
   return score;
 }
 
+// A daily waits on its start screen until Start is pressed.
+async function startDailyScreen(page, label) {
+  await page.waitForSelector('.daily-intro');
+  check(!(await page.$('.card-pick, .guess-slider')), `${label}: the daily does not start by itself`);
+  await page.click('main button:has-text("Start")');
+}
+
 async function playDaily(page, context, label, { reloadAt = 4 } = {}) {
   await page.goto(`${BASE}#/daily`);
+  await startDailyScreen(page, label);
   await page.waitForSelector('.card-pick');
   const firstPair = await cardTexts(page);
   let audited = false;
@@ -220,6 +228,7 @@ async function playDaily(page, context, label, { reloadAt = 4 } = {}) {
 
 async function playDailyGuess(page, label) {
   await page.goto(`${BASE}#/daily/guess`);
+  await startDailyScreen(page, `${label} guess`);
   for (let i = 0; i < 5; i++) {
     await page.waitForSelector('.guess-slider:not([disabled])');
     check((await page.textContent('.status')).includes(`Card ${i + 1} of 5`), `${label}: daily guess card ${i + 1}`);
@@ -545,6 +554,7 @@ async function main() {
       check(Boolean(await page.$('text=blocks storage')), 'storage-blocked: notice shown');
       await page.clock.setFixedTime(DAILY_TIME);
       await page.goto(`${BASE}#/daily`);
+      await startDailyScreen(page, 'storage-blocked');
       await page.waitForSelector('.card-pick');
       await context.close();
     }
