@@ -654,3 +654,215 @@ button.mode-tile { font: inherit; text-align: left; cursor: pointer; width: 100%
 .verdict-banner .auto-next { background: var(--ink); margin-top: 6px; }
 @keyframes banner-in { from { transform: translate(-50%, -24px); opacity: 0; } }
 @media (prefers-reduced-motion: reduce) { .verdict-banner { animation: none; } }
+
+/* ======================================================================
+   Fit mode (CrazyGames build, html.fit): every screen stays inside the
+   portal's frame. The page never scrolls; cards and text scale with the
+   frame's height; duplicates (answer buttons, side panel) step aside.
+   ====================================================================== */
+html.fit, html.fit body { height: 100%; overflow: hidden; }
+html.fit .layout { height: 100dvh; min-height: 0; }
+html.fit .panel, html.fit .side-invite { display: none; }
+html.fit main { height: 100dvh; overflow-y: auto; overscroll-behavior: contain; display: flex; flex-direction: column; padding: 12px 16px 72px; }
+html.fit main > * { flex: none; }
+html.fit .screen-title { font-size: clamp(1.25rem, 4.2vh, 2rem); margin-bottom: 4px; }
+html.fit .lede { font-size: clamp(0.85rem, 2.2vh, 1rem); margin: 4px 0 8px; }
+html.fit .kicker { margin-bottom: 2px; font-size: 0.85rem; }
+html.fit .section-head { margin-bottom: 6px; }
+html.fit .section-head h2 { font-size: clamp(1rem, 3vh, 1.2rem); }
+html.fit .actions { margin: 10px 0; }
+html.fit .box { padding: 12px 14px; border-radius: 16px; }
+@media (min-width: 900px) {
+  html.fit .layout { grid-template-columns: 196px minmax(0, 1fr); }
+  html.fit .sidebar { gap: 14px; padding: 14px 12px; }
+  html.fit .logo { font-size: 1.25rem; }
+  html.fit .nav a { min-height: 40px; font-size: 0.95rem; gap: 10px; }
+  html.fit .side-links { margin-top: auto; }
+  html.fit main { padding: 16px 24px; }
+}
+@media (max-width: 899px) {
+  html.fit .layout { grid-template-rows: auto minmax(0, 1fr); }
+  html.fit main { height: auto; min-height: 0; }
+}
+
+/* A round fills the frame: header, cards that take the room left, verdict. */
+html.fit .round-head .screen-title { font-size: clamp(1.1rem, 3.6vh, 1.8rem); }
+html.fit .round-head .sub, html.fit .answers, html.fit .progress:not(:has(.dots)) { display: none; }
+html.fit .round-head .kicker { font-size: 0.8rem; }
+html.fit .pill { padding: 4px 10px 4px 6px; }
+html.fit .round-timer { margin: 4px 0 6px; }
+html.fit .round-timer-bar { height: 9px; }
+html.fit .round-timer b { font-size: 1rem; }
+html.fit .duel { flex: 1 1 auto; min-height: 0; margin: 8px 0 8px; align-items: stretch; }
+html.fit .duel .card { min-height: 0; }
+html.fit .card-pick { min-height: 0; height: 100%; padding: clamp(8px, 1.6vh, 16px) clamp(10px, 1.6vw, 18px); gap: 4px; }
+html.fit .card-top { margin-bottom: 2px; }
+html.fit .card-text { font-size: clamp(0.85rem, 2.7vh, 1.3rem); }
+html.fit .card-detail { font-size: clamp(0.7rem, 1.8vh, 0.88rem); }
+html.fit .card .pie { width: auto; height: clamp(34px, 9vh, 84px); max-width: none; }
+html.fit .card-value { font-size: clamp(1.3rem, 6vh, 2.6rem); }
+html.fit .card-source { margin: 4px 0 0; font-size: 0.75rem; }
+html.fit .stamp { font-size: 0.75rem; }
+html.fit .reveal { margin-top: 4px; gap: 12px; align-items: center; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+html.fit .reveal .dial { max-height: clamp(48px, 11vh, 96px); }
+html.fit .feedback { font-size: clamp(0.85rem, 2.2vh, 1.05rem); margin-bottom: 4px; }
+html.fit .continue { min-height: 40px; padding: 6px 18px; }
+html.fit .progress { margin: 4px 0 0; font-size: 0.8rem; }
+html.fit .room-live { flex: none; max-height: 18vh; overflow: hidden; padding: 6px 12px; }
+html.fit .room-live .board li { padding: 3px 8px; }
+html.fit .target { margin: 4px 0 0; padding: 4px 12px 4px 6px; }
+html.fit .target .pie { width: clamp(28px, 6vh, 44px); }
+html.fit .target b { font-size: clamp(1.3rem, 5vh, 2.2rem); }
+
+/* Odd one out: four cards in a row when the frame is wide, 2 × 2 otherwise. */
+html.fit .odd-grid { flex: 1 1 auto; min-height: 0; margin: 8px 0 6px; gap: 12px; grid-auto-rows: minmax(0, 1fr); }
+html.fit .odd-grid .card-pick { min-height: 0; }
+html.fit .odd-grid .card-value { font-size: clamp(1.1rem, 4.6vh, 2rem); }
+html.fit .odd-grid .card .pie { height: clamp(28px, 7vh, 64px); }
+@media (min-width: 1000px) { html.fit .odd-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+html.fit .odd-reveal { margin-top: 0; gap: 4px; }
+html.fit .odd-why { margin: 0; font-size: 0.85rem; }
+html.fit .odd-ruler { margin: 18px 0 4px; }
+
+/* Closest guess: card and controls side by side when there is width. */
+html.fit .guess-stage { flex: 1 1 auto; min-height: 0; margin-top: 8px; gap: 12px; }
+html.fit .guess-card .card-pick { min-height: 0; }
+html.fit .guess-card .card-text { font-size: clamp(0.95rem, 3vh, 1.4rem); }
+html.fit .guess-card .card-value { font-size: clamp(1.5rem, 6vh, 2.6rem); }
+html.fit .guess-readout { font-size: clamp(2rem, 7vh, 3.4rem); }
+html.fit .guess-controls { padding: 8px 12px 12px; gap: 8px; }
+html.fit .guess-side { gap: 6px; }
+html.fit .guess-ruler { margin-top: 14px; }
+@media (min-width: 640px) { html.fit .guess-stage { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: stretch; } }
+
+/* Menus: home, single player, multiplayer packed into the frame. */
+html.fit .hero-mascot { width: clamp(56px, 14vh, 120px); }
+html.fit .hero .screen-title { font-size: clamp(1.5rem, 6vh, 2.6rem); }
+html.fit .hero-meta > * { min-height: 28px; font-size: 0.8rem; }
+html.fit .home-choices { margin-top: 12px; gap: 10px; max-width: none; }
+html.fit .hero-meta + .home-choices { margin-top: 12px; }
+html.fit .home-choice { padding: 10px 14px 12px; gap: 4px; }
+html.fit .home-choice strong { font-size: clamp(1.05rem, 3.4vh, 1.4rem); margin-top: 2px; }
+html.fit .home-choice > span:not(.choice-visual) { font-size: 0.85rem; }
+html.fit .choice-visual { height: clamp(44px, 10vh, 80px); }
+html.fit .choice-solo .pie { width: clamp(34px, 7vh, 54px); }
+html.fit .choice-multi .pie { width: clamp(26px, 5.5vh, 42px); }
+html.fit .home-daily { padding: 10px 14px; }
+html.fit .daily-date { width: 44px; height: 48px; font-size: 1.1rem; border-top-width: 8px; }
+@media (min-width: 900px) { html.fit .home-choices { grid-template-columns: 1fr 1fr 1fr; } html.fit .home-daily { grid-column: auto; flex-direction: column; align-items: flex-start; } }
+
+html.fit .modes-section { margin-top: 8px; }
+html.fit .mode-grid { gap: 10px; }
+html.fit .mode-tile { padding: 8px 10px 10px; gap: 2px; border-radius: 16px; }
+html.fit .mode-tile .mode-visual { height: clamp(36px, 7vh, 56px); margin-bottom: 2px; }
+html.fit .mode-tile .mode-visual .pie { width: clamp(20px, 4vh, 30px); }
+html.fit .mode-tile strong { font-size: 0.95rem; }
+html.fit .mode-tile > span:not(.mode-visual), html.fit .mode-tile small { font-size: 0.75rem; }
+@media (min-width: 700px) { html.fit .mode-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+@media (max-width: 699px) { html.fit .mode-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } html.fit .mode-tile > span:not(.mode-visual) { display: none; } }
+html.fit .cat-section { margin-top: 10px; }
+html.fit .cat-section > .muted, html.fit .mode-rules { display: none; }
+html.fit .segmented { margin: 4px 0; }
+html.fit .seg { min-height: 36px; padding: 4px 12px; font-size: 0.85rem; }
+html.fit .cat-grid { grid-template-columns: repeat(auto-fill, minmax(min(150px, 30%), 1fr)); gap: 8px; }
+html.fit .cat-tile { min-height: 0; padding: 6px 10px; display: flex; align-items: center; gap: 8px; box-shadow: 0 3px 0 var(--ink); border-radius: 14px; }
+html.fit .cat-tile::after, html.fit .cat-tile small { display: none; }
+html.fit .cat-tile strong { margin: 0; font-size: 0.8rem; }
+html.fit .cat-tile .icon { width: 20px; height: 20px; flex: none; }
+html.fit .cat-chips { gap: 6px; }
+html.fit .cat-chip { min-height: 34px; padding: 0 10px 0 8px; font-size: 0.8rem; }
+html.fit .online-grid { margin-top: 10px; gap: 10px; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
+html.fit .online-grid .box > p.muted, html.fit .online-grid .icon-big { display: none; }
+html.fit .online-grid .box h2 { font-size: 1rem; margin-bottom: 6px; }
+html.fit .btn-big { min-height: 44px; padding: 8px 18px; }
+
+/* Results, leaderboard, account: smaller numbers and boards. */
+html.fit .big-score { margin: 6px 0 2px; }
+html.fit .big-score span { font-size: clamp(2.4rem, 10vh, 4.4rem); }
+html.fit .board li { padding: 4px 8px; }
+
+/* Fit mode, second pass: odd-one-out text, phones and short frames. */
+html.fit .odd-grid .card-text { font-size: clamp(0.78rem, 2.2vh, 1.15rem); }
+html.fit .odd-grid .card-detail { font-size: clamp(0.66rem, 1.6vh, 0.8rem); }
+html.fit .odd-grid .card-pick { overflow: hidden; }
+html.fit .device-box { display: none; }
+html.fit .board-rules { font-size: 0.8rem; margin: 0 0 8px; }
+html.fit main .box[style] { margin-top: 10px !important; }
+@media (min-width: 900px) { html.fit main:has(.board-rules) { display: grid; grid-template-columns: 1fr 1fr; align-content: start; gap: 0 16px; } html.fit main:has(.board-rules) > :not(.box) { grid-column: 1 / -1; } }
+@media (max-width: 1000px) {
+  html.fit .cat-chips { flex-wrap: nowrap; overflow-x: auto; padding-bottom: 4px; scrollbar-width: thin; }
+  html.fit .cat-chip { flex: none; }
+}
+@media (max-width: 899px) {
+  html.fit .hero .lede, html.fit .hero-meta, html.fit .home-choice > span:not(.choice-visual), html.fit .home-choice small,
+  html.fit main > .lede, html.fit .section-head h2 { display: none; }
+  html.fit .home-choices { grid-template-columns: 1fr 1fr; }
+  html.fit .home-daily { grid-column: 1 / -1; }
+  html.fit .cat-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; }
+  html.fit .cat-tile { padding: 6px 8px; gap: 6px; }
+  html.fit .cat-tile strong { font-size: 0.72rem; }
+  html.fit .online-grid { grid-template-columns: 1fr 1fr; }
+  html.fit .online-grid > form { grid-column: 1 / -1; display: grid; grid-template-columns: 1fr auto; align-items: end; gap: 8px; }
+  html.fit .online-grid > form h2 { grid-column: 1 / -1; }
+  html.fit .guess-card .pie { display: none; }
+  html.fit .guess-card .card-foot { justify-content: flex-end; }
+  html.fit .guess-status { font-size: 0.8rem; margin: 0; }
+  html.fit .round-head .screen-title { font-size: clamp(1.05rem, 3.2vh, 1.5rem); }
+}
+@media (max-height: 560px) {
+  html.fit .hero-mascot, html.fit .choice-visual, html.fit .mode-tile .mode-visual { display: none; }
+  html.fit .hero .lede, html.fit .hero-meta { display: none; }
+  html.fit main > .lede { display: none; }
+}
+@media (max-width: 699px) {
+  html.fit .mode-tile .mode-visual { display: none; }
+  html.fit .mode-tile { padding: 8px 10px; justify-content: center; }
+  html.fit .seg { min-height: 32px; padding: 3px 10px; font-size: 0.8rem; }
+  html.fit .cat-tile { padding: 4px 8px; }
+  html.fit .online-grid .btn { min-height: 40px; padding: 6px 12px; font-size: 0.9rem; }
+}
+html.fit .online-grid > * { min-width: 0; }
+html.fit .online-grid input { width: 100%; min-width: 0; }
+html.fit .modes-section, html.fit .online-grid { margin-top: 6px; }
+html.fit main:has(.cat-chips) > .lede { display: none; }
+@media (max-width: 899px) { html.fit main { padding-bottom: 64px; } }
+
+/* Fit mode: results and account pages. */
+html.fit .share-text, html.fit .recap-box { display: none; }
+html.fit .grid { margin: 2px 0; font-size: 1.1rem; }
+html.fit .streak { padding: 8px 12px; }
+html.fit .dist { margin-top: 8px; }
+html.fit .dist-bars { gap: 2px; }
+html.fit .dist-bars li { font-size: 0.75rem; }
+@media (min-width: 900px) {
+  html.fit main:has(.dist) { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 0 20px; align-content: start; }
+  html.fit main:has(.dist) > * { grid-column: 1; }
+  html.fit main:has(.dist) > .dist { grid-column: 2; grid-row: 1 / span 12; margin-top: 0; }
+  html.fit main:has(.stat-row) { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 0 16px; align-content: start; }
+  html.fit main:has(.stat-row) > * { grid-column: 1 / -1; }
+  html.fit main:has(.stat-row) > form.box { grid-column: 1; }
+  html.fit main:has(.stat-row) > .box:has(.btn-danger) { grid-column: 2; grid-row: span 2; margin-top: 10px; }
+}
+@media (max-width: 899px) {
+  html.fit .dist, html.fit main:has(.dist) > .lede { display: none; }
+  html.fit .stat-row p b { font-size: 1.2rem; }
+}
+html.fit .box:has(.guess-recap) { display: none; }
+@media (min-width: 900px) {
+  html.fit main:has(.stat-row) > form.box { grid-row: 4; }
+  html.fit main:has(.stat-row) > .box:has(.btn-danger) { grid-row: 4; grid-column: 2; margin-top: 10px; }
+}
+html.fit main:has(.stat-row) > form.box { display: grid; grid-template-columns: 1fr auto; align-items: end; gap: 8px; }
+html.fit main:has(.stat-row) > form.box > :not(.field):not(button) { grid-column: 1 / -1; }
+html.fit main:has(.stat-row) > form.box .field { margin: 0; }
+html.fit .stat-row { gap: 8px; }
+html.fit .stat-row p { padding: 6px 10px; }
+html.fit .box:has(.btn-danger) .muted { font-size: 0.8rem; margin: 0 0 6px; }
+html.fit .box:has(.btn-danger) h2 { margin-bottom: 4px; }
+@media (max-width: 899px) {
+  html.fit .stat-row p small { font-size: 0.7rem; line-height: 1.2; }
+  html.fit main:has(.stat-row) .actions { margin: 8px 0; gap: 8px; }
+  html.fit main:has(.stat-row) .actions .btn { min-height: 40px; padding: 6px 14px; }
+  html.fit main:has(.stat-row) .board-empty { font-size: 0.8rem; }
+}
+@media (max-width: 899px) { html.fit .stat-row ~ .board, html.fit .stat-row ~ .board-empty { display: none; } }

@@ -1114,7 +1114,7 @@ function dailyResults(date, pairs, answers) {
       otherDone ? h('a', { class: 'btn', href: '#/' }, t('Play Endless')) : h('a', { class: 'btn', href: '#/daily/guess' }, t("Today's Closest guess"))),
     nextDailyCountdown(date, startDaily),
     distributionBox({ date, game: 'pairs', score, state, stateKey: dailyKey(date) }),
-    h('section', { class: 'box', style: 'margin-top:16px' }, h('h2', {}, t("Today's pairs")),
+    h('section', { class: 'box recap-box', style: 'margin-top:16px' }, h('h2', {}, t("Today's pairs")),
       h('ol', { class: 'recap' }, pairs.map((p, i) => h('li', {},
         `${answers[i] ? '🟩' : '🟥'} ${p.a.emoji} ${cardText(p.a)} (${formatValue(p.a.value)}) ${t('vs')} ${p.b.emoji} ${cardText(p.b)} (${formatValue(p.b.value)})`)))));
 }
@@ -1214,10 +1214,10 @@ function leaderboard() {
     h('p', { class: 'lede' }, online.currentUser()
       ? t('Playing as {name}. Your daily challenges count on the world board.', { name: online.currentUser().username })
       : PORTAL ? null : h('span', {}, ...tx('Guests only appear on this device. {link} to join the world board.', { link: h('a', { href: '#/account' }, t('Create an account')) }))),
-    h('p', { class: 'muted' }, t('The world board adds up the daily challenges, the same cards for everyone: 10 points for each right pair, plus your Closest guess points divided by 5. Up to 200 points a day.')),
+    h('p', { class: 'muted board-rules' }, t('The world board adds up the daily challenges, the same cards for everyone: 10 points for each right pair, plus your Closest guess points divided by 5. Up to 200 points a day.')),
     world, daily,
-    h('section', { class: 'box', style: 'margin-top:16px' }, h('h2', {}, t('This device: best Endless runs')), leaderboardList(10)),
-    h('section', { class: 'box', style: 'margin-top:16px' }, h('h2', {}, t('This device: Daily history')),
+    h('section', { class: 'box device-box', style: 'margin-top:16px' }, h('h2', {}, t('This device: best Endless runs')), leaderboardList(10)),
+    h('section', { class: 'box device-box', style: 'margin-top:16px' }, h('h2', {}, t('This device: Daily history')),
       history.length
         ? h('ol', { class: 'board' }, history.slice(0, 14).map(([d, sc]) => h('li', {},
           h('span', { class: 'rank' }, '📅'), h('span', {}, ''), h('span', { class: 'who' }, d), h('span', { class: 'score' }, `${sc}/10`))))
@@ -1960,6 +1960,8 @@ function route() {
 }
 
 if (load(MOTION_KEY, false)) document.documentElement.classList.add('reduce-motion');
+// The CrazyGames frame: everything fits on one screen, no page scrolling.
+if (PORTAL) document.documentElement.classList.add('fit');
 
 // One button mutes or unmutes everything; Settings has the separate switches.
 function updateSoundButton() {
