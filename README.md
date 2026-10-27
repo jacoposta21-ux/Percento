@@ -59,7 +59,7 @@ npm run review         # regenerate DATA_REVIEW.md
 
 ## Deploy
 
-**CrazyGames build**: `npm run build:crazygames` writes `crazygames/eyeball-crazygames.zip` (upload it in the CrazyGames developer portal; covers and the preview video are in `crazygames/`). That build follows the portal rules: online play is guest-only (no email or Google sign-in), shared texts and room invites carry no link back to eyeball.cloud, and Vercel analytics is left out.
+**CrazyGames build**: `npm run build:crazygames` writes `crazygames/eyeball-crazygames.zip` (upload it in the CrazyGames developer portal; covers and the preview video are in `crazygames/`). That build follows the portal rules: online play is guest-only (no email or Google sign-in), shared texts and room invites carry no link back to eyeball.cloud, and Vercel analytics is left out. Single player has no category play, and the daily there is a "higher or lower" marathon: the same endless run of pairs for everyone that day, over at the first miss, one go a day, with a day board (`marathon_results`, see `supabase/migrations/20261029_daily_marathon.sql`). Answers go to the server as they are given; it ends the run at a miss and refuses scores faster than 1.2 s a pair, but it cannot check that an answer was really right.
 
 `dist/` is a static site: upload it to any static host (Netlify, Vercel, GitHub Pages, S3 + CloudFront, nginx). No server code, no build step on the host. Routing uses `#/` hashes, so no rewrite rules are needed. Accounts and rooms talk to Supabase directly from the browser.
 

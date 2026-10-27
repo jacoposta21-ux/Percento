@@ -196,6 +196,28 @@ export async function loadDaily(day) {
   return data?.answers ?? null;
 }
 
+// ---------- daily marathon (CrazyGames) ----------
+/** Starts today's marathon on the server, or returns the run already started ({ score, finished }). */
+export async function marathonStart() {
+  if (!currentUser()) return null;
+  const { data, error } = await client.rpc('marathon_start');
+  return error ? null : data;
+}
+
+/** Sends one answer of today's marathon the moment it is given; a miss ends the run. */
+export async function marathonAnswer(right) {
+  if (!currentUser()) return null;
+  const { data, error } = await client.rpc('marathon_answer', { right_answer: right });
+  return error ? null : data;
+}
+
+/** The best marathon scores of a day ({ username, score }), the earlier finisher first on a tie. */
+export async function marathonBoard(day, limit = 10) {
+  const { data, error } = await client.from('marathon_board').select('username, score').eq('day', day)
+    .order('score', { ascending: false }).order('updated_at', { ascending: true }).limit(limit);
+  return error ? null : data;
+}
+
 // ---------- leaderboards ----------
 /** World leaderboard: the daily challenges summed per player ({ username, points, days }). */
 export async function topPlayers(limit = 10) {

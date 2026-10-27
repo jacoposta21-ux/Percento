@@ -833,6 +833,48 @@ async function main() {
       prodServer.close();
     }
 
+    log('▶ crazygames build: daily marathon');
+    {
+      execFileSync(process.execPath, [join(ROOT, 'scripts', 'build.mjs'), '--mode=production', '--target=crazygames', '--out=dist-cg-test']);
+      const cgServer = await startServer(PORT + 2, join(ROOT, 'dist-cg-test'));
+      const { ENTRIES: CG } = await import(join(ROOT, 'dist-cg-test', 'src', 'data.js'));
+      const valueOf = (text) => CG.find((e) => e.text === text)?.value;
+      const context = await newContext({ viewport: { width: 1240, height: 650 } });
+      await context.route('https://sdk.crazygames.com/**', (r) => r.abort());
+      const page = await context.newPage();
+      watch(page);
+      const url = `http://127.0.0.1:${PORT + 2}/`;
+      await page.goto(`${url}#/daily`);
+      await page.waitForSelector('.daily-intro', { timeout: 15000 });
+      check(!(await page.$('.card-pick')), 'marathon: waits for Start');
+      check(!(await page.$('.daily-tabs')), 'marathon: higher or lower only');
+      const firstPair = async () => page.$$eval('.card-text', (els) => els.map((e) => e.textContent));
+      await page.click('main button:has-text("Start")');
+      // Two right answers, then a wrong one ends the run.
+      for (let i = 0; i < 3; i++) {
+        await page.waitForSelector('.card-pick:not([disabled])');
+        const [ta, tb] = await firstPair();
+        const aHigher = valueOf(ta) > valueOf(tb);
+        const right = i < 2;
+        await page.click(aHigher === right ? '.card-a .card-pick' : '.card-b .card-pick');
+        check((await waitReveal(page)) === right, `marathon: answer ${i + 1} ${right ? 'right' : 'wrong'}`);
+      }
+      await page.waitForSelector('.marathon-over', { timeout: 10000 });
+      check((await page.textContent('.big-score')).includes('2'), 'marathon: score 2 after two right answers');
+      await page.waitForSelector('.marathon-board .board li.me', { timeout: 5000 });
+      check((await page.textContent('.marathon-board .board li.me .score')).trim() === '2', 'marathon: own score on the day board');
+      await page.goto(`${url}#/`);
+      await page.goto(`${url}#/daily`);
+      await page.waitForSelector('.marathon-over', { timeout: 8000 });
+      check(!(await page.$('.daily-intro')), 'marathon: one go a day');
+      await page.goto(`${url}#/leaderboard`);
+      await page.waitForSelector('.marathon-board .board li.me', { timeout: 8000 });
+      check(Boolean(await page.$('.nav [data-route="leaderboard"]')), 'marathon: Rankings in the menu');
+      check((await page.$$eval('.side-links a', (els) => els.every((a) => a.getBoundingClientRect().right <= document.querySelector('.sidebar').getBoundingClientRect().right))), 'crazygames: side links stay inside the sidebar');
+      await context.close();
+      cgServer.close();
+    }
+
     check(errors.length === 0, `console/page errors: ${errors.slice(0, 5).join(' | ')}`);
   } finally {
     if (errors.length) console.log('page errors:', errors.slice(0, 5));

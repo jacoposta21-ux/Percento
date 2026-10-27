@@ -7,7 +7,7 @@
   const DB_KEY = 'fake-supabase-db';
   const SESSION_KEY = 'fake-supabase-session';
   const read = () => JSON.parse(localStorage.getItem(DB_KEY) || 'null') || {
-    users: [], profiles: [], runs: [], daily_results: [], rooms: [], room_players: [], room_guesses: [], answer_stats: [], daily_counts: [], seq: 1,
+    users: [], profiles: [], runs: [], daily_results: [], rooms: [], room_players: [], room_guesses: [], answer_stats: [], daily_counts: [], marathon_results: [], seq: 1,
   };
   const write = (db) => localStorage.setItem(DB_KEY, JSON.stringify(db));
   const session = () => JSON.parse(sessionStorage.getItem(SESSION_KEY) || 'null');
@@ -42,6 +42,10 @@
         sum.set(name, { username: name, points: cur.points + right * 10 + Math.round((d.guess_points || 0) / 5), days: cur.days + 1 });
       }
       return [...sum.values()];
+    }
+    if (table === 'marathon_board') {
+      return (db.marathon_results || []).filter((m) => m.score > 0)
+        .map((m) => ({ ...m, username: db.profiles.find((p) => p.id === m.user_id)?.username ?? '?' }));
     }
     if (table === 'room_guesses') {
       // Row level security: your own guesses, everyone's once the round's clock stops.
@@ -140,11 +144,24 @@
     };
     if (name === 'server_time') return { data: new Date().toISOString(), error: null };
     if (name === 'delete_my_account') {
-      for (const t of ['runs', 'daily_results', 'room_players', 'room_guesses']) db[t] = db[t].filter((r) => r.user_id !== me);
+      for (const t of ['runs', 'daily_results', 'room_players', 'room_guesses', 'marathon_results']) db[t] = db[t].filter((r) => r.user_id !== me);
       db.profiles = db.profiles.filter((p) => p.id !== me);
       db.users = db.users.filter((u) => u.id !== me);
       touch();
       return { data: null, error: null };
+    }
+    // Daily marathon: one run a day, a miss ends it (the server's pace check is left out).
+    if (name === 'marathon_start' || name === 'marathon_answer') {
+      const day = new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Rome' }).format(new Date());
+      db.marathon_results ||= [];
+      let run = db.marathon_results.find((m) => m.user_id === me && m.day === day);
+      if (!run && name === 'marathon_start') { run = { user_id: me, day, score: 0, finished: false, updated_at: new Date().toISOString() }; db.marathon_results.push(run); }
+      if (run && name === 'marathon_answer' && !run.finished) {
+        if (args.right_answer) run.score++; else run.finished = true;
+        run.updated_at = new Date().toISOString();
+      }
+      write(db);
+      return { data: run ?? null, error: null };
     }
     if (name === 'quick_match') {
       const mode = args?.room_mode || 'standing';

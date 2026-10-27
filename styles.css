@@ -869,7 +869,7 @@ html.fit .box:has(.btn-danger) h2 { margin-bottom: 4px; }
 
 /* Fit mode, third pass: keep the game's look. Cards carry their category
    colour and a big pie; the menus keep their small pictures. */
-html.fit .nav { grid-template-columns: repeat(4, 1fr); }
+@media (max-width: 899px) { html.fit .nav { grid-template-columns: none; grid-auto-flow: column; grid-auto-columns: 1fr; } }
 html.fit .card-pick { background: linear-gradient(to bottom, var(--card) 45%, color-mix(in srgb, var(--c) 18%, var(--card))); }
 html.fit .card.lower .card-pick { background: var(--card-shade); }
 html.fit .duel .card .pie { height: clamp(48px, 17vh, 150px); }
@@ -890,3 +890,34 @@ html.fit .card-value { font-size: clamp(1.5rem, 7vh, 3rem); }
 .daily-intro .lede { margin: 0; }
 .daily-intro .daily-date, html.fit .daily-intro .daily-date { flex: none; color: var(--ink); width: 64px; height: 68px; font-size: 1.7rem; }
 @media (max-width: 899px) { html.fit .guess-status[data-hint] { display: none; } }
+
+/* Fit mode, fourth pass. A big faded category picture fills each card's
+   empty middle; the table gets a soft light and a dot grid; the sidebar's
+   small links stack instead of running out of the column. */
+.card-mark { display: none; }
+html.fit .card-pick { overflow: hidden; isolation: isolate; }
+html.fit .card-pick > :not(.card-mark) { position: relative; z-index: 1; }
+html.fit .card-mark {
+  display: block; position: absolute; z-index: 0; right: -8%; bottom: -10%; width: min(62%, 30vh); height: auto; aspect-ratio: 1;
+  color: color-mix(in srgb, var(--c) 70%, var(--ink)); opacity: 0.16; stroke-width: 1.4; transform: rotate(-14deg); pointer-events: none;
+}
+html.fit .card.higher .card-mark { opacity: 0.24; }
+html.fit .odd-grid .card-mark { width: min(70%, 18vh); }
+html.fit main {
+  background:
+    radial-gradient(ellipse 70% 55% at 80% -10%, rgb(255 255 255 / 0.10), transparent 70%),
+    radial-gradient(circle at 1px 1px, rgb(255 255 255 / 0.07) 1px, transparent 1.5px) 0 0 / 22px 22px;
+}
+@media (min-width: 900px) {
+  html.fit .side-links { flex-direction: column; align-items: flex-start; gap: 0; padding-left: 6px; }
+  html.fit .side-links a { min-height: 28px; padding: 0 6px; font-size: 0.82rem; }
+}
+.marathon-board { margin-top: 12px; }
+html.fit .marathon-board .board li { padding-block: 4px; }
+.marathon-boards { display: grid; gap: 12px; }
+.marathon-boards .marathon-board { margin-top: 0; }
+@media (min-width: 900px) {
+  .marathon-boards { grid-template-columns: 3fr 2fr; align-items: start; }
+  .marathon-over { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 24px; align-items: start; }
+}
+@media (max-width: 699px) { html.fit .odd-grid .card .pie { height: clamp(26px, 6vh, 56px); } }

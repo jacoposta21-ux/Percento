@@ -3,7 +3,7 @@ import { ENTRIES, BUILD } from './data.js';
 import { CATEGORIES, CATEGORY_IDS, RULES } from './config.js';
 import { createPairGenerator, higherOf, mulberry32, hashString, pairKey, pickCards } from './pairs.js';
 import {
-  DAILY_GUESS_CARDS, dailyPairs, dailyGuessCards, romeDate, msUntilNextDaily, formatCountdown, currentStreak, longestStreak,
+  DAILY_GUESS_CARDS, dailyPairs, dailyGuessCards, dailyPool, addDays, romeDate, msUntilNextDaily, formatCountdown, currentStreak, longestStreak,
 } from './daily.js';
 import { createDial, needlePosition, prefersReducedMotion } from './dial.js';
 import { createMatchGenerator, createOddGenerator } from './modes.js';
@@ -205,6 +205,7 @@ function statCard(e, { side, ariaLabel, onPick, stamp = t('Higher') }) {
     h('span', { class: 'card-text' }, cardText(e)),
     h('span', { class: 'card-detail' }, cardDetail(e)),
     h('span', { class: 'card-foot' }, pie, value),
+    icon(e.category, 'card-mark'),
     h('span', { class: 'stamp', 'aria-hidden': 'true' }, stamp));
   const source = h('p', { class: 'card-source', hidden: true },
     t('Source:'), ' ', h('a', { href: e.sourceUrl, target: '_blank', rel: 'noopener' }, e.source), ` · ${e.year}`);
@@ -402,8 +403,8 @@ function home() {
         h('small', {}, t('Online'))),
       h('a', { class: 'home-daily', href: '#/daily' },
         h('span', { class: 'daily-date', 'aria-hidden': 'true' }, String(Number(romeDate().slice(8, 10)))),
-        h('span', { class: 'home-daily-text' }, h('strong', {}, t('Daily challenge')),
-          h('span', {}, t('The same cards for everyone today. New ones tomorrow.'))),
+        h('span', { class: 'home-daily-text' }, h('strong', {}, PORTAL ? t('Daily marathon') : t('Daily challenge')),
+          h('span', {}, PORTAL ? t('The same pairs for everyone today. One mistake and it is over.') : t('The same cards for everyone today. New ones tomorrow.'))),
         days ? h('span', { class: 'streak-chip' }, `🔥 ${t('{n}-day streak', { n: days })}`) : h('span', { class: 'home-daily-go', 'aria-hidden': 'true' }, '→'))));
 }
 
@@ -1220,6 +1221,116 @@ function dailyGuessResults(date, cards, state) {
 }
 
 // ---------- other screens ----------
+// ---------- daily marathon (CrazyGames) ----------
+// One endless run of "higher or lower", the same pairs in the same order for
+// everyone that day, over at the first miss. One go a day; the server keeps
+// the score (each answer is sent the moment it is given) and the day's board.
+const marathonKey = (date) => `percento:marathon:${date}`;
+const MARATHON_BOARD = 10;
+
+function marathonPairs(date) {
+  return createPairGenerator(dailyPool(ENTRIES, date), mulberry32(hashString(`eyeball-marathon-v1:${date}`)));
+}
+
+/** Fills `box` with a day's best marathon scores (the player's own row highlighted). */
+function marathonBoardInto(box, date, limit = MARATHON_BOARD) {
+  const title = box.firstChild;
+  online.init().then(async (ok) => {
+    const rows = ok ? await online.marathonBoard(date, limit).catch(() => null) : null;
+    if (!box.isConnected) return;
+    box.replaceChildren(title, rows ? boardList(rows, online.currentUser()?.username)
+      : h('p', { class: 'board-empty' }, t('The leaderboard is offline right now.')));
+  });
+  return box;
+}
+
+const marathonBox = (date, heading, limit) =>
+  marathonBoardInto(h('section', { class: 'box marathon-board' }, h('h2', {}, heading), h('p', { class: 'muted' }, t('Loading…'))), date, limit);
+
+async function startMarathon() {
+  const date = romeDate();
+  const hash = location.hash;
+  mount(h('p', { class: 'kicker' }, t('Daily marathon')), h('h1', { class: 'screen-title' }, t('Higher or lower')), h('p', { class: 'muted' }, t('Loading…')));
+  // The score counts on the board only with a (CrazyGames guest) account.
+  const ok = await within(online.init(), 4000).catch(() => false);
+  if (location.hash !== hash) return;
+  if (ok && !online.currentUser()) return needAccount(hash, t('Daily marathon'), t('Pick a nickname so the others know who is who.'));
+  const local = load(marathonKey(date), null) || { score: 0, over: false };
+  const server = ok ? await online.marathonStart().catch(() => null) : null;
+  if (location.hash !== hash) return;
+  // A run started earlier today (another tab, or a reload) carries on where the server has it.
+  const state = server ? { score: server.score, over: server.finished, started: server.score > 0 || local.started } : local;
+  if (state.over) return marathonOver(date, state.score);
+  const play = () => {
+    state.started = true;
+    save(marathonKey(date), state);
+    const gen = marathonPairs(date);
+    for (let i = 0; i < state.score; i++) gen.next();
+    const rng = mulberry32(hashString(`eyeball-marathon-headlines:${date}`));
+    const round = () => {
+      const pair = gen.next();
+      if (!pair) { state.over = true; save(marathonKey(date), state); return marathonOver(date, state.score, true); }
+      renderRound({
+        pair,
+        headline: t(pickFrom(HEADLINES, rng)),
+        pill: { value: state.score, label: t('Correct today') },
+        progress: h('div', { class: 'progress' }, h('span', {}, `${t('Daily marathon')} · ${t('Pair {i}', { i: state.score + 1 })}`)),
+        timeLimit: DAILY_TIME_MS,
+        onAnswer: (correct) => {
+          if (correct) state.score++; else state.over = true;
+          save(marathonKey(date), state);
+          if (online.currentUser()) online.marathonAnswer(correct).catch(() => {});
+        },
+        onContinue: (correct) => (correct ? round() : marathonOver(date, state.score)),
+      });
+    };
+    round();
+  };
+  setKeys((ev) => { if (ev.key === 'Enter') { ev.preventDefault(); play(); } });
+  mount(
+    h('p', { class: 'kicker' }, t('Daily marathon')),
+    h('h1', { class: 'screen-title' }, t('Higher or lower')),
+    h('div', { class: 'daily-intro' },
+      h('span', { class: 'daily-date', 'aria-hidden': 'true' }, String(Number(date.slice(8, 10)))),
+      h('p', { class: 'lede' }, t('The same pairs for everyone today, one after another. 10 seconds each. One mistake and it is over. You get one go.'))),
+    h('div', { class: 'actions' }, h('button', { class: 'btn btn-primary btn-big', type: 'button', onclick: play },
+      state.started ? t('Continue ({n} right)', { n: state.score }) : t('Start'))),
+    ok ? null : h('p', { class: 'note' }, t('The leaderboard is offline right now. You can still play.')),
+    marathonBox(date, t('Best today'), 3));
+}
+
+function marathonOver(date, score, exhausted = false) {
+  const history = load(DAILY_HISTORY_KEY, {}) || {};
+  if (history[date] !== score) { history[date] = score; save(DAILY_HISTORY_KEY, history); }
+  setKeys((ev) => { if (ev.key === 'Enter') { ev.preventDefault(); location.hash = '#/endless'; } });
+  audio.sfx(score >= 10 ? 'win' : 'gameover');
+  mount(
+    h('p', { class: 'kicker' }, t('Daily marathon')),
+    h('div', { class: 'marathon-over' },
+      h('div', {},
+        h('h1', { class: 'screen-title' }, exhausted ? t('You ran out of statistics!') : t('Run over')),
+        h('p', { class: 'big-score' }, h('span', {}, String(score)), h('small', {}, score === 1 ? t('correct answer') : t('correct answers'))),
+        h('p', { class: 'lede' }, t(pickByScore(GAME_OVER_LINES, score))),
+        nextDailyCountdown(date, startMarathon),
+        h('div', { class: 'actions' },
+          h('a', { class: 'btn btn-primary', href: '#/endless' }, t('Play Endless')),
+          h('a', { class: 'btn', href: '#/leaderboard' }, t('Leaderboard')))),
+      marathonBox(date, t('Best today'), 5)));
+}
+
+function marathonLeaderboard() {
+  setKeys(null);
+  const today = romeDate();
+  const yesterday = addDays(today, -1);
+  mount(
+    h('h1', { class: 'screen-title' }, t('Leaderboard')),
+    h('p', { class: 'muted board-rules' }, t('The daily marathon: the same pairs for everyone, one go a day. A new board every midnight (Rome time).')),
+    h('div', { class: 'marathon-boards' },
+      marathonBox(today, t('Today'), MARATHON_BOARD),
+      marathonBox(yesterday, t('Yesterday'), 3)),
+    h('div', { class: 'actions' }, h('a', { class: 'btn btn-primary', href: '#/daily' }, t('Daily marathon'))));
+}
+
 function leaderboard() {
   setKeys(null);
   const history = Object.entries(load(DAILY_HISTORY_KEY, {}) || {}).sort((a, b) => (a[0] < b[0] ? 1 : -1));
@@ -1978,10 +2089,13 @@ function route() {
 
 if (load(MOTION_KEY, false)) document.documentElement.classList.add('reduce-motion');
 // The CrazyGames frame: everything fits on one screen, no page scrolling.
-// There is no world leaderboard there (nothing is saved to our server).
 if (PORTAL) {
   document.documentElement.classList.add('fit');
-  document.querySelector('.nav [data-route="leaderboard"]')?.remove();
+  // The daily there is the marathon, and the board is its board.
+  Object.assign(ROUTES, {
+    '#/daily': ['daily', startMarathon], '#/daily/guess': ['daily', () => { location.hash = '#/daily'; }],
+    '#/leaderboard': ['leaderboard', marathonLeaderboard],
+  });
 }
 
 // One button mutes or unmutes everything; Settings has the separate switches.
