@@ -882,6 +882,9 @@ async function main() {
       await page.goto(`${url}#/leaderboard`);
       await page.waitForSelector('.marathon-board .board li.me', { timeout: 8000 });
       check(Boolean(await page.$('.nav [data-route="leaderboard"]')), 'marathon: Rankings in the menu');
+      await page.goto(`${url}#/sources`);
+      await page.waitForSelector('.source-name');
+      check((await page.$$('a[href^="http"]')).length === 0, 'crazygames: no links to other sites (sources are plain text)');
       check((await page.$$eval('.side-links a', (els) => els.every((a) => a.getBoundingClientRect().right <= document.querySelector('.sidebar').getBoundingClientRect().right))), 'crazygames: side links stay inside the sidebar');
       await context.close();
       cgServer.close();

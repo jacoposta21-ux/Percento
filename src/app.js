@@ -195,6 +195,11 @@ function guessCrowdLine(stats) {
  * and the value (hidden as "?" until revealed). Returns the parts the modes
  * animate: { wrap, pick, value, source, fill(reading), show(value) }.
  */
+// The source of a statistic: a link on the web; plain text on CrazyGames,
+// which asks games not to link to other sites.
+const sourceRef = (e) => (PORTAL ? h('span', { class: 'source-name' }, e.source)
+  : h('a', { href: e.sourceUrl, target: '_blank', rel: 'noopener' }, e.source));
+
 function statCard(e, { side, ariaLabel, onPick, stamp = t('Higher') }) {
   const value = h('span', { class: 'card-value' }, '?');
   // The percentage as a slice of pie, swept round as the value counts up.
@@ -208,7 +213,7 @@ function statCard(e, { side, ariaLabel, onPick, stamp = t('Higher') }) {
     icon(e.category, 'card-mark'),
     h('span', { class: 'stamp', 'aria-hidden': 'true' }, stamp));
   const source = h('p', { class: 'card-source', hidden: true },
-    t('Source:'), ' ', h('a', { href: e.sourceUrl, target: '_blank', rel: 'noopener' }, e.source), ` · ${e.year}`);
+    t('Source:'), ' ', sourceRef(e), ` · ${e.year}`);
   const wrap = h('div', { class: 'card', style: `--c:${colorOf(e)}` }, pick, source);
   const show = (v) => { value.textContent = formatValue(v); fill(v); source.hidden = false; };
   return { wrap, pick, value, source, fill, show };
@@ -813,7 +818,7 @@ function renderGuess({ entry, headline, pill, progress, deadline = null, seconds
       h('span', { class: 'card-text' }, cardText(entry)),
       h('span', { class: 'card-detail' }, cardDetail(entry)),
       h('span', { class: 'card-foot' }, pie, value)),
-    h('p', { class: 'card-source', hidden: true }, t('Source:'), ' ', h('a', { href: entry.sourceUrl, target: '_blank', rel: 'noopener' }, entry.source), ` · ${entry.year}`));
+    h('p', { class: 'card-source', hidden: true }, t('Source:'), ' ', sourceRef(entry), ` · ${entry.year}`));
   const controls = h('div', { class: 'guess-controls' }, readout, slider,
     h('div', { class: 'guess-buttons' }, nudge(-1), nudge(+1), lockBtn));
 
@@ -1373,7 +1378,7 @@ function sources(focusCategory) {
       h('h2', { style: `--c:${CATEGORIES[c].color}` }, icon(c), `${CATEGORIES[c].label} (${list.length})`),
       h('ul', { class: 'source-list' }, list.map((e) => h('li', {},
         `${e.emoji} ${cardText(e)} `, h('strong', {}, formatValue(e.value)),
-        h('span', { class: 'source-detail' }, e.detail, ' · ', h('a', { href: e.sourceUrl, target: '_blank', rel: 'noopener' }, e.source), ` · ${e.year}`,
+        h('span', { class: 'source-detail' }, e.detail, ' · ', sourceRef(e), ` · ${e.year}`,
           e.status === 'unverified' ? h('span', { class: 'badge' }, 'unverified') : null)))))));
   if (focusCategory) document.getElementById(`cat-${focusCategory}`)?.scrollIntoView();
 }
@@ -1423,7 +1428,7 @@ function review() {
     h('p', { class: 'lede' }, t('Test build: {n} unverified of {total} statistics. The public version serves verified statistics only.', { n: list.length, total: ENTRIES.length })),
     h('ul', { class: 'source-list' }, list.map((e) => h('li', {},
       `[${e.id}] ${e.text} `, h('strong', {}, formatValue(e.value)),
-      h('span', { class: 'source-detail' }, e.detail, ' · ', h('a', { href: e.sourceUrl, target: '_blank', rel: 'noopener' }, e.source), ` · ${e.year} · ${e.reviewReason}`)))));
+      h('span', { class: 'source-detail' }, e.detail, ' · ', sourceRef(e), ` · ${e.year} · ${e.reviewReason}`)))));
 }
 
 // ---------- account ----------
