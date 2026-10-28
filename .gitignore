@@ -6,3 +6,6 @@ dist-cg-test/
 dist-crazygames/
 dist-shot/
 crazygames/*.zip
+dist-playgama/
+playgama/*.zip
+dist-pg-test/

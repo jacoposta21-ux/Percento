@@ -66,9 +66,10 @@ function tx(text, nodes, vars = {}) {
   out.push(str.slice(last));
   return out;
 }
-// The CrazyGames build plays inside their portal: no outside sign-in and no
-// links back to the web version (their rules); online play is guest-only.
-const PORTAL = BUILD.target === 'crazygames';
+// The portal builds (CrazyGames, Playgama) play inside a game portal: no
+// outside sign-in and no links to other sites (their rules); online play is
+// guest-only, and src/portal.js talks to the portal's SDK.
+const PORTAL = BUILD.target !== 'web';
 const shareUrl = () => (PORTAL ? '' : `${location.origin}${location.pathname}`);
 
 function toast(message) {
@@ -91,7 +92,7 @@ function mount(...children) {
   if (BUILD.mode === 'dev') nodes.unshift(h('p', { class: 'dev-banner' }, t('Test build with unverified statistics.'), ' ', h('a', { href: '#/review' }, t('Review mode'))));
   for (const b of document.querySelectorAll('.verdict-banner')) b.remove();
   app.replaceChildren(...nodes);
-  // CrazyGames wants to know when a round is being played (rounds have a .round-head).
+  // The portal wants to know when a round is being played (rounds have a .round-head).
   if (PORTAL) portal.gameplay(Boolean(app.querySelector('.round-head')));
   const heading = app.querySelector('.screen-title');
   heading?.setAttribute('tabindex', '-1');
@@ -195,8 +196,8 @@ function guessCrowdLine(stats) {
  * and the value (hidden as "?" until revealed). Returns the parts the modes
  * animate: { wrap, pick, value, source, fill(reading), show(value) }.
  */
-// The source of a statistic: a link on the web; plain text on CrazyGames,
-// which asks games not to link to other sites.
+// The source of a statistic: a link on the web; plain text on the game portals,
+// which ask games not to link to other sites.
 const sourceRef = (e) => (PORTAL ? h('span', { class: 'source-name' }, e.source)
   : h('a', { href: e.sourceUrl, target: '_blank', rel: 'noopener' }, e.source));
 
@@ -543,6 +544,7 @@ function startEndless(cat = null) {
 }
 
 function endlessOver({ mode = 'pairs', cat, score, best, exhausted, timed = false }) {
+  portal.interstitial();
   // The world board and the device top 10 rank timed, mixed "higher or lower" only.
   const ranked = mode === 'pairs' && !cat && timed;
   if (ranked) recordRun(score);
@@ -949,6 +951,7 @@ function startGuess(cat = null) {
 }
 
 function guessOver({ cat, total, results }) {
+  portal.interstitial();
   const key = guessBestKey(cat);
   const best = load(key, 0) || 0;
   const newBest = total > best;
@@ -1228,7 +1231,7 @@ function dailyGuessResults(date, cards, state) {
 }
 
 // ---------- other screens ----------
-// ---------- daily marathon (CrazyGames) ----------
+// ---------- daily marathon (portal builds) ----------
 // One endless run of "higher or lower", the same pairs in the same order for
 // everyone that day, over at the first miss. One go a day; the server keeps
 // the score (each answer is sent the moment it is given) and the day's board.
@@ -1258,7 +1261,7 @@ async function startMarathon() {
   const date = romeDate();
   const hash = location.hash;
   mount(h('p', { class: 'kicker' }, t('Daily marathon')), h('h1', { class: 'screen-title' }, t('Higher or lower')), h('p', { class: 'muted' }, t('Loading…')));
-  // The score counts on the board only with a (CrazyGames guest) account.
+  // The score counts on the board only with a (portal guest) account.
   const ok = await within(online.init(), 4000).catch(() => false);
   if (location.hash !== hash) return;
   if (ok && !online.currentUser()) return needAccount(hash, t('Daily marathon'), t('Pick a nickname so the others know who is who.'));
@@ -1267,7 +1270,7 @@ async function startMarathon() {
   if (location.hash !== hash) return;
   // A run started earlier today (another tab, or a reload) carries on where the server has it.
   const state = server ? { score: server.score, over: server.finished, started: server.score > 0 || local.started } : local;
-  if (state.over) return marathonOver(date, state.score);
+  if (state.over) return marathonOver(date, state.score, false, false);
   const play = () => {
     state.started = true;
     save(marathonKey(date), state);
@@ -1306,7 +1309,8 @@ async function startMarathon() {
     marathonBox(date, t('Best today'), 3));
 }
 
-function marathonOver(date, score, exhausted = false) {
+function marathonOver(date, score, exhausted = false, justPlayed = true) {
+  if (justPlayed) portal.interstitial();
   const history = load(DAILY_HISTORY_KEY, {}) || {};
   if (history[date] !== score) { history[date] = score; save(DAILY_HISTORY_KEY, history); }
   setKeys((ev) => { if (ev.key === 'Enter') { ev.preventDefault(); location.hash = '#/endless'; } });
@@ -1629,7 +1633,7 @@ function updateAccountLink() {
 function needAccount(hash, title, why) {
   session.set(RETURN_KEY, hash);
   if (PORTAL && !needAccount.auto) {
-    // CrazyGames players go straight in: their CrazyGames name, or a random one for guests.
+    // Portal players go straight in: their portal name, or a random one for guests.
     needAccount.auto = true;
     mount(h('h1', { class: 'screen-title' }, title), h('p', { class: 'muted' }, t('Loading…')));
     portalNickname().then((name) => online.signInAsGuest(name)).then((res) => {
@@ -1663,7 +1667,7 @@ function needAccount(hash, title, why) {
   nick.focus({ preventScroll: true });
 }
 
-/** A valid nickname from the CrazyGames account, or Player1234 for their guests. */
+/** A valid nickname from the portal account, or Player1234 for their guests. */
 async function portalNickname() {
   const raw = (await portal.username()) || '';
   const clean = raw.replace(/[^A-Za-z0-9_]+/g, '_').replace(/^_+|_+$/g, '').slice(0, 20);
@@ -1996,6 +2000,7 @@ async function room(code) {
       const winners = ranking.filter((row) => row.pts === top);
       const iWon = winners.some((row) => row.id === me.id);
       audio.sfx(iWon ? 'win' : 'gameover');
+      portal.interstitial();
       mount(
         h('p', { class: 'kicker' }, `${r.is_public ? t('Public game') : t('Room {code}', { code })} · ${t('Closest guess')}`),
         h('h1', { class: 'screen-title' }, winners.length > 1 ? `🏆 ${t("It's a tie: {names}!", { names: winners.map((w) => w.name).join(' & ') })}` : iWon ? t('🏆 You win!') : `🏆 ${t('{name} wins!', { name: winners[0]?.name ?? '?' })}`),
@@ -2043,7 +2048,7 @@ async function room(code) {
     const top = ranking();
     const winners = status === 'finished' ? top.filter((p) => p.score === top[0].score) : [];
     const iWon = winners.some((p) => p.user_id === me.id);
-    if (status === 'finished' && !fanfare) { fanfare = true; audio.sfx(iWon ? 'win' : 'gameover'); }
+    if (status === 'finished' && !fanfare) { fanfare = true; audio.sfx(iWon ? 'win' : 'gameover'); portal.interstitial(); }
     mount(
       h('p', { class: 'kicker' }, t('Room {code}', { code })),
       h('h1', { class: 'screen-title' }, status !== 'finished' ? t('You are out!')
@@ -2120,7 +2125,7 @@ function route() {
 }
 
 if (load(MOTION_KEY, false)) document.documentElement.classList.add('reduce-motion');
-// The CrazyGames frame: everything fits on one screen, no page scrolling.
+// The portal frame: everything fits on one screen, no page scrolling.
 if (PORTAL) {
   document.documentElement.classList.add('fit');
   // The daily there is the marathon, and the board is its board.
@@ -2156,7 +2161,7 @@ function translatePage() {
 
 audio.initAudio();
 // The language loads first (a small file), then the first screen appears.
-// On CrazyGames the game speaks the language of the player's CrazyGames site.
+// On a portal the game speaks the portal's language.
 const portalReady = PORTAL && await portal.init();
 await initI18n(portalReady ? portal.locale() : null);
 translatePage();
@@ -2165,7 +2170,7 @@ if (portalReady) {
   portal.loading(true);
   // Accepting an invite while the game is open goes straight to that room.
   portal.onJoinRoom((code) => { if (/^[A-Za-z0-9]{6}$/.test(code)) location.hash = `#/room/${code.toUpperCase()}`; });
-  // CrazyGames' mute button wins over ours while it is on.
+  // The portal's mute button (and its ads) win over ours while on.
   let before = null;
   portal.onMute((muted) => {
     if (muted && before === null) { before = [audio.soundEnabled(), audio.musicEnabled()]; audio.setSound(false); audio.setMusic(false); }

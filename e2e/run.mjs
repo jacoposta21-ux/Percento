@@ -890,6 +890,51 @@ async function main() {
       cgServer.close();
     }
 
+    log('▶ playgama build');
+    {
+      execFileSync(process.execPath, [join(ROOT, 'scripts', 'build.mjs'), '--mode=production', '--target=playgama', '--out=dist-pg-test']);
+      const pgServer = await startServer(PORT + 3, join(ROOT, 'dist-pg-test'));
+      const context = await newContext({ viewport: { width: 1240, height: 650 } });
+      // A stand-in for Playgama Bridge that records what the game tells it.
+      await context.route('https://bridge.playgama.com/**', (r) => r.fulfill({ contentType: 'text/javascript', body: `
+        window.pgLog = [];
+        const handlers = {};
+        const on = (name, fn) => { (handlers[name] ||= []).push(fn); };
+        window.pgEmit = (name, value) => (handlers[name] || []).forEach((fn) => fn(value));
+        window.bridge = {
+          initialize: async () => {},
+          platform: { language: 'it', isAudioEnabled: true, on, sendMessage: async (m) => { window.pgLog.push(m); } },
+          player: { isAuthorized: false, name: null },
+          advertisement: { isInterstitialSupported: true, on, showInterstitial: () => { window.pgLog.push('interstitial'); window.pgEmit('interstitial_state_changed', 'opened'); } },
+        };` }));
+      const page = await context.newPage();
+      watch(page);
+      const url = `http://127.0.0.1:${PORT + 3}/`;
+      await page.goto(`${url}#/endless`);
+      await page.waitForSelector('.card-pick:not([disabled])', { timeout: 15000 });
+      const pg = () => page.evaluate(() => window.pgLog);
+      check((await pg()).includes('game_ready'), 'playgama: game_ready once loaded');
+      check((await pg()).includes('gameplay_started'), 'playgama: gameplay_started when a round is on screen');
+      check((await page.getAttribute('html', 'lang')) === 'it', 'playgama: the platform language is used');
+      check(!(await page.$('a[href^="http"]')), 'playgama: no links to other sites');
+      // Lose until the game is over: an ad opens and the sound goes off while it is open.
+      for (let i = 0; i < 10 && !(await page.$('.big-score')); i++) {
+        if (await page.$('.card-pick:not([disabled])')) await page.click('.card-a .card-pick').catch(() => {});
+        await page.waitForTimeout(400);
+        await page.keyboard.press('Enter').catch(() => {});
+        await page.waitForSelector('.big-score, .card-pick:not([disabled])', { timeout: 10000 }).catch(() => {});
+      }
+      await page.waitForSelector('.big-score', { timeout: 30000 });
+      check((await pg()).includes('gameplay_stopped'), 'playgama: gameplay_stopped at game over');
+      check((await pg()).includes('interstitial'), 'playgama: an ad at game over');
+      check((await page.getAttribute('[data-sound-toggle]', 'aria-pressed')) === 'true', 'playgama: sound off while the ad is open');
+      await page.evaluate(() => window.pgEmit('interstitial_state_changed', 'closed'));
+      check((await page.getAttribute('[data-sound-toggle]', 'aria-pressed')) === 'false', 'playgama: sound back after the ad');
+      check(Boolean(await page.evaluate(() => fetch('playgama-bridge-config.json').then((r) => r.ok))), 'playgama: bridge config next to index.html');
+      await context.close();
+      pgServer.close();
+    }
+
     check(errors.length === 0, `console/page errors: ${errors.slice(0, 5).join(' | ')}`);
   } finally {
     if (errors.length) console.log('page errors:', errors.slice(0, 5));

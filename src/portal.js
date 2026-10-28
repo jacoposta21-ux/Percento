@@ -73,6 +73,9 @@ export async function username() {
   try { return (await sdk?.user?.getUser?.())?.username ?? null; } catch { return null; }
 }
 
+/** Full-screen ads at natural breaks: none on CrazyGames (Playgama shows them). */
+export function interstitial() {}
+
 /** Calls fn(muted) whenever the CrazyGames audio setting changes (and once now). */
 export function onMute(fn) {
   try {
